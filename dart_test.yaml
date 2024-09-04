@@ -1,0 +1,6 @@
+# See https://pub.dev/packages/test
+
+reporter: expanded
+
+tags:
+  golden:

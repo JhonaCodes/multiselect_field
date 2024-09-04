@@ -106,7 +106,6 @@ MultiSelectField<String>(
 
 
 ## Some test:
-![data_list.png](test%2Fgoldens%2Fmacos%2Fdata_list.png)
 ![default_data.png](test%2Fgoldens%2Fmacos%2Fdefault_data.png)
 ![title_footer.png](test%2Fgoldens%2Fmacos%2Ftitle_footer.png)
 ![title_footer_custom.png](test%2Fgoldens%2Fmacos%2Ftitle_footer_custom.png)

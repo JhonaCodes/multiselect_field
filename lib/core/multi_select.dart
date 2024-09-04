@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:multiselect_field/core/chip_multiselect_field.dart';
 import 'package:multiselect_field/core/search_multiselect_field.dart';
 
-
 /// [MultiSelectField] : Custom implementation of a multi-select field
 ///
 /// This implementation contain:
@@ -43,22 +42,23 @@ class MultiSelectField<T> extends StatefulWidget {
   final bool useTextFilter;
   final Decoration? decoration;
   final EdgeInsetsGeometry? padding;
+
   /// Or just modify a [Theme.of(context).textTheme.labelLarge].
   final TextStyle? textStyleSingleSelection;
   const MultiSelectField(
       {super.key,
-        required this.data,
-        required this.onSelect,
-        this.title,
-        this.defaultData,
-        this.useTextFilter = false,
-        this.decoration,
-        this.singleSelection = false,
-        this.footer,
-        this.padding,
-        this.multiSelectWidget,
-        this.singleSelectWidget,
-        this.textStyleSingleSelection});
+      required this.data,
+      required this.onSelect,
+      this.title,
+      this.defaultData,
+      this.useTextFilter = false,
+      this.decoration,
+      this.singleSelection = false,
+      this.footer,
+      this.padding,
+      this.multiSelectWidget,
+      this.singleSelectWidget,
+      this.textStyleSingleSelection});
 
   @override
   State<MultiSelectField<T>> createState() => _MultiSelectFieldState<T>();
@@ -95,12 +95,10 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
       _selectedPick.clear();
       _selectedPick.addAll(widget.defaultData!());
     }
-
   }
 
   @override
   void didUpdateWidget(covariant MultiSelectField<T> oldWidget) {
-
     /// [Timer]
     /// A simple solution to avoid multiple updates in a single action, if necessary.
     ///
@@ -139,7 +137,6 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
     super.dispose();
   }
 
-
   ///Todo: Next update, ValueNotifier implementation.
   @override
   Widget build(BuildContext context) {
@@ -156,7 +153,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
             builder: (context, val, child) => InkWell(
               hoverColor: Colors.transparent,
               overlayColor:
-              const WidgetStatePropertyAll<Color>(Colors.transparent),
+                  const WidgetStatePropertyAll<Color>(Colors.transparent),
 
               /// Help to open menu when click in any part of the current widget.
               /// But not when you tap on Edit text widget.
@@ -171,7 +168,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
                 _focusNodeTextField.requestFocus();
                 _arrowEnableOrNot();
               },
-              onTapDown: (down){
+              onTapDown: (down) {
                 _textController.clear();
                 _arrowEnableOrNot();
 
@@ -186,8 +183,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
                     if (event.logicalKey == LogicalKeyboardKey.backspace) {
                       if (_selectedPick.isNotEmpty &&
                           _textController.text.isEmpty) {
-                        _addOrRemove(
-                            _selectedPick[_selectedPick.length - 1]);
+                        _addOrRemove(_selectedPick[_selectedPick.length - 1]);
                       }
                     }
 
@@ -198,8 +194,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
                       if (_textController.text.isNotEmpty) {
                         ///Filtering element form general list.
                         Pick<T> elementFiltered = widget.data().firstWhere(
-                                (filter) =>
-                            filter.value.toLowerCase() ==
+                            (filter) =>
+                                filter.value.toLowerCase() ==
                                 _textController.text.toLowerCase());
 
                         _addOrRemove(elementFiltered);
@@ -232,26 +228,26 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
                           children: [
                             if (_selectedPick.isNotEmpty)
                               ..._selectedPick.map(
-                                    (element) {
+                                (element) {
                                   if (!widget.singleSelection) {
                                     return widget.multiSelectWidget != null
                                         ? widget.multiSelectWidget!(element)
                                         : ChipMultiselectField(
-                                      title: element.value,
-                                      onDeleted: () =>
-                                          _addOrRemove(element),
-                                    );
+                                            title: element.value,
+                                            onDeleted: () =>
+                                                _addOrRemove(element),
+                                          );
                                   } else {
                                     return widget.singleSelectWidget != null
                                         ? widget.singleSelectWidget!(element)
                                         : Text(
-                                      element.value,
-                                      style: widget
-                                          .textStyleSingleSelection ??
-                                          Theme.of(context)
-                                              .textTheme
-                                              .labelLarge,
-                                    );
+                                            element.value,
+                                            style: widget
+                                                    .textStyleSingleSelection ??
+                                                Theme.of(context)
+                                                    .textTheme
+                                                    .labelLarge,
+                                          );
                                   }
                                 },
                               ),
@@ -302,28 +298,30 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
               ),
             ),
             menuChildren: [
-              ..._onFilteredPick.where((element) => element.value.isNotEmpty).map(
-                    (result) {
+              ..._onFilteredPick
+                  .where((element) => element.value.isNotEmpty)
+                  .map(
+                (result) {
                   bool isGroupingTitle = result.key.isEmpty;
                   return MenuItemButton(
                     closeOnActivate:
-                    widget.singleSelection || widget.data().length == 1,
+                        widget.singleSelection || widget.data().length == 1,
                     key: _isSelected(result) &&
-                        _selectedPick.indexOf(result) == 0
+                            _selectedPick.indexOf(result) == 0
                         ? _selectedItemKey
                         : null,
                     trailingIcon: _isSelected(result)
                         ? const Icon(
-                      Icons.check,
-                      color: Colors.green,
-                      size: 12,
-                    )
+                            Icons.check,
+                            color: Colors.green,
+                            size: 12,
+                          )
                         : const SizedBox.shrink(),
                     style: ButtonStyle(
                       elevation: const WidgetStatePropertyAll<double>(10),
                       visualDensity: VisualDensity.compact,
                       overlayColor:
-                      const WidgetStatePropertyAll(Colors.transparent),
+                          const WidgetStatePropertyAll(Colors.transparent),
                       backgroundColor: WidgetStateProperty.resolveWith((state) {
                         /// Hovered only on web version
                         if ((state.contains(WidgetState.hovered) &&
@@ -343,12 +341,12 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
                     onPressed: isGroupingTitle
                         ? null
                         : () {
-                      _addOrRemove(result);
-                      if (!widget.singleSelection &&
-                          widget.useTextFilter) {
-                        _textController.clear();
-                      }
-                    },
+                            _addOrRemove(result);
+                            if (!widget.singleSelection &&
+                                widget.useTextFilter) {
+                              _textController.clear();
+                            }
+                          },
                     child: Container(
                       width: size.width - (_isMobile ? 65 : 50),
                       padding: EdgeInsets.only(
@@ -368,9 +366,9 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
             ],
             style: MenuStyle(
               backgroundColor:
-              WidgetStatePropertyAll<Color>(Theme.of(context).cardColor),
+                  WidgetStatePropertyAll<Color>(Theme.of(context).cardColor),
               surfaceTintColor:
-              WidgetStatePropertyAll<Color>(Theme.of(context).cardColor),
+                  WidgetStatePropertyAll<Color>(Theme.of(context).cardColor),
               elevation: const WidgetStatePropertyAll<double>(5),
               visualDensity: VisualDensity.adaptivePlatformDensity,
               maximumSize: WidgetStatePropertyAll<Size>(Size(size.width, 300)),
@@ -399,18 +397,19 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
     }
   }
 
-
-  void _searchElement(String text){
-
+  void _searchElement(String text) {
     setState(() {
-
-      _onFilteredPick = _onSelected ? widget.data() : widget.data().where((e) => e.value
-          .toLowerCase()
-          .contains( text.toLowerCase().toString(),
-      ),).toList();
-
+      _onFilteredPick = _onSelected
+          ? widget.data()
+          : widget
+              .data()
+              .where(
+                (e) => e.value.toLowerCase().contains(
+                      text.toLowerCase().toString(),
+                    ),
+              )
+              .toList();
     });
-
   }
 
   void _addOrRemove(Pick<T>? va) {
@@ -436,7 +435,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
           _onSelected = true;
 
           /// When select any element we need focus again on TextField if is in use.
-          if(widget.useTextFilter) _focusNodeTextField.requestFocus();
+          if (widget.useTextFilter) _focusNodeTextField.requestFocus();
         }
 
         /// Ensure that when the dropdown is opened again, all items are available for selection.
@@ -450,9 +449,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
           /// Otherwise, add the new Pick to the list and reset `isUsingRemove` to false.
           _selectedPick.add(va);
           _isUsingRemove = false;
-          if(widget.useTextFilter) _focusNodeTextField.requestFocus();
+          if (widget.useTextFilter) _focusNodeTextField.requestFocus();
         }
-
       }
 
       /// Trigger the `onSelect` callback with the updated list of selected elements if it's not empty.
@@ -558,11 +556,11 @@ class Pick<T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is Pick &&
-              runtimeType == other.runtimeType &&
-              key == other.key &&
-              value == other.value &&
-              metadata == other.metadata;
+      other is Pick &&
+          runtimeType == other.runtimeType &&
+          key == other.key &&
+          value == other.value &&
+          metadata == other.metadata;
 
   @override
   int get hashCode => Object.hash(key, value, metadata);

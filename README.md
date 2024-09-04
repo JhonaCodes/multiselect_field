@@ -3,6 +3,13 @@
 
 # MultiSelectField
 
+![multiselect_field](https://github.com/user-attachments/assets/447968f9-2256-47d2-afef-8b3da5ab108b)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![text_field_validation](https://img.shields.io/pub/v/multiselect_field.svg)](https://pub.dev/packages/multiselect_field)
+[![Dart 3](https://img.shields.io/badge/Dart-3%2B-blue.svg)](https://dart.dev/)
+[![Flutter 3.10](https://img.shields.io/badge/Flutter-3%2B-blue.svg)](https://flutter.dev/)
+
 `MultiSelectField` is a custom implementation of a multi-select field for Flutter applications. This library provides a flexible and highly configurable solution for projects that require native multi-selection, real-time text filtering, and more advanced features.
 
 ## Features
@@ -42,11 +49,14 @@ import 'package:multi_select_field/multiselect_field.dart';
 class MyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiSelectField<String>(
+    return MultiSelectField<Car>(
       data: () => [
-        Pick(key: '1', value: 'Option 1'),
-        Pick(key: '2', value: 'Option 2'),
-        Pick(key: '3', value: 'Option 3'),
+        Pick<Car>('', 'Ferrari'),
+        Pick<Car>('2', '488 GTB', metadata: Car(103, 27.500, 2015)),
+        Pick<Car>('3', '458 Italia', metadata: Car(99, 22.000, 2009)),
+        Pick<Car>('4', 'Portofino', metadata: Car(105, 31.000, 2017)),
+        Pick<Car>('5', 'California T', metadata: Car(102, 25.000, 2016)),
+        Pick<Car>('6', 'F8 Tributo', metadata: Car(104, 30.000, 2019)),
       ],
       onSelect: (selectedItems) {
         // Handle selected items here
@@ -109,6 +119,27 @@ MultiSelectField<String>(
 ![default_data.png](test%2Fgoldens%2Fmacos%2Fdefault_data.png)
 ![title_footer.png](test%2Fgoldens%2Fmacos%2Ftitle_footer.png)
 ![title_footer_custom.png](test%2Fgoldens%2Fmacos%2Ftitle_footer_custom.png)
+
+## Some screen captures
+### With grouping list.
+<img width="284" alt="Screenshot 2024-09-04 at 9 45 32 PM" src="https://github.com/user-attachments/assets/63dcf1f3-7e17-478c-bc6b-7576b35cf03b">
+
+### Multiple selection.
+<img width="282" alt="Screenshot 2024-09-04 at 9 54 57 PM" src="https://github.com/user-attachments/assets/b481dcb4-1e0a-444e-bb0a-06c7b98e40d7">
+
+### Multiple selection custom widget.
+<img width="281" alt="Screenshot 2024-09-04 at 9 55 49 PM" src="https://github.com/user-attachments/assets/515e49ae-a216-4fb1-bf1c-c054d07afa97">
+
+### Text Filtering.
+<img width="283" alt="Screenshot 2024-09-04 at 9 56 50 PM" src="https://github.com/user-attachments/assets/34fb2ea0-140f-4375-8625-bf9439208094">
+
+### With title and footer.
+<img width="287" alt="Screenshot 2024-09-04 at 9 54 03 PM" src="https://github.com/user-attachments/assets/72800d4d-e2f8-44ef-8147-46fe145db6ac">
+
+
+### Video example
+![ScreenRecording2024-09-05at12 19 59AM-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/43841493-b8ba-4a3c-a1a7-7ba899f7b567)
+
 
 ## Contribution
 

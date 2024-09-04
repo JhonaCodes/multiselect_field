@@ -66,9 +66,11 @@ final class SearchMultiselectField extends StatelessWidget {
       ),
       child: SearchBar(
         controller: textController,
-        padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.zero),
+        padding:
+            const WidgetStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.zero),
         elevation: const WidgetStatePropertyAll<double>(0),
-        backgroundColor: const WidgetStatePropertyAll<Color>(Colors.transparent),
+        backgroundColor:
+            const WidgetStatePropertyAll<Color>(Colors.transparent),
         shape: const WidgetStatePropertyAll<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(3)),
@@ -83,7 +85,8 @@ final class SearchMultiselectField extends StatelessWidget {
           ),
         ),
         constraints: BoxConstraints(minHeight: isMobile ? 40 : 30),
-        surfaceTintColor: const WidgetStatePropertyAll<Color>(Colors.transparent),
+        surfaceTintColor:
+            const WidgetStatePropertyAll<Color>(Colors.transparent),
         shadowColor: const WidgetStatePropertyAll<Color>(Colors.transparent),
         overlayColor: const WidgetStatePropertyAll<Color>(Colors.transparent),
         hintStyle: const WidgetStatePropertyAll<TextStyle>(

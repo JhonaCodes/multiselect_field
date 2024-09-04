@@ -1,6 +1,6 @@
 name: multiselect_field
 description: "A class for multiple select fields that allows users to select multiple elements from a list"
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/JhonaCodes/multiselect_field
 
 environment:

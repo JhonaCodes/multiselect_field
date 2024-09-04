@@ -26,7 +26,7 @@ Add the dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  multiselect_field: ^1.0.0
+  multiselect_field: ^1.0.1
 ```
 
 Then, install the dependencies using:
@@ -112,13 +112,6 @@ MultiSelectField<String>(
   ),
 );
 ```
-
-
-
-## Some test:
-![default_data.png](test%2Fgoldens%2Fmacos%2Fdefault_data.png)
-![title_footer.png](test%2Fgoldens%2Fmacos%2Ftitle_footer.png)
-![title_footer_custom.png](test%2Fgoldens%2Fmacos%2Ftitle_footer_custom.png)
 
 ## Some screen captures
 ### With grouping list.

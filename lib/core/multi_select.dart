@@ -7,28 +7,51 @@ import 'package:flutter/services.dart';
 import 'package:multiselect_field/core/chip_multiselect_field.dart';
 import 'package:multiselect_field/core/search_multiselect_field.dart';
 
-/// [MultiSelectField] : Custom implementation of a multi-select field
+/// A customizable [MultiSelectField] widget that allows users to select
+/// multiple options from a list with a search capability.
 ///
-/// This implementation contain:
+/// The [MultiSelectField] provides a user interface for selecting multiple
+/// items from a predefined list. It features a search bar to help users
+/// filter and find the options they are looking for quickly.
 ///
-/// 1. Flexibility: Offers greater control over the widget's design and behavior,
-///    allowing for more precise customization according to project requirements.
+/// This widget is particularly useful in forms where users need to select
+/// multiple categories, tags, or options from a large dataset. It supports
+/// mobile and desktop platforms with responsive design adjustments.
 ///
-/// 2. Native multiple selection: Implements multiple selection functionality
-///    natively, without the need for additional packages or complex modifications.
+/// Example usage:
+/// ```dart
+/// class Demo extends StatelessWidget {
+///   const Demo({super.key});
 ///
-/// 3. Advanced features: Includes features such as real-time text filtering
-///    and display of selected items as chips, enhancing the user experience.
+///   @override
+///   Widget build(BuildContext context) {
+///     return MultiSelectField<Car>(
+///       data: () => [
+///         Pick<Car>('', 'Ferrari'),
+///         Pick<Car>('2', '488 GTB', metadata: Car(103, 27.500, 2015)),
+///         Pick<Car>('3', '458 Italia'),
+///         Pick<Car>('4', 'Portofino', metadata: Car(105, 31.000, 2017)),
+///         Pick<Car>('5', 'California T', metadata: Car(102, 25.000, 2016)),
+///         Pick<Car>('6', 'F8 Tributo',),
+///       ],
+///       onSelect: (selectedItems) {
+///         // Handle selected items here
+///         print(selectedItems.map((item) => item.value).toList());
+///       },
+///       useTextFilter: true, // Enables real-time text filtering
+///     );
+///   }
+/// }
+///```
 ///
-/// 4. Maintenance and evolution: Being a custom implementation, it allows for easy
-///    adaptation and evolution as project needs change.
+/// Properties:
+/// - `options`: A list of all available options.
+/// - `selectedOptions`: A list of options that are currently selected.
+/// - `onSelectionChanged`: A callback that is triggered when the selection changes.
 ///
-/// 5. Independence: Avoids dependency on third-party packages, which can
-///    improve long-term stability and control of the project.
-///
-/// While [DropdownMenuItem] offers a standard implementation, our custom solution
-/// provides a better balance between functionality, flexibility, and maintainability
-/// for the specific requirements of some projects.
+/// Customization:
+/// - The search bar allows users to quickly filter options.
+/// - The layout adapts to different screen sizes and devices.
 ///
 class MultiSelectField<T> extends StatefulWidget {
   final Widget Function(bool isEmpty)? title;

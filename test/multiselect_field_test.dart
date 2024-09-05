@@ -21,38 +21,54 @@ void main() {
         children: [
           GoldenTestScenario(
             name: 'No title and no footer',
-            child: MultiSelectField(
-              data: () => [],
-              decoration: decoration,
-              onSelect: (value) {},
+            child: SizedBox(
+              width: 300,
+              height: 150,
+              child: MultiSelectField(
+                data: () => [],
+                decoration: decoration,
+                onSelect: (value) {},
+              ),
             ),
           ),
           GoldenTestScenario(
             name: 'Title',
-            child: MultiSelectField(
-              title: (isEmpty) => const Text("Title Optional"),
-              decoration: decoration,
-              data: () => [],
-              onSelect: (value) {},
+            child: SizedBox(
+              width: 300,
+              height: 150,
+              child: MultiSelectField(
+                title: (isEmpty) => const Text("Title Optional"),
+                decoration: decoration,
+                data: () => [],
+                onSelect: (value) {},
+              ),
             ),
           ),
           GoldenTestScenario(
             name: 'Footer',
-            child: MultiSelectField(
-              data: () => [],
-              decoration: decoration,
-              onSelect: (value) {},
-              footer: const Text('Footer Optional.'),
+            child: SizedBox(
+              width: 300,
+              height: 150,
+              child: MultiSelectField(
+                data: () => [],
+                decoration: decoration,
+                onSelect: (value) {},
+                footer: const Text('Footer Optional.'),
+              ),
             ),
           ),
           GoldenTestScenario(
             name: 'Title and Footer',
-            child: MultiSelectField(
-              data: () => [],
-              decoration: decoration,
-              onSelect: (value) {},
-              title: (isEmpty) => const Text("Title Optional"),
-              footer: const Text('Footer Optional.'),
+            child: SizedBox(
+              width: 300,
+              height: 150,
+              child: MultiSelectField(
+                data: () => [],
+                decoration: decoration,
+                onSelect: (value) {},
+                title: (isEmpty) => const Text("Title Optional"),
+                footer: const Text('Footer Optional.'),
+              ),
             ),
           ),
         ],
@@ -67,32 +83,44 @@ void main() {
         children: [
           GoldenTestScenario(
             name: 'Title and footer custom widget',
-            child: MultiSelectField(
-              title: (isEmpty) => OutlinedButton(
-                  onPressed: () {}, child: const Text('Button on Title')),
-              footer: const Chip(label: Text('Chip on Footer')),
-              data: () => [],
-              decoration: decoration,
-              onSelect: (value) {},
+            child: SizedBox(
+              width: 300,
+              height: 150,
+              child: MultiSelectField(
+                title: (isEmpty) => OutlinedButton(
+                    onPressed: () {}, child: const Text('Button on Title')),
+                footer: const Chip(label: Text('Chip on Footer')),
+                data: () => [],
+                decoration: decoration,
+                onSelect: (value) {},
+              ),
             ),
           ),
           GoldenTestScenario(
             name: 'Title custom widget',
-            child: MultiSelectField(
-              title: (isEmpty) => OutlinedButton(
-                  onPressed: () {}, child: const Text('Button on Title')),
-              data: () => [],
-              decoration: decoration,
-              onSelect: (value) {},
+            child: SizedBox(
+              width: 300,
+              height: 150,
+              child: MultiSelectField(
+                title: (isEmpty) => OutlinedButton(
+                    onPressed: () {}, child: const Text('Button on Title')),
+                data: () => [],
+                decoration: decoration,
+                onSelect: (value) {},
+              ),
             ),
           ),
           GoldenTestScenario(
             name: 'Footer custom widget',
-            child: MultiSelectField(
-              data: () => [],
-              decoration: decoration,
-              onSelect: (value) {},
-              footer: const Chip(label: Text('Chip on Footer')),
+            child: SizedBox(
+              width: 300,
+              height: 150,
+              child: MultiSelectField(
+                data: () => [],
+                decoration: decoration,
+                onSelect: (value) {},
+                footer: const Chip(label: Text('Chip on Footer')),
+              ),
             ),
           ),
         ],
@@ -109,29 +137,41 @@ void main() {
         children: [
           GoldenTestScenario(
             name: "Default empty",
-            child: MultiSelectField(
-              decoration: decoration,
-              data: () => [],
-              onSelect: (value) {},
+            child: SizedBox(
+              width: 300,
+              height: 70,
+              child: MultiSelectField(
+                decoration: decoration,
+                data: () => [],
+                onSelect: (value) {},
+              ),
             ),
           ),
           GoldenTestScenario(
             name: "Default single select",
-            child: MultiSelectField(
-              decoration: decoration,
-              singleSelection: true,
-              defaultData: () => [Pick('1', 'Item')],
-              data: () => [],
-              onSelect: (value) {},
+            child: SizedBox(
+              width: 300,
+              height: 70,
+              child: MultiSelectField(
+                decoration: decoration,
+                singleSelection: true,
+                defaultData: () => [Pick('1', 'Item')],
+                data: () => [],
+                onSelect: (value) {},
+              ),
             ),
           ),
           GoldenTestScenario(
             name: "Default multiple select",
-            child: MultiSelectField(
-              decoration: decoration,
-              defaultData: () => [Pick('1', 'Item1'), Pick('2', 'Item2')],
-              data: () => [],
-              onSelect: (value) {},
+            child: SizedBox(
+              width: 300,
+              height: 70,
+              child: MultiSelectField(
+                decoration: decoration,
+                defaultData: () => [Pick('1', 'Item1'), Pick('2', 'Item2')],
+                data: () => [],
+                onSelect: (value) {},
+              ),
             ),
           ),
         ],

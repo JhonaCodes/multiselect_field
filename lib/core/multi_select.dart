@@ -87,7 +87,7 @@ class MultiSelectField<T> extends StatefulWidget {
   State<MultiSelectField<T>> createState() => _MultiSelectFieldState<T>();
 }
 
-class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
+class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> with AutomaticKeepAliveClientMixin {
   final bool _isMobile = (defaultTargetPlatform == TargetPlatform.iOS ||
       defaultTargetPlatform == TargetPlatform.android);
   final GlobalKey _selectedItemKey = GlobalKey();
@@ -153,6 +153,10 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
     super.didUpdateWidget(oldWidget);
   }
 
+  /// Help in case of use ListView.
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   void dispose() {
     _focusNode.dispose();
@@ -163,6 +167,11 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
   ///Todo: Next update, ValueNotifier implementation.
   @override
   Widget build(BuildContext context) {
+
+    /// Maintain state, special when you are using ListView.
+    /// This avoid unnecessary dispose.
+    super.build(context);
+
     final size = MediaQuery.sizeOf(context);
 
     return RepaintBoundary(
@@ -486,6 +495,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> {
       setState(() {});
     }
   }
+
 }
 
 /// [Pick]

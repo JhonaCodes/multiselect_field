@@ -1,3 +1,6 @@
+## 1.1.1
+- Validate value on `didUpdateWidget`, helps to avoid continuous calling.
+
 ## 1.1.0
 ### You can now:
 - Set fixed menu width.

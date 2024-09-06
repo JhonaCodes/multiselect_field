@@ -61,6 +61,7 @@ class MultiSelectField<T> extends StatefulWidget {
   final List<Pick<T>> Function() data;
   final Function(List<Pick<T>> pickList) onSelect;
   final List<Pick<T>> Function()? defaultData;
+  final bool isMandatory;
   final bool singleSelection;
   final bool useTextFilter;
   final Decoration? decoration;
@@ -111,6 +112,7 @@ class MultiSelectField<T> extends StatefulWidget {
       this.footer,
       this.multiSelectWidget,
       this.singleSelectWidget,
+      this.isMandatory = false,
       this.textStyleSingleSelection});
 
   @override
@@ -145,7 +147,6 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
   @override
   void initState() {
     super.initState();
-    log('initState multiselect');
     if (widget.defaultData != null && widget.defaultData!().isNotEmpty) {
       _selectedPick.clear();
       _selectedPick.addAll(widget.defaultData!());
@@ -501,7 +502,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
         /// If there are already selected elements, clear the selection and the input field.
         /// Set `isUsingRemove` to true to indicate that a removal operation is occurring,
         /// preventing the selected elements from being updated by default data.
-        if (_selectedPick.isNotEmpty && _isSelected(va)) {
+        if (_selectedPick.isNotEmpty && _isSelected(va) && !widget.isMandatory) {
           _selectedPick.clear();
           _textController.clear();
 
@@ -526,8 +527,20 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       } else {
         /// If the item is already selected, remove it from the list and mark `isUsingRemove` as true.
         if (_isSelected(va)) {
-          _selectedPick.remove(va);
-          _isUsingRemove = true;
+
+          if(widget.isMandatory){
+
+            if(_selectedPick.isNotEmpty) {
+              _selectedPick.remove(va);
+              _isUsingRemove = true;
+            }
+
+          }else{
+            _selectedPick.remove(va);
+            _isUsingRemove = true;
+          }
+
+
         } else {
           /// Otherwise, add the new Pick to the list and reset `isUsingRemove` to false.
           _selectedPick.add(va);

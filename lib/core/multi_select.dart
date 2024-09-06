@@ -160,7 +160,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
     Timer(const Duration(milliseconds: 100), () {
       if (widget.defaultData != null &&
           widget.defaultData!().isNotEmpty &&
-          widget.singleSelection && _selectedPick.isEmpty) {
+          widget.singleSelection &&
+          _selectedPick.isEmpty) {
         /// If the current action is not removing an element, update [_selectedElements]
         /// with [defaultData]. Otherwise, keep the previous value of [_selectedElements],
         /// preventing it from being updated by [defaultData].

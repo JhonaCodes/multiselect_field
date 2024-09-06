@@ -437,8 +437,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                             Text(
                               result.value,
                               style: isGroupingTitle
-                                  ? widget.titleMenuStyle ?? Theme.of(context).textTheme.titleLarge
-                                  : widget.itemMenuStyle ?? Theme.of(context).textTheme.labelLarge,
+                                  ? widget.titleMenuStyle ?? Theme.of(context).textTheme.titleMedium
+                                  : widget.itemMenuStyle ?? Theme.of(context).textTheme.labelMedium,
                             ),
                       ),
                     );

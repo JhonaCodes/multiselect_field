@@ -91,6 +91,10 @@ class MultiSelectField<T> extends StatefulWidget {
 
   /// Selectable child of MenuItemButton
   final Widget? itemMenuButton;
+
+  /// Text style items, title and value.
+  final TextStyle? titleMenuStyle;
+  final TextStyle? itemMenuStyle;
   const MultiSelectField(
       {super.key,
       required this.data,
@@ -113,6 +117,8 @@ class MultiSelectField<T> extends StatefulWidget {
       this.multiSelectWidget,
       this.singleSelectWidget,
       this.isMandatory = false,
+        this.itemMenuStyle,
+        this.titleMenuStyle,
       this.textStyleSingleSelection});
 
   @override
@@ -431,8 +437,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                             Text(
                               result.value,
                               style: isGroupingTitle
-                                  ? Theme.of(context).textTheme.titleLarge
-                                  : Theme.of(context).textTheme.labelLarge,
+                                  ? widget.titleMenuStyle ?? Theme.of(context).textTheme.titleLarge
+                                  : widget.itemMenuStyle ?? Theme.of(context).textTheme.labelLarge,
                             ),
                       ),
                     );

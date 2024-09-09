@@ -134,6 +134,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
   List<Pick<T>> _selectedPick = [];
   List<Pick<T>> _onFilteredPick = [];
 
+  Timer? _timer;
+
   /// Prevents unintended or unexpected updates to the list of selected elements [_selectedPick].
   bool _isUsingRemove = false;
 
@@ -164,7 +166,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
     /// [Timer]
     /// A simple solution to avoid multiple updates in a single action, if necessary.
     ///
-    Timer(const Duration(milliseconds: 100), () {
+    _timer = Timer(const Duration(milliseconds: 50), () {
       if (widget.defaultData != null &&
           widget.defaultData!().isNotEmpty &&
           widget.singleSelection &&
@@ -203,6 +205,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
     log('dispose multiselect');
     _focusNode.dispose();
     _textController.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 

@@ -202,7 +202,6 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
 
   @override
   void dispose() {
-    log('dispose multiselect');
     _focusNode.dispose();
     _textController.dispose();
     _timer?.cancel();
@@ -452,10 +451,6 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
               ],
               style: widget.menuStyle ??
                   MenuStyle(
-                    backgroundColor: WidgetStatePropertyAll<Color>(
-                        Theme.of(context).cardColor),
-                    surfaceTintColor: WidgetStatePropertyAll<Color>(
-                        Theme.of(context).cardColor),
                     elevation: const WidgetStatePropertyAll<double>(5),
                     visualDensity: VisualDensity.adaptivePlatformDensity,
                     maximumSize: widget.menuWidthBaseOnContent &&

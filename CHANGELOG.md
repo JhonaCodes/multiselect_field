@@ -1,7 +1,10 @@
+## 1.2.2
+- Remove default color on list background and surface
+- Implement dispose for Time render `Help for your testing`.
+
 ## 1.2.1
 - New feature `isMandatory`.
 - Edit style Title and item from list items.
-- 
 
 ## 1.1.1
 - Validate value on `didUpdateWidget`, helps to avoid continuous calling.

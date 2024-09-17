@@ -20,13 +20,18 @@
 - **Maintenance and evolution**: As a custom implementation, it allows easy adaptation and evolution as project needs change.
 - **Independence**: Avoids third-party dependencies, improving project stability and long-term control.
 
+## Library
+
+Check out the library on [pub.dev](https://pub.dev/packages/multiselect_field).
+
+
 ## Installation
 
 Add the dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  multiselect_field: ^1.2.1
+  multiselect_field: ^1.3.0
 ```
 
 Then, install the dependencies using:

@@ -167,15 +167,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           'Optional Title Widget',
                         )
                     : null,
-                defaultData: () => _defaultData ? [picks.first] : [],
+                defaultData: () => _defaultData ? [choices.first] : [],
                 decoration: BoxDecoration(
                     color: Colors.black12,
                     borderRadius: BorderRadius.circular(12)),
                 footer:
                     _useFooter ? const Text('Optional Footer Widget') : null,
                 data: () => _useGroupingList
-                    ? picks
-                    : picks.where((e) => e.key.isNotEmpty).toList(),
+                    ? choices
+                    : choices
+                        .where((e) => e.key != null && e.key!.isNotEmpty)
+                        .toList(),
                 onSelect: (element) {
                   setState(() {
                     currentCar =
@@ -185,21 +187,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 singleSelection: _singleSelection,
                 useTextFilter: _useTextForFiltering,
                 multiSelectWidget: _customMultiselectWidget
-                    ? (pick) {
+                    ? (choice) {
                         return OutlinedButton(
                             onPressed: () {
                               showDialog(
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    title: Text(pick.value),
+                                    title: Text(choice.value),
                                     content: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text("Price: ${pick.metadata?.price}"),
-                                        Text("Year: ${pick.metadata?.year}"),
                                         Text(
-                                            "sold: ${pick.metadata?.totalSold}"),
+                                            "Price: ${choice.metadata?.price}"),
+                                        Text("Year: ${choice.metadata?.year}"),
+                                        Text(
+                                            "sold: ${choice.metadata?.totalSold}"),
                                       ],
                                     ),
                                     actions: [
@@ -212,14 +215,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                 },
                               );
                             },
-                            child: Text(pick.value));
+                            child: Text(choice.value));
                       }
                     : null,
                 singleSelectWidget: _customSingleSelectWidget
-                    ? (pick) {
+                    ? (choice) {
                         return Chip(
-                          avatar: Text("${pick.metadata?.totalSold}"),
-                          label: Text(pick.value),
+                          avatar: Text("${choice.metadata?.totalSold}"),
+                          label: Text(choice.value),
                         );
                       }
                     : null,
@@ -250,7 +253,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 subtitle: const Text(
-                    "Help to create your own style for single selection using the standard widget. For more flexibility, use singleSelectWidget(pick){}."),
+                    "Help to create your own style for single selection using the standard widget. For more flexibility, use singleSelectWidget(Choice){}."),
               ),
               ListTile(
                 title: Text(
@@ -267,33 +270,34 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-List<Pick<Car>> picks = [
-  Pick<Car>('', 'Ferrari'),
-  Pick<Car>('2', '488 GTB', metadata: Car(103, 27.500, 2015)),
-  Pick<Car>('3', '458 Italia', metadata: Car(99, 22.000, 2009)),
-  Pick<Car>('4', 'Portofino', metadata: Car(105, 31.000, 2017)),
-  Pick<Car>('5', 'California T', metadata: Car(102, 25.000, 2016)),
-  Pick<Car>('6', 'F8 Tributo', metadata: Car(104, 30.000, 2019)),
-  Pick<Car>('', 'Porche'),
-  Pick<Car>('8', '911 Carrera S', metadata: Car(106, 32.000, 2019)),
-  Pick<Car>('9', 'Boxster GTS', metadata: Car(101, 24.000, 2017)),
-  Pick<Car>('10', 'Cayman GT4', metadata: Car(105, 30.500, 2020)),
-  Pick<Car>('11', 'Macan Turbo', metadata: Car(102, 25.000, 2019)),
-  Pick<Car>('', 'Lamborghini'),
-  Pick<Car>('13', 'Huracán Evo', metadata: Car(111, 36.500, 2020)),
-  Pick<Car>('14', 'Aventador SVJ', metadata: Car(109, 34.000, 2018)),
-  Pick<Car>('15', 'Urus', metadata: Car(108, 32.000, 2019)),
-  Pick<Car>('16', 'Gallardo LP560-4', metadata: Car(107, 31.000, 2003)),
-  Pick<Car>('', 'Bugatti'),
-  Pick<Car>('18', 'Chiron Super Sport 300+', metadata: Car(125, 46.500, 2019)),
-  Pick<Car>('19', 'La Voiture Noire', metadata: Car(124, 45.000, 2019)),
-  Pick<Car>('20', 'Veyron Super Sport', metadata: Car(123, 43.000, 2008)),
-  Pick<Car>('21', 'Divo', metadata: Car(122, 42.000, 2014)),
-  Pick<Car>('', 'McLaren'),
-  Pick<Car>('23', '720S Spider', metadata: Car(113, 36.000, 2019)),
-  Pick<Car>('24', '600LT Spider', metadata: Car(112, 35.000, 2017)),
-  Pick<Car>('25', 'Speedtail', metadata: Car(114, 37.000, 2020)),
-  Pick<Car>('26', '650S GT3', metadata: Car(116, 39.500, 2015)),
+List<Choice<Car>> choices = [
+  Choice<Car>('', 'Ferrari'),
+  Choice<Car>('2', '488 GTB', metadata: Car(103, 27.500, 2015)),
+  Choice<Car>('3', '458 Italia', metadata: Car(99, 22.000, 2009)),
+  Choice<Car>('4', 'Portofino', metadata: Car(105, 31.000, 2017)),
+  Choice<Car>('5', 'California T', metadata: Car(102, 25.000, 2016)),
+  Choice<Car>('6', 'F8 Tributo', metadata: Car(104, 30.000, 2019)),
+  Choice<Car>('', 'Porche'),
+  Choice<Car>('8', '911 Carrera S', metadata: Car(106, 32.000, 2019)),
+  Choice<Car>('9', 'Boxster GTS', metadata: Car(101, 24.000, 2017)),
+  Choice<Car>('10', 'Cayman GT4', metadata: Car(105, 30.500, 2020)),
+  Choice<Car>('11', 'Macan Turbo', metadata: Car(102, 25.000, 2019)),
+  Choice<Car>('', 'Lamborghini'),
+  Choice<Car>('13', 'Huracán Evo', metadata: Car(111, 36.500, 2020)),
+  Choice<Car>('14', 'Aventador SVJ', metadata: Car(109, 34.000, 2018)),
+  Choice<Car>('15', 'Urus', metadata: Car(108, 32.000, 2019)),
+  Choice<Car>('16', 'Gallardo LP560-4', metadata: Car(107, 31.000, 2003)),
+  Choice<Car>('', 'Bugatti'),
+  Choice<Car>('18', 'Chiron Super Sport 300+',
+      metadata: Car(125, 46.500, 2019)),
+  Choice<Car>('19', 'La Voiture Noire', metadata: Car(124, 45.000, 2019)),
+  Choice<Car>('20', 'Veyron Super Sport', metadata: Car(123, 43.000, 2008)),
+  Choice<Car>('21', 'Divo', metadata: Car(122, 42.000, 2014)),
+  Choice<Car>('', 'McLaren'),
+  Choice<Car>('23', '720S Spider', metadata: Car(113, 36.000, 2019)),
+  Choice<Car>('24', '600LT Spider', metadata: Car(112, 35.000, 2017)),
+  Choice<Car>('25', 'Speedtail', metadata: Car(114, 37.000, 2020)),
+  Choice<Car>('26', '650S GT3', metadata: Car(116, 39.500, 2015)),
 ];
 
 class Car {

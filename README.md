@@ -51,12 +51,12 @@ class MyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiSelectField<Car>(
       data: () => [
-        Pick<Car>('', 'Ferrari'),
-        Pick<Car>('2', '488 GTB', metadata: Car(103, 27.500, 2015)),
-        Pick<Car>('3', '458 Italia', metadata: Car(99, 22.000, 2009)),
-        Pick<Car>('4', 'Portofino', metadata: Car(105, 31.000, 2017)),
-        Pick<Car>('5', 'California T', metadata: Car(102, 25.000, 2016)),
-        Pick<Car>('6', 'F8 Tributo', metadata: Car(104, 30.000, 2019)),
+        Choice<Car>('Ferrari'),
+        Choice<Car>('2', '488 GTB', metadata: Car(103, 27.500, 2015)),
+        Choice<Car>('3', '458 Italia', metadata: Car(99, 22.000, 2009)),
+        Choice<Car>('4', 'Portofino', metadata: Car(105, 31.000, 2017)),
+        Choice<Car>('5', 'California T', metadata: Car(102, 25.000, 2016)),
+        Choice<Car>('6', 'F8 Tributo', metadata: Car(104, 30.000, 2019)),
       ],
       onSelect: (selectedItems) {
         // Handle selected items here
@@ -70,13 +70,13 @@ class MyWidget extends StatelessWidget {
 
 ### Properties
 
-- **`data`**: `List<Pick<T>> Function()`. Function that returns a list of `Pick` elements for selection.
-- **`onSelect`**: `Function(List<Pick<T>> pickList)`. Callback invoked when items are selected.
+- **`data`**: `List<Choice<T>> Function()`. Function that returns a list of `Choice` elements for selection.
+- **`onSelect`**: `Function(List<Choice<T>> ChoiceList)`. Callback invoked when items are selected.
 - **`title`**: `Widget Function(bool isEmpty)?`. Optional widget that displays a title, depending on whether the selection is empty.
 - **`footer`**: `Widget?`. Optional widget displayed at the bottom.
-- **`singleSelectWidget`**: `Widget Function(Pick<T> pickList)?`. Optional widget for displaying a single selected item.
-- **`multiSelectWidget`**: `Widget Function(Pick<T> pickList)?`. Optional widget for displaying multiple selected items.
-- **`defaultData`**: `List<Pick<T>> Function()?`. Optional function that returns the default list of selected items.
+- **`singleSelectWidget`**: `Widget Function(Choice<T> ChoiceList)?`. Optional widget for displaying a single selected item.
+- **`multiSelectWidget`**: `Widget Function(Choice<T> ChoiceList)?`. Optional widget for displaying multiple selected items.
+- **`defaultData`**: `List<Choice<T>> Function()?`. Optional function that returns the default list of selected items.
 - **`singleSelection`**: `bool`. Defines if the widget should allow only a single selection. Defaults to `false`.
 - **`useTextFilter`**: `bool`. Enables or disables real-time text filtering.
 - **`decoration`**: `Decoration?`. Custom decoration for the widget.
@@ -88,11 +88,11 @@ class MyWidget extends StatelessWidget {
 ```dart
 MultiSelectField<String>(
   data: () => [
-    Pick(key: 'apple', value: 'Apple'),
-    Pick(key: 'banana', value: 'Banana'),
-    Pick(key: 'orange', value: 'Orange'),
+    Choice(key: 'apple', value: 'Apple'),
+    Choice(key: 'banana', value: 'Banana'),
+    Choice(key: 'orange', value: 'Orange'),
   ],
-  defaultData: () => [Pick(key: 'banana', value: 'Banana')],
+  defaultData: () => [Choice(key: 'banana', value: 'Banana')],
   onSelect: (selectedItems) {
     // Update selection state
   },

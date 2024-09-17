@@ -1,8 +1,13 @@
-## 1.2.2
-- Remove default color on list background and surface
-- Implement dispose for Time render `Help for your testing`.
+## 1.3.0
+- `Pick` was removed in favor of `Choice`
+- The `key` value can now be null to determine the group title.
+- 
 
 ## 1.2.1
+- Remove default color on list background and surface
+- Implement dispose for Time render `Help for your testing`
+
+## 1.2.0
 - New feature `isMandatory`.
 - Edit style Title and item from list items.
 

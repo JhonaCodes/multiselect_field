@@ -27,12 +27,12 @@ import 'package:multiselect_field/core/search_multiselect_field.dart';
 ///   Widget build(BuildContext context) {
 ///     return MultiSelectField<Car>(
 ///       data: () => [
-///         Pick<Car>('', 'Ferrari'),
-///         Pick<Car>('2', '488 GTB', metadata: Car(103, 27.500, 2015)),
-///         Pick<Car>('3', '458 Italia'),
-///         Pick<Car>('4', 'Portofino', metadata: Car(105, 31.000, 2017)),
-///         Pick<Car>('5', 'California T', metadata: Car(102, 25.000, 2016)),
-///         Pick<Car>('6', 'F8 Tributo',),
+///         Choice<Car>('', 'Ferrari'),
+///         Choice<Car>('2', '488 GTB', metadata: Car(103, 27.500, 2015)),
+///         Choice<Car>('3', '458 Italia'),
+///         Choice<Car>('4', 'Portofino', metadata: Car(105, 31.000, 2017)),
+///         Choice<Car>('5', 'California T', metadata: Car(102, 25.000, 2016)),
+///         Choice<Car>('6', 'F8 Tributo',),
 ///       ],
 ///       onSelect: (selectedItems) {
 ///         // Handle selected items here
@@ -56,11 +56,11 @@ import 'package:multiselect_field/core/search_multiselect_field.dart';
 class MultiSelectField<T> extends StatefulWidget {
   final Widget Function(bool isEmpty)? title;
   final Widget? footer;
-  final Widget Function(Pick<T> pickList)? singleSelectWidget;
-  final Widget Function(Pick<T> pickList)? multiSelectWidget;
-  final List<Pick<T>> Function() data;
-  final Function(List<Pick<T>> pickList) onSelect;
-  final List<Pick<T>> Function()? defaultData;
+  final Widget Function(Choice<T> choiceList)? singleSelectWidget;
+  final Widget Function(Choice<T> choiceList)? multiSelectWidget;
+  final List<Choice<T>> Function() data;
+  final Function(List<Choice<T>> choiceList) onSelect;
+  final List<Choice<T>> Function()? defaultData;
   final bool isMandatory;
   final bool singleSelection;
   final bool useTextFilter;
@@ -131,12 +131,12 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       defaultTargetPlatform == TargetPlatform.android);
   final GlobalKey _selectedItemKey = GlobalKey();
 
-  List<Pick<T>> _selectedPick = [];
-  List<Pick<T>> _onFilteredPick = [];
+  List<Choice<T>> _selectedChoice = [];
+  List<Choice<T>> _onFilteredChoice = [];
 
   Timer? _timer;
 
-  /// Prevents unintended or unexpected updates to the list of selected elements [_selectedPick].
+  /// Prevents unintended or unexpected updates to the list of selected elements [_selectedChoice].
   bool _isUsingRemove = false;
 
   /// Something rustic and without animation, but simple and functional,
@@ -156,8 +156,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
   void initState() {
     super.initState();
     if (widget.defaultData != null && widget.defaultData!().isNotEmpty) {
-      _selectedPick.clear();
-      _selectedPick.addAll(widget.defaultData!());
+      _selectedChoice.clear();
+      _selectedChoice.addAll(widget.defaultData!());
     }
   }
 
@@ -170,7 +170,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       if (widget.defaultData != null &&
           widget.defaultData!().isNotEmpty &&
           widget.singleSelection &&
-          _selectedPick.isEmpty) {
+          _selectedChoice.isEmpty) {
         /// If the current action is not removing an element, update [_selectedElements]
         /// with [defaultData]. Otherwise, keep the previous value of [_selectedElements],
         /// preventing it from being updated by [defaultData].
@@ -186,7 +186,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
         if (!_isUsingRemove && !_onSelected) {
           setState(() {
             log('didUpdateWidget multiselect');
-            _selectedPick = widget.defaultData!();
+            _selectedChoice = widget.defaultData!();
           });
         }
       }
@@ -219,7 +219,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.title != null) widget.title!(_selectedPick.isEmpty),
+          if (widget.title != null) widget.title!(_selectedChoice.isEmpty),
           LayoutBuilder(builder: (context, size) {
             return MenuAnchor(
               alignmentOffset: const Offset(0, 5),
@@ -246,7 +246,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                   _textController.clear();
                   _arrowEnableOrNot();
 
-                  _onFilteredPick = widget.data();
+                  _onFilteredChoice = widget.data();
                 },
                 child: KeyboardListener(
                   focusNode: _focusNode,
@@ -255,9 +255,10 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                     if (event.runtimeType == KeyDownEvent) {
                       /// Back space is delete, this is used for delete element similar to delete text on the widget.
                       if (event.logicalKey == LogicalKeyboardKey.backspace) {
-                        if (_selectedPick.isNotEmpty &&
+                        if (_selectedChoice.isNotEmpty &&
                             _textController.text.isEmpty) {
-                          _addOrRemove(_selectedPick[_selectedPick.length - 1]);
+                          _addOrRemove(
+                              _selectedChoice[_selectedChoice.length - 1]);
                         }
                       }
 
@@ -267,7 +268,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                       if (event.logicalKey == LogicalKeyboardKey.enter) {
                         if (_textController.text.isNotEmpty) {
                           ///Filtering element form general list.
-                          Pick<T> elementFiltered = widget.data().firstWhere(
+                          Choice<T> elementFiltered = widget.data().firstWhere(
                               (filter) =>
                                   filter.value.toLowerCase() ==
                                   _textController.text.toLowerCase());
@@ -302,8 +303,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                             spacing: 7,
                             runSpacing: _isMobile ? 0 : 7,
                             children: [
-                              if (_selectedPick.isNotEmpty)
-                                ..._selectedPick.map(
+                              if (_selectedChoice.isNotEmpty)
+                                ..._selectedChoice.map(
                                   (element) {
                                     if (!widget.singleSelection) {
                                       return widget.multiSelectWidget != null
@@ -379,11 +380,12 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                 ),
               ),
               menuChildren: [
-                ..._onFilteredPick
+                ..._onFilteredChoice
                     .where((element) => element.value.isNotEmpty)
                     .map(
                   (result) {
-                    bool isGroupingTitle = result.key.isEmpty;
+                    bool isGroupingTitle = result.key == null ||
+                        (result.key != null && result.key!.isEmpty);
                     return SizedBox(
                       width:
                           widget.menuWidthBaseOnContent ? null : size.maxWidth,
@@ -391,7 +393,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                         closeOnActivate:
                             widget.singleSelection || widget.data().length == 1,
                         key: _isSelected(result) &&
-                                _selectedPick.indexOf(result) == 0
+                                _selectedChoice.indexOf(result) == 0
                             ? _selectedItemKey
                             : null,
                         trailingIcon: _isSelected(result)
@@ -474,11 +476,11 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
   void _arrowEnableOrNot() => setState(() => _isTap = !_isTap);
 
   /// Define if the element is selected.
-  bool _isSelected(Pick val) =>
-      _selectedPick.where((element) => element.key == val.key).isNotEmpty;
+  bool _isSelected(Choice val) =>
+      _selectedChoice.where((element) => element.key == val.key).isNotEmpty;
 
   /// Scrolling to selected item.
-  Future<void> _scrollToSelectedItem() async{
+  Future<void> _scrollToSelectedItem() async {
     if (_selectedItemKey.currentContext != null) {
       await Scrollable.ensureVisible(
         _selectedItemKey.currentContext!,
@@ -489,7 +491,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
 
   void _searchElement(String text) {
     setState(() {
-      _onFilteredPick = _onSelected
+      _onFilteredChoice = _onSelected
           ? widget.data()
           : widget
               .data()
@@ -502,22 +504,22 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
     });
   }
 
-  void _addOrRemove(Pick<T>? va) {
+  void _addOrRemove(Choice<T>? va) {
     if (va != null) {
       if (widget.singleSelection) {
         /// If there are already selected elements, clear the selection and the input field.
         /// Set `isUsingRemove` to true to indicate that a removal operation is occurring,
         /// preventing the selected elements from being updated by default data.
-        if (_selectedPick.isNotEmpty &&
+        if (_selectedChoice.isNotEmpty &&
             _isSelected(va) &&
             !widget.isMandatory) {
-          _selectedPick.clear();
+          _selectedChoice.clear();
           _textController.clear();
 
           _isUsingRemove = true;
         } else {
-          /// If no elements are selected, add the new Pick and update the input field with its value.
-          _selectedPick = [va];
+          /// If no elements are selected, add the new Choice and update the input field with its value.
+          _selectedChoice = [va];
           _textController.text = va.value;
 
           /// Reset `isUsingRemove` to false since this is not a removal operation.
@@ -531,32 +533,32 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
         }
 
         /// Ensure that when the dropdown is opened again, all items are available for selection.
-        _onSelected = _selectedPick.isNotEmpty;
+        _onSelected = _selectedChoice.isNotEmpty;
       } else {
         /// If the item is already selected, remove it from the list and mark `isUsingRemove` as true.
         if (_isSelected(va)) {
           if (widget.isMandatory) {
-            if (_selectedPick.isNotEmpty) {
-              _selectedPick.remove(va);
+            if (_selectedChoice.isNotEmpty) {
+              _selectedChoice.remove(va);
               _isUsingRemove = true;
             }
           } else {
-            _selectedPick.remove(va);
+            _selectedChoice.remove(va);
             _isUsingRemove = true;
           }
         } else {
-          /// Otherwise, add the new Pick to the list and reset `isUsingRemove` to false.
-          _selectedPick.add(va);
+          /// Otherwise, add the new Choice to the list and reset `isUsingRemove` to false.
+          _selectedChoice.add(va);
           _isUsingRemove = false;
           if (widget.useTextFilter) _focusNodeTextField.requestFocus();
         }
       }
 
       /// Trigger the `onSelect` callback with the updated list of selected elements if it's not empty.
-      widget.onSelect(_selectedPick);
+      widget.onSelect(_selectedChoice);
 
       /// Clean filtering
-      _onFilteredPick = widget.data();
+      _onFilteredChoice = widget.data();
 
       // Update the UI with the latest state.
       setState(() {});
@@ -564,11 +566,11 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
   }
 }
 
-/// [Pick]
+/// [Choice]
 /// A generic class that standardizes elements for consistent manipulation.
 ///
-/// The `Pick` class provides a standardized way to handle different types of
-/// elements within a list, menu, or selection field. Each instance of `Pick`
+/// The `Choice` class provides a standardized way to handle different types of
+/// elements within a list, menu, or selection field. Each instance of `Choice`
 /// contains a unique key (`key`), a display value (`value`), and optional metadata
 /// of any type, making it highly versatile.
 ///
@@ -581,27 +583,28 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
 /// The `key` field serves a dual purpose:
 ///
 /// 1. **Quick Validations**:
-///    - **Unique Identification**: Each `Pick` can have a unique `key` that facilitates
+///    - **Unique Identification**: Each `Choice` can have a unique `key` that facilitates
 ///      the identification and validation of selected items.
 ///    - **Search and Filter Operations**: Enables efficient searches and filters based on the key.
 ///
 /// 2. **Grouping of Elements**:
-///    - **Contextual Grouping**: By assigning a specific `key` (e.g., an empty string `''`),
+///    - **Contextual Grouping**: By assigning a specific `key` (e.g., an empty string `''` or null ),
 ///      it can be used to group the following elements under a unique context.
-///    - **Group Title**: If a `Pick` has an empty `key` (`''`), it is interpreted as the title
-///      of a group. All elements following this title, until another `Pick` with an empty `key`
+///    - **Group Title**: If a `Choice` has an empty `key` (`''` or `null`), it is interpreted as the title
+///      of a group. All elements following this title, until another `Choice` with an empty `key`
 ///      is encountered, will be grouped under this title.
+///    - That `null` value is recommended
 ///
 /// ### Grouping Example:
 ///
 /// ```dart
-/// List<Pick<dynamic>> options = [
-///   Pick('', 'Group A'), // Group title
-///   Pick('1', 'Option A1'),
-///   Pick('2', 'Option A2'),
-///   Pick('', 'Group B'), // New group title
-///   Pick('3', 'Option B1'),
-///   Pick('4', 'Option B2'),
+/// List<Choice<dynamic>> options = [
+///   Choice('Group A'), // Group title
+///   Choice('1', 'Option A1'),
+///   Choice('2', 'Option A2'),
+///   Choice('', 'Group B'), // New group title
+///   Choice('3', 'Option B1'),
+///   Choice('4', 'Option B2'),
 /// ];
 /// ```
 /// In this example:
@@ -609,53 +612,53 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
 /// - "Group B" is the title of the second group containing "Option B1" and "Option B2".
 ///
 /// ### Parameters:
-/// - **[key]** (`String`):
-///   - **Description**: An optional and unique identifier for the Pick.
+/// - **[key]** (`String` or `null`):
+///   - **Description**: An optional and unique identifier for the Choice.
 ///   - **Usage in Validations**: Facilitates quick validations and search operations.
-///   - **Usage in Grouping**: If left empty (`''`), the Pick will act as the title of a group.
-///     The following Picks will be part of this group until another empty `key` is found.
+///   - **Usage in Grouping**: If left empty (`''`), the Choice will act as the title of a group.
+///     The following Choices will be part of this group until another empty `key` is found.
 ///   - **Note**: The `key` cannot be null; it must have a value or be an empty string.
 /// - **[value]** (`String`):
 ///   - **Description**: The text to be displayed in the user interface.
 /// - **[metadata]** (`T?`):
-///   - **Description**: Additional data associated with the Pick, which can be used to
+///   - **Description**: Additional data associated with the Choice, which can be used to
 ///     store extra information related to this item.
 ///
 /// ### Usage Examples:
 ///
 /// ```dart
-/// // A Pick with a string as metadata.
-/// Pick<String> stringPick = Pick('1', 'Option 1', metadata: 'This is a string');
+/// // A Choice with a string as metadata.
+/// Choice<String> stringChoice = Choice('1', 'Option 1', metadata: 'This is a string');
 ///
-/// // A Pick with a UserProfile object as metadata.
-/// Pick<UserProfile> userProfilePick = Pick('2', 'Jhonatan', metadata: UserProfile('Jhonatan', 30));
+/// // A Choice with a UserProfile object as metadata.
+/// Choice<UserProfile> userProfileChoice = Choice('2', 'Jhonatan', metadata: UserProfile('Jhonatan', 30));
 ///
-/// // A Pick without metadata, used as a group title.
-/// Pick<void> groupTitle = Pick('', 'User Group');
+/// // A Choice without metadata, used as a group title.
+/// Choice<void> groupTitle = Choice('User Group');
 /// ```
 ///
 /// ### Complete Class:
 ///
 /// ```dart
-/// class Pick<T> {
+/// class Choice<T> {
 ///   final String key;
 ///   final String value;
 ///   final T? metadata;
 ///
-///   Pick(this.key, this.value, {this.metadata});
+///   Choice(this.key, this.value, {this.metadata});
 /// }
 /// ```
-class Pick<T> {
-  final String key;
+class Choice<T> {
+  final String? key;
   final String value;
   final T? metadata;
 
-  Pick(this.key, this.value, {this.metadata});
+  Choice(this.key, this.value, {this.metadata});
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Pick &&
+      other is Choice &&
           runtimeType == other.runtimeType &&
           key == other.key &&
           value == other.value &&

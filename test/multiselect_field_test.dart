@@ -155,7 +155,7 @@ void main() {
               child: MultiSelectField(
                 decoration: decoration,
                 singleSelection: true,
-                defaultData: () => [Pick('1', 'Item')],
+                defaultData: () => [Choice('1', 'Item')],
                 data: () => [],
                 onSelect: (value) {},
               ),
@@ -168,7 +168,7 @@ void main() {
               height: 70,
               child: MultiSelectField(
                 decoration: decoration,
-                defaultData: () => [Pick('1', 'Item1'), Pick('2', 'Item2')],
+                defaultData: () => [Choice('1', 'Item1'), Choice('2', 'Item2')],
                 data: () => [],
                 onSelect: (value) {},
               ),

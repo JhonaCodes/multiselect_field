@@ -478,9 +478,9 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       _selectedPick.where((element) => element.key == val.key).isNotEmpty;
 
   /// Scrolling to selected item.
-  void _scrollToSelectedItem() {
+  Future<void> _scrollToSelectedItem() async{
     if (_selectedItemKey.currentContext != null) {
-      Scrollable.ensureVisible(
+      await Scrollable.ensureVisible(
         _selectedItemKey.currentContext!,
         alignment: 0.5,
       );

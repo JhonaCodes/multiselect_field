@@ -185,12 +185,11 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       _timer = Timer(const Duration(milliseconds: 50), () {
 
         if (!_isUsingRemove && !_onSelected) {
-          setState(() {
-            log('didUpdateWidget multiselect');
-            _selectedChoice = widget.defaultData!();
-          });
+          log('didUpdateWidget multiselect');
+          _selectedChoice = widget.defaultData!();
         }
       });
+
     }
 
 

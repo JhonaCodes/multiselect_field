@@ -59,7 +59,7 @@ class MultiSelectField<T> extends StatefulWidget {
   final Widget Function(Choice<T> choiceList)? singleSelectWidget;
   final Widget Function(Choice<T> choiceList)? multiSelectWidget;
   final List<Choice<T>> Function() data;
-  final Function(List<Choice<T>> choiceList) onSelect;
+  final void Function(List<Choice<T>> choiceList) onSelect;
   final List<Choice<T>> Function()? defaultData;
   final bool isMandatory;
   final bool singleSelection;
@@ -95,31 +95,33 @@ class MultiSelectField<T> extends StatefulWidget {
   /// Text style items, title and value.
   final TextStyle? titleMenuStyle;
   final TextStyle? itemMenuStyle;
-  const MultiSelectField(
-      {super.key,
-      required this.data,
-      required this.onSelect,
-      this.title,
-      this.defaultData,
-      this.useTextFilter = false,
-      this.decoration,
-      this.singleSelection = false,
-      this.menuHeightBaseOnContent = false,
-      this.menuWidthBaseOnContent = false,
-      this.itemMenuButton,
-      this.buttonStyle,
-      this.iconLeft,
-      this.iconRight,
-      this.menuStyle,
-      this.menuHeight,
-      this.menuWidth,
-      this.footer,
-      this.multiSelectWidget,
-      this.singleSelectWidget,
-      this.isMandatory = false,
-      this.itemMenuStyle,
-      this.titleMenuStyle,
-      this.textStyleSingleSelection});
+
+  const MultiSelectField({
+    super.key,
+    required this.data,
+    required this.onSelect,
+    this.title,
+    this.defaultData,
+    this.useTextFilter = false,
+    this.decoration,
+    this.singleSelection = false,
+    this.menuHeightBaseOnContent = false,
+    this.menuWidthBaseOnContent = false,
+    this.itemMenuButton,
+    this.buttonStyle,
+    this.iconLeft,
+    this.iconRight,
+    this.menuStyle,
+    this.menuHeight,
+    this.menuWidth,
+    this.footer,
+    this.multiSelectWidget,
+    this.singleSelectWidget,
+    this.isMandatory = false,
+    this.itemMenuStyle,
+    this.titleMenuStyle,
+    this.textStyleSingleSelection,
+  });
 
   @override
   State<MultiSelectField<T>> createState() => _MultiSelectFieldState<T>();
@@ -182,16 +184,14 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       /// Recommendation:
       /// Over time this entire implementation should be migrated to [ValueNotifier], with a singleton abstraction.
       ///
-      _timer = Timer(const Duration(milliseconds: 50), () {
-
+      _timer = Timer(const Duration(milliseconds: 100), () {
         if (!_isUsingRemove && !_onSelected) {
           log('didUpdateWidget multiselect');
           _selectedChoice = widget.defaultData!();
+          widget.onSelect(_selectedChoice);
         }
       });
-
     }
-
 
     super.didUpdateWidget(oldWidget);
   }

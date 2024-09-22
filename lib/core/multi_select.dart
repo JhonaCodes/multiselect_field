@@ -166,31 +166,33 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
     /// [Timer]
     /// A simple solution to avoid multiple updates in a single action, if necessary.
     ///
-    _timer = Timer(const Duration(milliseconds: 50), () {
-      if (widget.defaultData != null &&
-          widget.defaultData!().isNotEmpty &&
-          widget.singleSelection &&
-          _selectedChoice.isEmpty) {
-        /// If the current action is not removing an element, update [_selectedElements]
-        /// with [defaultData]. Otherwise, keep the previous value of [_selectedElements],
-        /// preventing it from being updated by [defaultData].
-        ///
-        /// Note: [didUpdateWidget] is called whenever the widget is updated,
-        /// so it's important to control when [_selectedElements] should be updated.
-        /// This is also executed if and only if we do not have any elements selected,
-        /// because in this way we will only have an update if an element is selected after the widget is built.
-        ///
-        /// Recommendation:
-        /// Over time this entire implementation should be migrated to [ValueNotifier], with a singleton abstraction.
-        ///
+    if (widget.defaultData != null &&
+        widget.defaultData!().isNotEmpty &&
+        widget.singleSelection &&
+        _selectedChoice.isEmpty) {
+      /// If the current action is not removing an element, update [_selectedElements]
+      /// with [defaultData]. Otherwise, keep the previous value of [_selectedElements],
+      /// preventing it from being updated by [defaultData].
+      ///
+      /// Note: [didUpdateWidget] is called whenever the widget is updated,
+      /// so it's important to control when [_selectedElements] should be updated.
+      /// This is also executed if and only if we do not have any elements selected,
+      /// because in this way we will only have an update if an element is selected after the widget is built.
+      ///
+      /// Recommendation:
+      /// Over time this entire implementation should be migrated to [ValueNotifier], with a singleton abstraction.
+      ///
+      _timer = Timer(const Duration(milliseconds: 50), () {
+
         if (!_isUsingRemove && !_onSelected) {
           setState(() {
             log('didUpdateWidget multiselect');
             _selectedChoice = widget.defaultData!();
           });
         }
-      }
-    });
+      });
+    }
+
 
     super.didUpdateWidget(oldWidget);
   }

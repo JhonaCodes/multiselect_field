@@ -165,12 +165,11 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
 
   @override
   void didUpdateWidget(covariant MultiSelectField<T> oldWidget) {
-    /// [Timer]
-    /// A simple solution to avoid multiple updates in a single action, if necessary.
-    ///
+
     if (widget.defaultData != null &&
         widget.defaultData!.isNotEmpty &&
         widget.singleSelection ) {
+
       /// If the current action is not removing an element, update [_selectedElements]
       /// with [defaultData]. Otherwise, keep the previous value of [_selectedElements],
       /// preventing it from being updated by [defaultData].
@@ -185,6 +184,10 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       ///
 
       if( !listEquals(_selectedChoice, widget.defaultData!) ) {
+
+        /// [Timer]
+        /// A simple solution to avoid multiple updates in a single action, if necessary.
+        ///
         _timer = Timer(const Duration(milliseconds: 100), () {
           if (!_isUsingRemove && !_onSelected) {
             log('didUpdateWidget multiselect');

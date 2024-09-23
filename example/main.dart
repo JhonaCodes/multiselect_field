@@ -167,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           'Optional Title Widget',
                         )
                     : null,
-                defaultData: () => _defaultData ? [choices.first] : [],
+                defaultData: _defaultData ? [choices.first] : [],
                 decoration: BoxDecoration(
                     color: Colors.black12,
                     borderRadius: BorderRadius.circular(12)),

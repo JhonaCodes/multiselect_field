@@ -60,7 +60,7 @@ class MultiSelectField<T> extends StatefulWidget {
   final Widget Function(Choice<T> choiceList)? multiSelectWidget;
   final List<Choice<T>> Function() data;
   final void Function(List<Choice<T>> choiceList) onSelect;
-  final List<Choice<T>> Function()? defaultData;
+  final List<Choice<T>>? defaultData;
   final bool isMandatory;
   final bool singleSelection;
   final bool useTextFilter;
@@ -157,9 +157,9 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
   @override
   void initState() {
     super.initState();
-    if (widget.defaultData != null && widget.defaultData!().isNotEmpty) {
+    if (widget.defaultData != null && widget.defaultData!.isNotEmpty) {
       _selectedChoice.clear();
-      _selectedChoice.addAll(widget.defaultData!());
+      _selectedChoice.addAll(widget.defaultData!);
     }
   }
 
@@ -169,9 +169,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
     /// A simple solution to avoid multiple updates in a single action, if necessary.
     ///
     if (widget.defaultData != null &&
-        widget.defaultData!().isNotEmpty &&
-        widget.singleSelection &&
-        _selectedChoice.isEmpty) {
+        widget.defaultData!.isNotEmpty &&
+        widget.singleSelection ) {
       /// If the current action is not removing an element, update [_selectedElements]
       /// with [defaultData]. Otherwise, keep the previous value of [_selectedElements],
       /// preventing it from being updated by [defaultData].
@@ -184,18 +183,22 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       /// Recommendation:
       /// Over time this entire implementation should be migrated to [ValueNotifier], with a singleton abstraction.
       ///
-      _timer = Timer(const Duration(milliseconds: 100), () {
-        if (!_isUsingRemove && !_onSelected) {
-          log('didUpdateWidget multiselect');
-          _selectedChoice = widget.defaultData!();
-          widget.onSelect(_selectedChoice);
-          _selectedChoice = [];
-        }
-      });
+
+      if( !listEquals(_selectedChoice, widget.defaultData!) ) {
+        _timer = Timer(const Duration(milliseconds: 100), () {
+          if (!_isUsingRemove && !_onSelected) {
+            log('didUpdateWidget multiselect');
+            _selectedChoice = widget.defaultData!;
+            widget.onSelect(_selectedChoice);
+          }
+        });
+      }
     }
+
 
     super.didUpdateWidget(oldWidget);
   }
+
 
   @override
 

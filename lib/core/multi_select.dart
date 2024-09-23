@@ -189,6 +189,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
           log('didUpdateWidget multiselect');
           _selectedChoice = widget.defaultData!();
           widget.onSelect(_selectedChoice);
+          _selectedChoice = [];
         }
       });
     }

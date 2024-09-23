@@ -481,8 +481,9 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
   void _arrowEnableOrNot() => setState(() => _isTap = !_isTap);
 
   /// Define if the element is selected.
-  bool _isSelected(Choice val) =>
-      _selectedChoice.where((element) => element.key == val.key).isNotEmpty;
+  bool _isSelected(Choice val) {
+    return _selectedChoice.where((element) => (val.key != null || val.key!.isNotEmpty) && element.key == val.key).isNotEmpty;
+  }
 
   /// Scrolling to selected item.
   Future<void> _scrollToSelectedItem() async {

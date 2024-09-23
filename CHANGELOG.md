@@ -1,7 +1,15 @@
+## 1.4.0
+### Breaking changes:
+- DefaultValue is no longer a function; it should now be used as `defaultData: []`.
+- If you update the data in `defaultData`, it triggers the execution of `onSelect(element)`.
+- Small change on logic for `didUpdateWidget`.
+- Improve logic for default value.
+- Improve validation for selected element and title of elements. 
+- More improvements.
+
 ## 1.3.0
 - `Pick` was removed in favor of `Choice`
 - The `key` value can now be null to determine the group title.
-- 
 
 ## 1.2.1
 - Remove default color on list background and surface

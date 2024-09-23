@@ -165,11 +165,9 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
 
   @override
   void didUpdateWidget(covariant MultiSelectField<T> oldWidget) {
-
     if (widget.defaultData != null &&
         widget.defaultData!.isNotEmpty &&
-        widget.singleSelection ) {
-
+        widget.singleSelection) {
       /// If the current action is not removing an element, update [_selectedElements]
       /// with [defaultData]. Otherwise, keep the previous value of [_selectedElements],
       /// preventing it from being updated by [defaultData].
@@ -183,8 +181,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       /// Over time this entire implementation should be migrated to [ValueNotifier], with a singleton abstraction.
       ///
 
-      if( !listEquals(_selectedChoice, widget.defaultData!) ) {
-
+      if (!listEquals(_selectedChoice, widget.defaultData!)) {
         /// [Timer]
         /// A simple solution to avoid multiple updates in a single action, if necessary.
         ///
@@ -198,10 +195,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       }
     }
 
-
     super.didUpdateWidget(oldWidget);
   }
-
 
   @override
 
@@ -392,7 +387,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                     .where((element) => element.value.isNotEmpty)
                     .map(
                   (result) {
-                    bool isGroupingTitle = result.key == null || result.key!.isEmpty;
+                    bool isGroupingTitle =
+                        result.key == null || result.key!.isEmpty;
                     return SizedBox(
                       width:
                           widget.menuWidthBaseOnContent ? null : size.maxWidth,
@@ -484,7 +480,10 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
 
   /// Define if the element is selected.
   bool _isSelected(Choice val) {
-    return _selectedChoice.where((element) => (val.key != null || val.key!.isNotEmpty) && element.key == val.key).isNotEmpty;
+    return _selectedChoice
+        .where((element) =>
+            (val.key != null || val.key!.isNotEmpty) && element.key == val.key)
+        .isNotEmpty;
   }
 
   /// Scrolling to selected item.

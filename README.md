@@ -31,7 +31,7 @@ Add the dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  multiselect_field: ^1.3.0
+  multiselect_field: ^1.4.0
 ```
 
 Then, install the dependencies using:
@@ -81,7 +81,7 @@ class MyWidget extends StatelessWidget {
 - **`footer`**: `Widget?`. Optional widget displayed at the bottom.
 - **`singleSelectWidget`**: `Widget Function(Choice<T> ChoiceList)?`. Optional widget for displaying a single selected item.
 - **`multiSelectWidget`**: `Widget Function(Choice<T> ChoiceList)?`. Optional widget for displaying multiple selected items.
-- **`defaultData`**: `List<Choice<T>> Function()?`. Optional function that returns the default list of selected items.
+- **`defaultData`**: `List<Choice<T>>?`. Optional function that returns the default list of selected items.
 - **`singleSelection`**: `bool`. Defines if the widget should allow only a single selection. Defaults to `false`.
 - **`useTextFilter`**: `bool`. Enables or disables real-time text filtering.
 - **`decoration`**: `Decoration?`. Custom decoration for the widget.
@@ -97,7 +97,7 @@ MultiSelectField<String>(
     Choice(key: 'banana', value: 'Banana'),
     Choice(key: 'orange', value: 'Orange'),
   ],
-  defaultData: () => [Choice(key: 'banana', value: 'Banana')],
+  defaultData: [Choice(key: 'banana', value: 'Banana')],
   onSelect: (selectedItems) {
     // Update selection state
   },

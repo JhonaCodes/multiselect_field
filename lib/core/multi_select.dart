@@ -389,19 +389,18 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                     .where((element) => element.value.isNotEmpty)
                     .map(
                   (result) {
-                    bool isGroupingTitle = result.key == null ||
-                        (result.key != null && result.key!.isEmpty);
+                    bool isGroupingTitle = result.key == null || result.key!.isEmpty;
                     return SizedBox(
                       width:
                           widget.menuWidthBaseOnContent ? null : size.maxWidth,
                       child: MenuItemButton(
                         closeOnActivate:
                             widget.singleSelection || widget.data().length == 1,
-                        key: _isSelected(result) &&
+                        key: (!isGroupingTitle && _isSelected(result)) &&
                                 _selectedChoice.indexOf(result) == 0
                             ? _selectedItemKey
                             : null,
-                        trailingIcon: _isSelected(result)
+                        trailingIcon: (!isGroupingTitle && _isSelected(result))
                             ? const Icon(
                                 Icons.check,
                                 color: Colors.green,
@@ -424,7 +423,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                                 }
 
                                 /// Color When is element selected
-                                if (_isSelected(result)) {
+                                if ((!isGroupingTitle && _isSelected(result))) {
                                   return Colors.lightBlueAccent
                                       .withOpacity(0.1);
                                 }

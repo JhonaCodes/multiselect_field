@@ -98,7 +98,8 @@ MultiSelectField<String>(
     Choice(key: 'orange', value: 'Orange'),
   ],
   defaultData: [Choice(key: 'banana', value: 'Banana')],
-  onSelect: (selectedItems) {
+  ///[isFromDefault] Helps to know if current selected element is from default data or not.
+  onSelect: (selectedItems, isFromDefaultData) {
     // Update selection state
   },
   title: (isEmpty) => Text(isEmpty ? 'Select a fruit' : 'Selected fruits'),

@@ -1,3 +1,6 @@
+## 1.4.1
+- `isFromDefaultData`, Helps to know if onSelect data comes from defaultData.
+
 ## 1.4.0
 ### Breaking changes:
 - DefaultValue is no longer a function; it should now be used as `defaultData: []`.

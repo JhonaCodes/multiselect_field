@@ -59,7 +59,7 @@ class MultiSelectField<T> extends StatefulWidget {
   final Widget Function(Choice<T> choiceList)? singleSelectWidget;
   final Widget Function(Choice<T> choiceList)? multiSelectWidget;
   final List<Choice<T>> Function() data;
-  final void Function(List<Choice<T>> choiceList) onSelect;
+  final void Function(List<Choice<T>> choiceList, bool isFromDefaultData) onSelect;
   final List<Choice<T>>? defaultData;
   final bool isMandatory;
   final bool singleSelection;
@@ -189,7 +189,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
           if (!_isUsingRemove && !_onSelected) {
             log('didUpdateWidget multiselect');
             _selectedChoice = widget.defaultData!;
-            widget.onSelect(_selectedChoice);
+            widget.onSelect(_selectedChoice, true);
           }
         });
       }
@@ -562,7 +562,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       }
 
       /// Trigger the `onSelect` callback with the updated list of selected elements if it's not empty.
-      widget.onSelect(_selectedChoice);
+      widget.onSelect(_selectedChoice, false);
 
       /// Clean filtering
       _onFilteredChoice = widget.data();

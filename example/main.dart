@@ -178,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     : choices
                         .where((e) => e.key != null && e.key!.isNotEmpty)
                         .toList(),
-                onSelect: (element) {
+                onSelect: (element, isFromDefault) {
                   setState(() {
                     currentCar =
                         element.isNotEmpty ? element.first.metadata : null;

@@ -518,12 +518,10 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
             !widget.isMandatory) {
           _selectedChoice.clear();
           _textController.clear();
-
         } else {
           /// If no elements are selected, add the new Choice and update the input field with its value.
           _selectedChoice = [va];
           _textController.text = va.value;
-
 
           /// By changing this to true, the next time we open the dropdown, we will have all the items in the list.
           _onSelected = true;
@@ -540,11 +538,9 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
           if (widget.isMandatory) {
             if (_selectedChoice.isNotEmpty) {
               _selectedChoice.remove(va);
-
             }
           } else {
             _selectedChoice.remove(va);
-
           }
         } else {
           /// Otherwise, add the new Choice to the list and reset `isUsingRemove` to false.

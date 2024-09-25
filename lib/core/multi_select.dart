@@ -139,9 +139,6 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
 
   Timer? _timer;
 
-  /// Prevents unintended or unexpected updates to the list of selected elements [_selectedChoice].
-  bool _isUsingRemove = false;
-
   /// Something rustic and without animation, but simple and functional,
   /// it will need some time in transition and a little smoothness when changing state.
   ///
@@ -522,14 +519,11 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
           _selectedChoice.clear();
           _textController.clear();
 
-          _isUsingRemove = true;
         } else {
           /// If no elements are selected, add the new Choice and update the input field with its value.
           _selectedChoice = [va];
           _textController.text = va.value;
 
-          /// Reset `isUsingRemove` to false since this is not a removal operation.
-          _isUsingRemove = false;
 
           /// By changing this to true, the next time we open the dropdown, we will have all the items in the list.
           _onSelected = true;
@@ -546,16 +540,16 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
           if (widget.isMandatory) {
             if (_selectedChoice.isNotEmpty) {
               _selectedChoice.remove(va);
-              _isUsingRemove = true;
+
             }
           } else {
             _selectedChoice.remove(va);
-            _isUsingRemove = true;
+
           }
         } else {
           /// Otherwise, add the new Choice to the list and reset `isUsingRemove` to false.
           _selectedChoice.add(va);
-          _isUsingRemove = false;
+
           if (widget.useTextFilter) _focusNodeTextField.requestFocus();
         }
       }

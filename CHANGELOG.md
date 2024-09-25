@@ -1,3 +1,6 @@
+## 1.4.2
+- Remove unnecessary validation on `didUpdateWidget`, in favour `isFromDefaultData`
+
 ## 1.4.1
 - `isFromDefaultData`, Helps to know if onSelect data comes from defaultData.
 

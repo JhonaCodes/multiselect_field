@@ -187,11 +187,9 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
         /// A simple solution to avoid multiple updates in a single action, if necessary.
         ///
         _timer = Timer(const Duration(milliseconds: 100), () {
-          if (!_isUsingRemove && !_onSelected) {
-            log('didUpdateWidget multiselect');
-            _selectedChoice = widget.defaultData!;
-            widget.onSelect(_selectedChoice, true);
-          }
+          log('didUpdateWidget from multiselect lib was called');
+          _selectedChoice = widget.defaultData!;
+          widget.onSelect(_selectedChoice, true);
         });
       }
     }

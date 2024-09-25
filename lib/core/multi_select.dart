@@ -59,7 +59,8 @@ class MultiSelectField<T> extends StatefulWidget {
   final Widget Function(Choice<T> choiceList)? singleSelectWidget;
   final Widget Function(Choice<T> choiceList)? multiSelectWidget;
   final List<Choice<T>> Function() data;
-  final void Function(List<Choice<T>> choiceList, bool isFromDefaultData) onSelect;
+  final void Function(List<Choice<T>> choiceList, bool isFromDefaultData)
+      onSelect;
   final List<Choice<T>>? defaultData;
   final bool isMandatory;
   final bool singleSelection;

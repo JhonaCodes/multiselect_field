@@ -1,3 +1,6 @@
+## 1.5.0
+- New functionality added, now you can clear the entire current selection using `cleanCurrentSelection`.
+
 ## 1.4.2
 - Remove unnecessary validation on `didUpdateWidget`, in favour `isFromDefaultData`
 

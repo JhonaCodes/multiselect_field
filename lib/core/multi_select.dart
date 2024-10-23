@@ -58,6 +58,18 @@ class MultiSelectField<T> extends StatefulWidget {
   final Widget? footer;
   final Widget Function(Choice<T> choiceList)? singleSelectWidget;
   final Widget Function(Choice<T> choiceList)? multiSelectWidget;
+
+  /// [cleanCurrentSelection]
+  /// When set to true, the current selection will be cleared immediately.
+  /// The check verifies if the current list is empty, so after the selection is cleared,
+  /// it won't be executed again until there are items in the selection list.
+  /// It's recommended not to have a constant true condition for clearing.
+  /// Instead, you could validate if the list is null or if a process returns a specific result,
+  /// thus preventing unnecessary clearing.
+  /// Keeping this value constantly true will cause the selection to always be cleared immediately.
+  ///
+  final bool cleanCurrentSelection;
+
   final List<Choice<T>> Function() data;
   final void Function(List<Choice<T>> choiceList, bool isFromDefaultData)
       onSelect;
@@ -122,6 +134,7 @@ class MultiSelectField<T> extends StatefulWidget {
     this.itemMenuStyle,
     this.titleMenuStyle,
     this.textStyleSingleSelection,
+    this.cleanCurrentSelection = false
   });
 
   @override
@@ -189,6 +202,13 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
           widget.onSelect(_selectedChoice, true);
         });
       }
+    }
+
+
+    /// [cleanCurrentSelection]
+    ///
+    if(_selectedChoice.isNotEmpty && widget.cleanCurrentSelection){
+      _selectedChoice.clear();
     }
 
     super.didUpdateWidget(oldWidget);

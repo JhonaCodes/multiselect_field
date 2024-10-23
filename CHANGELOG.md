@@ -1,3 +1,6 @@
+## 1.5.1
+- Format.
+
 ## 1.5.0
 - New functionality added, now you can clear the entire current selection using `cleanCurrentSelection`.
 

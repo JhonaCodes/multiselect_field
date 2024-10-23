@@ -109,33 +109,32 @@ class MultiSelectField<T> extends StatefulWidget {
   final TextStyle? titleMenuStyle;
   final TextStyle? itemMenuStyle;
 
-  const MultiSelectField({
-    super.key,
-    required this.data,
-    required this.onSelect,
-    this.title,
-    this.defaultData,
-    this.useTextFilter = false,
-    this.decoration,
-    this.singleSelection = false,
-    this.menuHeightBaseOnContent = false,
-    this.menuWidthBaseOnContent = false,
-    this.itemMenuButton,
-    this.buttonStyle,
-    this.iconLeft,
-    this.iconRight,
-    this.menuStyle,
-    this.menuHeight,
-    this.menuWidth,
-    this.footer,
-    this.multiSelectWidget,
-    this.singleSelectWidget,
-    this.isMandatory = false,
-    this.itemMenuStyle,
-    this.titleMenuStyle,
-    this.textStyleSingleSelection,
-    this.cleanCurrentSelection = false
-  });
+  const MultiSelectField(
+      {super.key,
+      required this.data,
+      required this.onSelect,
+      this.title,
+      this.defaultData,
+      this.useTextFilter = false,
+      this.decoration,
+      this.singleSelection = false,
+      this.menuHeightBaseOnContent = false,
+      this.menuWidthBaseOnContent = false,
+      this.itemMenuButton,
+      this.buttonStyle,
+      this.iconLeft,
+      this.iconRight,
+      this.menuStyle,
+      this.menuHeight,
+      this.menuWidth,
+      this.footer,
+      this.multiSelectWidget,
+      this.singleSelectWidget,
+      this.isMandatory = false,
+      this.itemMenuStyle,
+      this.titleMenuStyle,
+      this.textStyleSingleSelection,
+      this.cleanCurrentSelection = false});
 
   @override
   State<MultiSelectField<T>> createState() => _MultiSelectFieldState<T>();
@@ -204,10 +203,9 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       }
     }
 
-
     /// [cleanCurrentSelection]
     ///
-    if(_selectedChoice.isNotEmpty && widget.cleanCurrentSelection){
+    if (_selectedChoice.isNotEmpty && widget.cleanCurrentSelection) {
       _selectedChoice.clear();
     }
 

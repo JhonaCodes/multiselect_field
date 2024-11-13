@@ -109,32 +109,38 @@ class MultiSelectField<T> extends StatefulWidget {
   final TextStyle? titleMenuStyle;
   final TextStyle? itemMenuStyle;
 
-  const MultiSelectField(
-      {super.key,
-      required this.data,
-      required this.onSelect,
-      this.title,
-      this.defaultData,
-      this.useTextFilter = false,
-      this.decoration,
-      this.singleSelection = false,
-      this.menuHeightBaseOnContent = false,
-      this.menuWidthBaseOnContent = false,
-      this.itemMenuButton,
-      this.buttonStyle,
-      this.iconLeft,
-      this.iconRight,
-      this.menuStyle,
-      this.menuHeight,
-      this.menuWidth,
-      this.footer,
-      this.multiSelectWidget,
-      this.singleSelectWidget,
-      this.isMandatory = false,
-      this.itemMenuStyle,
-      this.titleMenuStyle,
-      this.textStyleSingleSelection,
-      this.cleanCurrentSelection = false});
+  final String? label;
+  final TextStyle? textStyleLabel;
+
+  const MultiSelectField({
+    super.key,
+    required this.data,
+    required this.onSelect,
+    this.title,
+    this.defaultData,
+    this.useTextFilter = false,
+    this.decoration,
+    this.singleSelection = false,
+    this.menuHeightBaseOnContent = false,
+    this.menuWidthBaseOnContent = false,
+    this.itemMenuButton,
+    this.buttonStyle,
+    this.iconLeft,
+    this.iconRight,
+    this.menuStyle,
+    this.menuHeight,
+    this.menuWidth,
+    this.footer,
+    this.multiSelectWidget,
+    this.singleSelectWidget,
+    this.isMandatory = false,
+    this.itemMenuStyle,
+    this.titleMenuStyle,
+    this.textStyleSingleSelection,
+    this.cleanCurrentSelection = false,
+    this.label,
+    this.textStyleLabel,
+  });
 
   @override
   State<MultiSelectField<T>> createState() => _MultiSelectFieldState<T>();
@@ -320,6 +326,13 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                             spacing: 7,
                             runSpacing: _isMobile ? 0 : 7,
                             children: [
+                              if (_selectedChoice.isEmpty &&
+                                  !widget.useTextFilter &&
+                                  widget.label != null)
+                                Text(
+                                  widget.label!,
+                                  style: widget.textStyleLabel,
+                                ),
                               if (_selectedChoice.isNotEmpty)
                                 ..._selectedChoice.map(
                                   (element) {
@@ -351,6 +364,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                                   textController: _textController,
                                   focusNodeTextField: _focusNodeTextField,
                                   isMobile: _isMobile,
+                                  label: widget.label,
+                                  textStyleLabel: widget.textStyleLabel,
                                   onTap: () {
                                     if (!val.isOpen) val.open();
                                   },

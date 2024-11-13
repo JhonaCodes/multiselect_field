@@ -1,3 +1,6 @@
+## 1.5.2
+- Attribute label text.
+
 ## 1.5.1
 - Format.
 

@@ -1,7 +1,7 @@
 name: multiselect_field
-description: "A class for multiple select fields that allows users to select multiple elements from a list"
-version: 1.5.1
-homepage: https://github.com/JhonaCodes/multiselect_field
+description: "A flexible dropdown field supporting single/multiple selection modes, styles, titles, etc"
+version: 1.5.2
+homepage: https://github.com/JhonaCodes/multiselect_field.git
 
 environment:
   sdk: ^3.5.1

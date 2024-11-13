@@ -178,4 +178,59 @@ void main() {
       ),
     );
   });
+
+
+  group('GOLDEN_TEST_LABEL', () {
+    goldenTest(
+      'Default label',
+      fileName: 'default_label',
+      builder: () => GoldenTestGroup(
+        scenarioConstraints: constraint,
+        children: [
+          GoldenTestScenario(
+            name: "Default text",
+            child: SizedBox(
+              width: 300,
+              height: 70,
+              child: MultiSelectField(
+                decoration: decoration,
+                label: "Label text",
+                data: () => [],
+                onSelect: (value, isFromDefault) {},
+              ),
+            ),
+          ),
+          GoldenTestScenario(
+            name: "Label on Filter by text",
+            child: SizedBox(
+              width: 300,
+              height: 70,
+              child: MultiSelectField(
+                decoration: decoration,
+                singleSelection: true,
+                useTextFilter: true,
+                label: "Label on text filter",
+                data: () => [],
+                onSelect: (value, isFromDefault) {},
+              ),
+            ),
+          ),
+          GoldenTestScenario(
+            name: "Label with default data",
+            child: SizedBox(
+              width: 300,
+              height: 70,
+              child: MultiSelectField(
+                decoration: decoration,
+                label: "Label with default data",
+                defaultData: [Choice('1', 'Item1'), Choice('2', 'Item2')],
+                data: () => [],
+                onSelect: (value, isFromDefault) {},
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  });
 }

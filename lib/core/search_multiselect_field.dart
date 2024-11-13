@@ -45,6 +45,9 @@ final class SearchMultiselectField extends StatelessWidget {
   /// Callback function that handles changes in the search input.
   final void Function(String value) onChange;
 
+  final String? label;
+  final TextStyle? textStyleLabel;
+
   /// Creates a [SearchMultiselectField] widget.
   ///
   /// The [textController], [isMobile], [onTap], [focusNodeTextField], and [onChange] parameters are required.
@@ -55,6 +58,8 @@ final class SearchMultiselectField extends StatelessWidget {
     required this.onTap,
     required this.focusNodeTextField,
     required this.onChange,
+    this.label,
+    this.textStyleLabel,
   });
 
   @override
@@ -66,6 +71,7 @@ final class SearchMultiselectField extends StatelessWidget {
       ),
       child: SearchBar(
         controller: textController,
+        hintText: label,
         padding:
             const WidgetStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.zero),
         elevation: const WidgetStatePropertyAll<double>(0),
@@ -89,11 +95,11 @@ final class SearchMultiselectField extends StatelessWidget {
             const WidgetStatePropertyAll<Color>(Colors.transparent),
         shadowColor: const WidgetStatePropertyAll<Color>(Colors.transparent),
         overlayColor: const WidgetStatePropertyAll<Color>(Colors.transparent),
-        hintStyle: const WidgetStatePropertyAll<TextStyle>(
-          TextStyle(
-            color: Colors.transparent,
-            decoration: TextDecoration.none,
-          ),
+        hintStyle: WidgetStatePropertyAll<TextStyle>(
+          textStyleLabel ??
+              const TextStyle(
+                decoration: TextDecoration.none,
+              ),
         ),
         onTap: onTap,
         onChanged: onChange,

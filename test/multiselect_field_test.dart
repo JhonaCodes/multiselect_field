@@ -179,7 +179,6 @@ void main() {
     );
   });
 
-
   group('GOLDEN_TEST_LABEL', () {
     goldenTest(
       'Default label',

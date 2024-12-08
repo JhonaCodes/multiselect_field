@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:multiselect_field/core/multi_select.dart';
 
 final decoration = BoxDecoration(
-    color: Colors.grey,
-    borderRadius: BorderRadius.circular(10),
-    border: Border.all(color: Colors.black));
+  color: Colors.grey,
+  borderRadius: BorderRadius.circular(10),
+  border: Border.all(color: Colors.black),
+);
 
 const constraint = BoxConstraints(maxWidth: 600);
 

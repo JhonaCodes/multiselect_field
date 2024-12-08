@@ -1,3 +1,7 @@
+## 1.5.3
+- Upgrade dev lib.
+- upgrade sdk version.
+
 ## 1.5.2
 - Attribute label text.
 

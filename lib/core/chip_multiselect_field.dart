@@ -47,7 +47,7 @@ final class ChipMultiselectField extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
         side: BorderSide(
-          color: Colors.grey.withOpacity(0.3),
+          color: Colors.grey.withOpacity(0.3), // ignore: deprecated_member_use
           style: BorderStyle.solid,
           width: 0.5,
           strokeAlign: 0.5,
@@ -58,7 +58,7 @@ final class ChipMultiselectField extends StatelessWidget {
         child: Icon(
           Icons.close,
           size: 15,
-          color: Colors.grey.withOpacity(0.5),
+          color: Colors.grey.withOpacity(0.5), // ignore: deprecated_member_use
         ),
       ),
       onDeleted: onDeleted,

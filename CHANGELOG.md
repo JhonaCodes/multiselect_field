@@ -1,3 +1,6 @@
+## 1.5.4
+- Use withValues on style.
+
 ## 1.5.3
 - Upgrade dev lib.
 - upgrade sdk version.

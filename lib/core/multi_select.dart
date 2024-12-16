@@ -447,13 +447,14 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                                 /// Hovered only on web version
                                 if ((state.contains(WidgetState.hovered) &&
                                     _isMobile)) {
-                                  return Colors.grey.withOpacity(0.1);
+                                  return Colors.grey
+                                      .withValues(alpha: (255.0 * 0.05));
                                 }
 
                                 /// Color When is element selected
                                 if ((!isGroupingTitle && _isSelected(result))) {
                                   return Colors.lightBlueAccent
-                                      .withOpacity(0.1);
+                                      .withValues(alpha: (255.0 * 0.05));
                                 }
 
                                 /// Default color, No selected, no hovered.

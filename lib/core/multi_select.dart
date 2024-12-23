@@ -292,9 +292,10 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                         if (_textController.text.isNotEmpty) {
                           ///Filtering element form general list.
                           Choice<T> elementFiltered = widget.data().firstWhere(
-                              (filter) =>
-                                  filter.value.toLowerCase() ==
-                                  _textController.text.toLowerCase());
+                                (filter) =>
+                                    filter.value.toLowerCase() ==
+                                    _textController.text.toLowerCase(),
+                              );
 
                           _addOrRemove(elementFiltered);
                         }
@@ -491,11 +492,13 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                     maximumSize: widget.menuWidthBaseOnContent &&
                             widget.menuHeightBaseOnContent
                         ? null
-                        : WidgetStatePropertyAll<Size>(Size(
-                            widget.menuWidth ?? size.maxWidth,
-                            widget.menuHeightBaseOnContent
-                                ? size.maxHeight
-                                : widget.menuHeight ?? 300)),
+                        : WidgetStatePropertyAll<Size>(
+                            Size(
+                                widget.menuWidth ?? size.maxWidth,
+                                widget.menuHeightBaseOnContent
+                                    ? size.maxHeight
+                                    : widget.menuHeight ?? 300),
+                          ),
                   ),
             );
           }),

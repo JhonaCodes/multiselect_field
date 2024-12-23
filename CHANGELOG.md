@@ -1,3 +1,7 @@
+## 1.5.5
+- Some format tweaks.
+- Update to `withValues` on colors.
+
 ## 1.5.4
 - Use withValues on style.
 

@@ -485,18 +485,21 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                                 : null
                             : null,
                         leadingIcon: widget.selectAllOption && !isGroupingTitle
-                            ? (_isSelected(result))
-                                ? const Icon(
-                                    Icons.check_box,
-                                    color: Colors.green,
-                                  )
-                                : Icon(Icons.check_box_outline_blank)
+                            ? Padding(
+                                padding: EdgeInsets.only(left: 15),
+                                child: _isSelected(result)
+                                    ? const Icon(
+                                        Icons.check_box,
+                                        color: Colors.green,
+                                      )
+                                    : Icon(Icons.check_box_outline_blank),
+                              )
                             : null,
                         style: widget.buttonStyle ??
                             ButtonStyle(
                               alignment: Alignment.centerLeft,
                               elevation:
-                                  const WidgetStatePropertyAll<double>(10),
+                                  const WidgetStatePropertyAll<double>(7.5),
                               overlayColor: const WidgetStatePropertyAll(
                                   Colors.transparent),
                               backgroundColor:
@@ -529,13 +532,17 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                                 }
                               },
                         child: widget.itemMenuButton ??
-                            Text(
-                              result.value,
-                              style: isGroupingTitle
-                                  ? widget.titleMenuStyle ??
-                                      Theme.of(context).textTheme.titleMedium
-                                  : widget.itemMenuStyle ??
-                                      Theme.of(context).textTheme.labelMedium,
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left: isGroupingTitle ? 10 : 0),
+                              child: Text(
+                                result.value,
+                                style: isGroupingTitle
+                                    ? widget.titleMenuStyle ??
+                                        Theme.of(context).textTheme.titleMedium
+                                    : widget.itemMenuStyle ??
+                                        Theme.of(context).textTheme.labelMedium,
+                              ),
                             ),
                       ),
                     );

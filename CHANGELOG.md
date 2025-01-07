@@ -1,4 +1,7 @@
 ## 1.6.1
+- UI enhancements, including padding and layout adjustments.
+
+## 1.6.1
 - New feature `itemColor`, Customize the colors for selected, hovered, and unselected items.
 
 ## 1.6.0

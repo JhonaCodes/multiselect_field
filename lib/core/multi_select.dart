@@ -465,9 +465,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                     return SizedBox(
                       width: widget.menuWidthBaseOnContent
                           ? null
-                          : widget.selectAllOption
-                              ? (size.maxWidth - 10)
-                              : size.maxWidth,
+                          : size.maxWidth,
                       child: MenuItemButton(
                         closeOnActivate:
                             widget.singleSelection || widget.data().length == 1,
@@ -553,10 +551,6 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                   MenuStyle(
                     elevation: const WidgetStatePropertyAll<double>(5),
                     visualDensity: VisualDensity.adaptivePlatformDensity,
-                    padding: widget.selectAllOption
-                        ? WidgetStatePropertyAll<EdgeInsets>(
-                            EdgeInsets.only(left: 10))
-                        : null,
                     maximumSize: widget.menuWidthBaseOnContent &&
                             widget.menuHeightBaseOnContent
                         ? null

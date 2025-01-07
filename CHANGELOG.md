@@ -1,4 +1,4 @@
-## 1.6.1
+## 1.6.2
 - UI enhancements, including padding and layout adjustments.
 
 ## 1.6.1

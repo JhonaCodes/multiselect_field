@@ -1,3 +1,6 @@
+## 1.6.1
+- New feature `itemColor`, Customize the colors for selected, hovered, and unselected items.
+
 ## 1.6.0
 - New feature `selectAllOption`, You will have a default option to select all the items on your list.
 - Solve transparent color on `x` delete widget. 

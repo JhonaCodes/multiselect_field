@@ -112,7 +112,11 @@ class MultiSelectField<T> extends StatefulWidget {
   final String? label;
   final TextStyle? textStyleLabel;
 
+  /// Set to `true` to display an [All] option in the multiselect list.
   final bool selectAllOption;
+
+  /// Customize the colors for [selected], [hovered], and [unselected] items.
+  final ItemColor? itemColor;
 
   const MultiSelectField({
     super.key,
@@ -141,6 +145,7 @@ class MultiSelectField<T> extends StatefulWidget {
     this.textStyleSingleSelection,
     this.cleanCurrentSelection = false,
     this.selectAllOption = false,
+    this.itemColor,
     this.label,
     this.textStyleLabel,
   });
@@ -178,6 +183,11 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       .data()
       .where((ele) => ele.key != null || ele.key!.isNotEmpty)
       .toList();
+
+  ItemColor get _currentItemColor => ItemColor(
+      selected: Colors.blueAccent.shade100.withAlpha(50),
+      unSelected: Colors.transparent,
+      hovered: Colors.blueAccent.shade100.withAlpha(30));
 
   @override
   void initState() {
@@ -494,18 +504,19 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                                 /// Hovered only on web version
                                 if ((state.contains(WidgetState.hovered) &&
                                     _isMobile)) {
-                                  return Colors.grey
-                                      .withValues(alpha: (255.0 * 0.05));
+                                  return widget.itemColor?.hovered ??
+                                      _currentItemColor.hovered;
                                 }
 
                                 /// Color When is element selected
                                 if ((!isGroupingTitle && _isSelected(result))) {
-                                  return Colors.lightBlueAccent
-                                      .withValues(alpha: (255.0 * 0.05));
+                                  return widget.itemColor?.selected ??
+                                      _currentItemColor.selected;
                                 }
 
                                 /// Default color, No selected, no hovered.
-                                return Colors.transparent;
+                                return widget.itemColor?.unSelected ??
+                                    _currentItemColor.unSelected;
                               }),
                             ),
                         onPressed: isGroupingTitle
@@ -755,4 +766,16 @@ bool isSameData<T>(List<Choice<T>> list1, List<Choice<T>> list2) {
   if (list1.length != list2.length) return false;
 
   return Set.from(list1).containsAll(list2);
+}
+
+class ItemColor {
+  final Color? selected;
+  final Color? hovered;
+  final Color? unSelected;
+
+  ItemColor({
+    this.selected,
+    this.hovered,
+    this.unSelected,
+  });
 }

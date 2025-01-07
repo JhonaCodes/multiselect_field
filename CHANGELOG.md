@@ -1,3 +1,6 @@
+## 1.6.0
+- New feature `selectAllOption`, You will have a default option to select all the items on your list.
+
 ## 1.5.5
 - Some format tweaks.
 - Update to `withValues` on colors.

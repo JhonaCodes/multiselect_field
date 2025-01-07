@@ -112,6 +112,8 @@ class MultiSelectField<T> extends StatefulWidget {
   final String? label;
   final TextStyle? textStyleLabel;
 
+  final bool selectAllOption;
+
   const MultiSelectField({
     super.key,
     required this.data,
@@ -138,6 +140,7 @@ class MultiSelectField<T> extends StatefulWidget {
     this.titleMenuStyle,
     this.textStyleSingleSelection,
     this.cleanCurrentSelection = false,
+    this.selectAllOption = false,
     this.label,
     this.textStyleLabel,
   });
@@ -169,10 +172,17 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
 
   /// It helps to show the complete list of elements after selecting an element using the text filter.
   bool _onSelected = false;
+  bool _selectAllActive = false;
+
+  List<Choice<T>> get _cleanData => widget
+      .data()
+      .where((ele) => ele.key != null || ele.key!.isNotEmpty)
+      .toList();
 
   @override
   void initState() {
     super.initState();
+
     if (widget.defaultData != null && widget.defaultData!.isNotEmpty) {
       _selectedChoice.clear();
       _selectedChoice.addAll(widget.defaultData!);
@@ -213,6 +223,15 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
     ///
     if (_selectedChoice.isNotEmpty && widget.cleanCurrentSelection) {
       _selectedChoice.clear();
+    }
+
+    /// Verification for select all data, if you select one per one and you have select all option, you nee to si is you're selected all data.
+    bool equalData = isSameData(_selectedChoice, widget.data());
+
+    if (equalData) {
+      _selectAllActive = true;
+    } else if (_selectAllActive && widget.selectAllOption && !equalData) {
+      _selectAllActive = false;
     }
 
     super.didUpdateWidget(oldWidget);
@@ -413,6 +432,20 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                 ),
               ),
               menuChildren: [
+                if (widget.selectAllOption)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: CheckboxMenuButton(
+                      value: _selectAllActive,
+                      onChanged: (vale) {
+                        _selectAllActive = !_selectAllActive;
+
+                        _selectedChoice = _selectAllActive ? _cleanData : [];
+                        widget.onSelect(_selectedChoice, false);
+                      },
+                      child: Text("All"),
+                    ),
+                  ),
                 ..._onFilteredChoice
                     .where((element) => element.value.isNotEmpty)
                     .map(
@@ -420,8 +453,11 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                     bool isGroupingTitle =
                         result.key == null || result.key!.isEmpty;
                     return SizedBox(
-                      width:
-                          widget.menuWidthBaseOnContent ? null : size.maxWidth,
+                      width: widget.menuWidthBaseOnContent
+                          ? null
+                          : widget.selectAllOption
+                              ? (size.maxWidth - 10)
+                              : size.maxWidth,
                       child: MenuItemButton(
                         closeOnActivate:
                             widget.singleSelection || widget.data().length == 1,
@@ -429,12 +465,22 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                                 _selectedChoice.indexOf(result) == 0
                             ? _selectedItemKey
                             : null,
-                        trailingIcon: (!isGroupingTitle && _isSelected(result))
-                            ? const Icon(
-                                Icons.check,
-                                color: Colors.green,
-                                size: 12,
-                              )
+                        trailingIcon: !widget.selectAllOption
+                            ? (!isGroupingTitle && _isSelected(result))
+                                ? const Icon(
+                                    Icons.check,
+                                    color: Colors.green,
+                                    size: 12,
+                                  )
+                                : null
+                            : null,
+                        leadingIcon: widget.selectAllOption && !isGroupingTitle
+                            ? (_isSelected(result))
+                                ? const Icon(
+                                    Icons.check_box,
+                                    color: Colors.green,
+                                  )
+                                : Icon(Icons.check_box_outline_blank)
                             : null,
                         style: widget.buttonStyle ??
                             ButtonStyle(
@@ -489,6 +535,10 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                   MenuStyle(
                     elevation: const WidgetStatePropertyAll<double>(5),
                     visualDensity: VisualDensity.adaptivePlatformDensity,
+                    padding: widget.selectAllOption
+                        ? WidgetStatePropertyAll<EdgeInsets>(
+                            EdgeInsets.only(left: 10))
+                        : null,
                     maximumSize: widget.menuWidthBaseOnContent &&
                             widget.menuHeightBaseOnContent
                         ? null
@@ -591,7 +641,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       widget.onSelect(_selectedChoice, false);
 
       /// Clean filtering
-      _onFilteredChoice = widget.data();
+      _onFilteredChoice = _cleanData;
 
       // Update the UI with the latest state.
       setState(() {});
@@ -699,4 +749,10 @@ class Choice<T> {
 
   @override
   int get hashCode => Object.hash(key, value, metadata);
+}
+
+bool isSameData<T>(List<Choice<T>> list1, List<Choice<T>> list2) {
+  if (list1.length != list2.length) return false;
+
+  return Set.from(list1).containsAll(list2);
 }

@@ -442,7 +442,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                 ),
               ),
               menuChildren: [
-                if (widget.selectAllOption)
+                if (widget.selectAllOption && widget.data().isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: CheckboxMenuButton(

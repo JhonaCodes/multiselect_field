@@ -255,8 +255,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
   @override
   void dispose() {
     _focusNode.dispose();
-    _textController.dispose();
     _timer?.cancel();
+    _focusNodeTextField.dispose();
     super.dispose();
   }
 
@@ -267,6 +267,28 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
     /// This avoid unnecessary dispose.
     super.build(context);
 
+    double currentMenuHeight = widget.menuHeight ?? 300;
+
+    /// Ensures that the widget tree is rendered correctly after the current frame is drawn.
+    /// This is used to handle keyboard visibility and adjust the pop-up menu position accordingly.
+    WidgetsBinding.instance.addPostFrameCallback((obs) {
+      // Step 1: Verify if the keyboard is open based on the bottom inset.
+      final isKeyboardOpen = View.of(context).viewInsets.bottom > 0;
+
+      // Step 3: Handle the pop-up menu behavior based on keyboard visibility.
+      if (_menuController.isOpen && isKeyboardOpen) {
+        // If the menu is open and the keyboard is visible, adjust the menu's position upwards
+        // to avoid overlapping with the keyboard.
+        _menuController.open(position: Offset(0, -(currentMenuHeight + 7)));
+      } else if (_menuController.isOpen && !isKeyboardOpen) {
+        // If the menu is open and the keyboard is not visible, reset the menu's position.
+        _menuController.close();
+
+        // Re-open the menu at its default position.
+        _menuController.open();
+      }
+    });
+
     return RepaintBoundary(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,171 +298,185 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
             return MenuAnchor(
               alignmentOffset: const Offset(0, 5),
               controller: _menuController,
-              builder: (context, val, child) => InkWell(
-                hoverColor: Colors.transparent,
-                overlayColor:
-                    const WidgetStatePropertyAll<Color>(Colors.transparent),
+              builder: (context, menu, child) {
+                // Step 2: Determine the height of the pop-up menu based on content or predefined value.
+                currentMenuHeight = widget.menuHeightBaseOnContent
+                    ? size
+                        .maxHeight // If the menu height depends on content, use the max height.
+                    : widget.menuHeight ??
+                        300; // Otherwise, use a predefined height or default to 300.
 
-                /// Help to open menu when click in any part of the current widget.
-                /// But not when you tap on Edit text widget.
-                onTap: () {
-                  if (!val.isOpen) val.open();
+                return InkWell(
+                  hoverColor: Colors.transparent,
+                  overlayColor:
+                      const WidgetStatePropertyAll<Color>(Colors.transparent),
 
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _scrollToSelectedItem();
-                  });
+                  /// Help to open menu when click in any part of the current widget.
+                  /// But not when you tap on Edit text widget.
+                  onTap: () {
+                    if (!menu.isOpen) menu.open();
 
-                  /// Help to focus on textField when click on any part of the widget.
-                  _focusNodeTextField.requestFocus();
-                  _arrowEnableOrNot();
-                },
-                onTapDown: (down) {
-                  _textController.clear();
-                  _arrowEnableOrNot();
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _scrollToSelectedItem();
+                    });
 
-                  _onFilteredChoice = widget.data();
-                },
-                child: KeyboardListener(
-                  focusNode: _focusNode,
-                  onKeyEvent: (event) {
-                    /// Verify if is keyboard event
-                    if (event.runtimeType == KeyDownEvent) {
-                      /// Back space is delete, this is used for delete element similar to delete text on the widget.
-                      if (event.logicalKey == LogicalKeyboardKey.backspace) {
-                        if (_selectedChoice.isNotEmpty &&
-                            _textController.text.isEmpty) {
-                          _addOrRemove(
-                              _selectedChoice[_selectedChoice.length - 1]);
-                        }
-                      }
-
-                      /// Whe press enter, should be save the current filtered element.
-                      ///
-                      /// Help when you type the element on the widget
-                      if (event.logicalKey == LogicalKeyboardKey.enter) {
-                        if (_textController.text.isNotEmpty) {
-                          ///Filtering element form general list.
-                          Choice<T> elementFiltered = widget.data().firstWhere(
-                                (filter) =>
-                                    filter.value.toLowerCase() ==
-                                    _textController.text.toLowerCase(),
-                              );
-
-                          _addOrRemove(elementFiltered);
-                        }
-                      }
+                    /// Help to focus on textField when click on any part of the widget.
+                    if (!_focusNodeTextField.hasFocus) {
+                      _focusNodeTextField.requestFocus();
                     }
+                    _arrowEnableOrNot();
                   },
-                  child: Container(
-                    width: size.maxWidth,
-                    constraints: const BoxConstraints(
-                      minHeight: 45,
-                    ),
-                    decoration: widget.decoration,
-                    padding: const EdgeInsets.all(5),
-                    margin: const EdgeInsets.only(top: 2),
-                    child: Flex(
-                      direction: Axis.horizontal,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        if (widget.iconLeft != null)
-                          widget.iconLeft!(_menuController.isOpen),
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: Wrap(
-                            direction: Axis.horizontal,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            alignment: WrapAlignment.start,
-                            runAlignment: WrapAlignment.center,
-                            spacing: 7,
-                            runSpacing: _isMobile ? 0 : 7,
-                            children: [
-                              if (_selectedChoice.isEmpty &&
-                                  !widget.useTextFilter &&
-                                  widget.label != null)
-                                Text(
-                                  widget.label!,
-                                  style: widget.textStyleLabel,
-                                ),
-                              if (_selectedChoice.isNotEmpty)
-                                ..._selectedChoice.map(
-                                  (element) {
-                                    if (!widget.singleSelection) {
-                                      return widget.multiSelectWidget != null
-                                          ? widget.multiSelectWidget!(element)
-                                          : ChipMultiselectField(
-                                              title: element.value,
-                                              onDeleted: () =>
-                                                  _addOrRemove(element),
-                                            );
-                                    } else {
-                                      return widget.singleSelectWidget != null
-                                          ? widget.singleSelectWidget!(element)
-                                          : Text(
-                                              element.value,
-                                              style: widget
-                                                      .textStyleSingleSelection ??
-                                                  Theme.of(context)
-                                                      .textTheme
-                                                      .labelLarge,
-                                            );
-                                    }
-                                  },
-                                ),
-                              if (widget.useTextFilter &&
-                                  _menuController.isOpen)
-                                SearchMultiselectField(
-                                  textController: _textController,
-                                  focusNodeTextField: _focusNodeTextField,
-                                  isMobile: _isMobile,
-                                  label: widget.label,
-                                  textStyleLabel: widget.textStyleLabel,
-                                  onTap: () {
-                                    if (!val.isOpen) val.open();
-                                  },
-                                  onChange: (value) {
-                                    /// Editing text, open list.
-                                    /// this is in case of list was closed, but you start to write.
-                                    if (!val.isOpen) val.open();
+                  onTapDown: (down) {
+                    _textController.clear();
+                    _arrowEnableOrNot();
 
-                                    /// If we write data to the controller, it changes to false so we can see the elements that match our filter.
-                                    _onSelected = false;
+                    _onFilteredChoice = widget.data();
+                  },
+                  child: KeyboardListener(
+                    focusNode: _focusNode,
+                    onKeyEvent: (event) {
+                      /// Verify if is keyboard event
+                      if (event.runtimeType == KeyDownEvent) {
+                        /// Back space is delete, this is used for delete element similar to delete text on the widget.
+                        if (event.logicalKey == LogicalKeyboardKey.backspace) {
+                          if (_selectedChoice.isNotEmpty &&
+                              _textController.text.isEmpty) {
+                            _addOrRemove(
+                                _selectedChoice[_selectedChoice.length - 1]);
+                          }
+                        }
 
-                                    _searchElement(_textController.text);
-                                  },
-                                )
-                            ],
-                          ),
-                        ),
-                        widget.iconRight == null
-                            ? SizedBox(
-                                height: 40,
-                                width: 20,
-                                child: Center(
-                                  child: GestureDetector(
-                                    child: Icon(
-                                      val.isOpen
-                                          ? Icons.arrow_drop_up
-                                          : Icons.arrow_drop_down,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                    ),
-                                    onTap: () {
-                                      _menuController.isOpen
-                                          ? _menuController.close()
-                                          : _menuController.open();
+                        /// Whe press enter, should be save the current filtered element.
+                        ///
+                        /// Help when you type the element on the widget
+                        if (event.logicalKey == LogicalKeyboardKey.enter) {
+                          if (_textController.text.isNotEmpty) {
+                            ///Filtering element form general list.
+                            Choice<T> elementFiltered =
+                                widget.data().firstWhere(
+                                      (filter) =>
+                                          filter.value.toLowerCase() ==
+                                          _textController.text.toLowerCase(),
+                                    );
+
+                            _addOrRemove(elementFiltered);
+                          }
+                        }
+                      }
+                    },
+                    child: Container(
+                      width: size.maxWidth,
+                      constraints: const BoxConstraints(
+                        minHeight: 45,
+                      ),
+                      decoration: widget.decoration,
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(top: 2),
+                      child: Flex(
+                        direction: Axis.horizontal,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (widget.iconLeft != null)
+                            widget.iconLeft!(_menuController.isOpen),
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: Wrap(
+                              direction: Axis.horizontal,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              alignment: WrapAlignment.start,
+                              runAlignment: WrapAlignment.center,
+                              spacing: 7,
+                              runSpacing: _isMobile ? 0 : 7,
+                              children: [
+                                if (_selectedChoice.isEmpty &&
+                                    !widget.useTextFilter &&
+                                    widget.label != null)
+                                  Text(
+                                    widget.label!,
+                                    style: widget.textStyleLabel,
+                                  ),
+                                if (_selectedChoice.isNotEmpty)
+                                  ..._selectedChoice.map(
+                                    (element) {
+                                      if (!widget.singleSelection) {
+                                        return widget.multiSelectWidget != null
+                                            ? widget.multiSelectWidget!(element)
+                                            : ChipMultiselectField(
+                                                title: element.value,
+                                                onDeleted: () =>
+                                                    _addOrRemove(element),
+                                              );
+                                      } else {
+                                        return widget.singleSelectWidget != null
+                                            ? widget
+                                                .singleSelectWidget!(element)
+                                            : Text(
+                                                element.value,
+                                                style: widget
+                                                        .textStyleSingleSelection ??
+                                                    Theme.of(context)
+                                                        .textTheme
+                                                        .labelLarge,
+                                              );
+                                      }
                                     },
                                   ),
-                                ),
-                              )
-                            : widget.iconRight!(_menuController.isOpen),
-                      ],
+                                if (widget.useTextFilter &&
+                                    _menuController.isOpen)
+                                  SearchMultiselectField(
+                                    focusNodeTextField: _focusNodeTextField,
+                                    isMobile: _isMobile,
+                                    label: widget.label,
+                                    textStyleLabel: widget.textStyleLabel,
+                                    onTap: () {
+                                      if (!menu.isOpen) menu.open();
+                                    },
+                                    onChange: (value) {
+                                      _textController.text = value;
+
+                                      /// Editing text, open list.
+                                      /// this is in case of list was closed, but you start to write.
+                                      if (!menu.isOpen) menu.open();
+
+                                      /// If we write data to the controller, it changes to false so we can see the elements that match our filter.
+                                      _onSelected = false;
+
+                                      _searchElement(_textController.text);
+                                    },
+                                  )
+                              ],
+                            ),
+                          ),
+                          widget.iconRight == null
+                              ? SizedBox(
+                                  height: 40,
+                                  width: 20,
+                                  child: Center(
+                                    child: GestureDetector(
+                                      child: Icon(
+                                        menu.isOpen
+                                            ? Icons.arrow_drop_up
+                                            : Icons.arrow_drop_down,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                      ),
+                                      onTap: () {
+                                        _menuController.isOpen
+                                            ? _menuController.close()
+                                            : _menuController.open();
+                                      },
+                                    ),
+                                  ),
+                                )
+                              : widget.iconRight!(_menuController.isOpen),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
               menuChildren: [
                 if (widget.selectAllOption && widget.data().isNotEmpty)
                   Padding(
@@ -463,9 +499,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                     bool isGroupingTitle =
                         result.key == null || result.key!.isEmpty;
                     return SizedBox(
-                      width: widget.menuWidthBaseOnContent
-                          ? null
-                          : size.maxWidth,
+                      width:
+                          widget.menuWidthBaseOnContent ? null : size.maxWidth,
                       child: MenuItemButton(
                         closeOnActivate:
                             widget.singleSelection || widget.data().length == 1,
@@ -555,11 +590,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                             widget.menuHeightBaseOnContent
                         ? null
                         : WidgetStatePropertyAll<Size>(
-                            Size(
-                                widget.menuWidth ?? size.maxWidth,
-                                widget.menuHeightBaseOnContent
-                                    ? size.maxHeight
-                                    : widget.menuHeight ?? 300),
+                            Size(widget.menuWidth ?? size.maxWidth,
+                                currentMenuHeight),
                           ),
                   ),
             );
@@ -626,7 +658,9 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
           _onSelected = true;
 
           /// When select any element we need focus again on TextField if is in use.
-          if (widget.useTextFilter) _focusNodeTextField.requestFocus();
+          if (widget.useTextFilter && !_focusNodeTextField.hasFocus) {
+            _focusNodeTextField.requestFocus();
+          }
         }
 
         /// Ensure that when the dropdown is opened again, all items are available for selection.
@@ -645,7 +679,9 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
           /// Otherwise, add the new Choice to the list and reset `isUsingRemove` to false.
           _selectedChoice.add(va);
 
-          if (widget.useTextFilter) _focusNodeTextField.requestFocus();
+          if (widget.useTextFilter && !_focusNodeTextField.hasFocus) {
+            _focusNodeTextField.requestFocus();
+          }
         }
       }
 

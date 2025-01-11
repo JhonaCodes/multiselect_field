@@ -30,9 +30,6 @@ import 'package:flutter/material.dart';
 /// ```
 @protected
 final class SearchMultiselectField extends StatelessWidget {
-  /// Controls the text being edited in the search bar.
-  final TextEditingController textController;
-
   /// Indicates whether the device is mobile, adjusting the height of the search bar.
   final bool isMobile;
 
@@ -53,7 +50,6 @@ final class SearchMultiselectField extends StatelessWidget {
   /// The [textController], [isMobile], [onTap], [focusNodeTextField], and [onChange] parameters are required.
   const SearchMultiselectField({
     super.key,
-    required this.textController,
     required this.isMobile,
     required this.onTap,
     required this.focusNodeTextField,
@@ -70,7 +66,6 @@ final class SearchMultiselectField extends StatelessWidget {
         maxWidth: 100,
       ),
       child: SearchBar(
-        controller: textController,
         hintText: label,
         padding:
             const WidgetStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.zero),

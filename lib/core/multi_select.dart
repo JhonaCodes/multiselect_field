@@ -567,7 +567,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                         child: widget.itemMenuButton ??
                             Padding(
                               padding: EdgeInsets.only(
-                                  left: isGroupingTitle ? 10 : 0),
+                                  left: isGroupingTitle ? 0 : 10),
                               child: Text(
                                 result.value,
                                 style: isGroupingTitle

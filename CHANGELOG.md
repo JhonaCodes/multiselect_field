@@ -1,3 +1,6 @@
+## 1.6.6
+- Fix margin on section title.
+
 ## 1.6.5
 - Fix: Resolved the issue where the menu was not adjusting correctly when the keyboard was active and there wasn't enough space below for its display. Now, the menu opens at the top in such cases.
 Related to issue: (https://github.com/JhonaCodes/multiselect_field/issues/8)

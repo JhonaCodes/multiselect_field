@@ -279,7 +279,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       if (_menuController.isOpen && isKeyboardOpen) {
         // If the menu is open and the keyboard is visible, adjust the menu's position upwards
         // to avoid overlapping with the keyboard.
-        _menuController.open(position: Offset(0, -(currentMenuHeight + 7)));
+        _menuController.open(position: Offset(0, double.infinity));
       } else if (_menuController.isOpen && !isKeyboardOpen) {
         // If the menu is open and the keyboard is not visible, reset the menu's position.
         _menuController.close();

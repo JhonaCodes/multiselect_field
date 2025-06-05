@@ -89,7 +89,9 @@ void main() {
               height: 150,
               child: MultiSelectField(
                 title: (isEmpty) => OutlinedButton(
-                    onPressed: () {}, child: const Text('Button on Title')),
+                  onPressed: () {},
+                  child: const Text('Button on Title'),
+                ),
                 footer: const Chip(label: Text('Chip on Footer')),
                 data: () => [],
                 decoration: decoration,
@@ -104,7 +106,9 @@ void main() {
               height: 150,
               child: MultiSelectField(
                 title: (isEmpty) => OutlinedButton(
-                    onPressed: () {}, child: const Text('Button on Title')),
+                  onPressed: () {},
+                  child: const Text('Button on Title'),
+                ),
                 data: () => [],
                 decoration: decoration,
                 onSelect: (value, isFromDefault) {},

@@ -40,10 +40,7 @@ final class ChipMultiselectField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Chip(
       padding: const EdgeInsets.all(7),
-      label: Text(
-        title,
-        style: Theme.of(context).textTheme.labelLarge,
-      ),
+      label: Text(title, style: Theme.of(context).textTheme.labelLarge),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
         side: BorderSide(
@@ -55,8 +52,11 @@ final class ChipMultiselectField extends StatelessWidget {
       ),
       deleteIcon: Align(
         alignment: Alignment.center,
-        child: Icon(Icons.close,
-            size: 15, color: Colors.grey.withValues(alpha: 255 * 0.7)),
+        child: Icon(
+          Icons.close,
+          size: 15,
+          color: Colors.grey.withValues(alpha: 255 * 0.7),
+        ),
       ),
       onDeleted: onDeleted,
     );

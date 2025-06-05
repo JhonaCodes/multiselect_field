@@ -122,10 +122,7 @@ void main() {
               width: 300,
               height: 400,
               child: MultiSelectField<String>(
-                data: () => [
-                  Choice('1', 'Option 1'),
-                  Choice('2', 'Option 2'),
-                ],
+                data: () => [Choice('1', 'Option 1'), Choice('2', 'Option 2')],
                 onSelect: (selected, isFromDefault) {},
                 decoration: decoration,
                 menuHeight: 300,

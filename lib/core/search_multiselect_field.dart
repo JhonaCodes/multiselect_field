@@ -61,17 +61,16 @@ final class SearchMultiselectField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(
-        minWidth: 0,
-        maxWidth: 100,
-      ),
+      constraints: const BoxConstraints(minWidth: 0, maxWidth: 100),
       child: SearchBar(
         hintText: label,
-        padding:
-            const WidgetStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.zero),
+        padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
+          EdgeInsets.zero,
+        ),
         elevation: const WidgetStatePropertyAll<double>(0),
-        backgroundColor:
-            const WidgetStatePropertyAll<Color>(Colors.transparent),
+        backgroundColor: const WidgetStatePropertyAll<Color>(
+          Colors.transparent,
+        ),
         shape: const WidgetStatePropertyAll<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(3)),
@@ -86,15 +85,13 @@ final class SearchMultiselectField extends StatelessWidget {
           ),
         ),
         constraints: BoxConstraints(minHeight: isMobile ? 40 : 30),
-        surfaceTintColor:
-            const WidgetStatePropertyAll<Color>(Colors.transparent),
+        surfaceTintColor: const WidgetStatePropertyAll<Color>(
+          Colors.transparent,
+        ),
         shadowColor: const WidgetStatePropertyAll<Color>(Colors.transparent),
         overlayColor: const WidgetStatePropertyAll<Color>(Colors.transparent),
         hintStyle: WidgetStatePropertyAll<TextStyle>(
-          textStyleLabel ??
-              const TextStyle(
-                decoration: TextDecoration.none,
-              ),
+          textStyleLabel ?? const TextStyle(decoration: TextDecoration.none),
         ),
         onTap: onTap,
         onChanged: onChange,

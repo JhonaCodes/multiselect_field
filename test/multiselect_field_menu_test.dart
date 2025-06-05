@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:multiselect_field/core/multi_select.dart';
-import 'package:multiselect_field/core/chip_multiselect_field.dart';
 
 void main() {
   group('MultiSelectField Menu Tests', () {
@@ -19,7 +18,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Material(
-            child: Container(
+            child: SizedBox(
               width: 300,
               height: 400,
               child: MultiSelectField<String>(
@@ -52,7 +51,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Material(
-            child: Container(
+            child: SizedBox(
               width: 300,
               height: 400,
               child: MultiSelectField<String>(
@@ -90,7 +89,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Material(
-            child: Container(
+            child: SizedBox(
               width: 300,
               height: 400,
               child: MultiSelectField<String>(
@@ -128,7 +127,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Material(
-            child: Container(
+            child: SizedBox(
               width: 300,
               height: 400,
               child: MultiSelectField<String>(
@@ -150,7 +149,7 @@ void main() {
       await tester.tap(find.byType(InkWell));
       await tester.pumpAndSettle();
 
-      // Verificar que la opción "Seleccionar todo" está presente
+      // Verificar que la opción "Seleccionar todo está presente
       expect(find.text('All'), findsOneWidget);
 
       // Seleccionar "Seleccionar todo"
@@ -159,13 +158,19 @@ void main() {
 
       // Verificar que todas las opciones están seleccionadas
       expect(selectedItems?.length, 3);
-      expect(selectedItems?.map((e) => e.value), containsAll(['Option 1', 'Option 2', 'Option 3']));
+      expect(
+        selectedItems?.map((e) => e.value),
+        containsAll(['Option 1', 'Option 2', 'Option 3']),
+      );
       expect(isFromDefault, false);
 
       // Verificar que se actualiza correctamente
       await tester.pump();
       expect(selectedItems?.length, 3);
-      expect(selectedItems?.map((e) => e.value), containsAll(['Option 1', 'Option 2', 'Option 3']));
+      expect(
+        selectedItems?.map((e) => e.value),
+        containsAll(['Option 1', 'Option 2', 'Option 3']),
+      );
       expect(isFromDefault, false);
     });
   });

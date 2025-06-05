@@ -51,10 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(
-          widget.title,
-          style: const TextStyle(color: Colors.white),
-        ),
+        title: Text(widget.title, style: const TextStyle(color: Colors.white)),
       ),
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       body: Padding(
@@ -158,30 +155,29 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               MultiSelectField<Car>(
                 title: _useTitle
-                    ? (val) => const Text(
-                          'Optional Title Widget',
-                        )
+                    ? (val) => const Text('Optional Title Widget')
                     : null,
                 defaultData: _defaultData ? [choices.first] : [],
                 decoration: BoxDecoration(
-                    color: Colors.black12,
-                    borderRadius: BorderRadius.circular(12)),
-                footer:
-                    _useFooter ? const Text('Optional Footer Widget') : null,
+                  color: Colors.black12,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                footer: _useFooter
+                    ? const Text('Optional Footer Widget')
+                    : null,
                 data: () => _useGroupingList
                     ? choices
                     : choices
-                        .where((e) => e.key != null && e.key!.isNotEmpty)
-                        .toList(),
+                          .where((e) => e.key != null && e.key!.isNotEmpty)
+                          .toList(),
                 onSelect: (element, isFromDefault) {
                   setState(() {
-                    currentCar =
-                        element.isNotEmpty ? element.first.metadata : null;
+                    currentCar = element.isNotEmpty
+                        ? element.first.metadata
+                        : null;
                   });
                 },
                 singleSelection: _singleSelection,
@@ -189,33 +185,34 @@ class _MyHomePageState extends State<MyHomePage> {
                 multiSelectWidget: _customMultiselectWidget
                     ? (choice) {
                         return OutlinedButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text(choice.value),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                            "Price: ${choice.metadata?.price}"),
-                                        Text("Year: ${choice.metadata?.year}"),
-                                        Text(
-                                            "sold: ${choice.metadata?.totalSold}"),
-                                      ],
-                                    ),
-                                    actions: [
-                                      OutlinedButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: const Text('Ok'),
-                                      )
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text(choice.value),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text("Price: ${choice.metadata?.price}"),
+                                      Text("Year: ${choice.metadata?.year}"),
+                                      Text(
+                                        "sold: ${choice.metadata?.totalSold}",
+                                      ),
                                     ],
-                                  );
-                                },
-                              );
-                            },
-                            child: Text(choice.value));
+                                  ),
+                                  actions: [
+                                    OutlinedButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('Ok'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Text(choice.value),
+                        );
                       }
                     : null,
                 singleSelectWidget: _customSingleSelectWidget
@@ -231,18 +228,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     const Text("First car"),
                     Text("Price: ${currentCar!.price}"),
                     Text("Year: ${currentCar!.year}"),
                     Text("sold: ${currentCar!.totalSold}"),
                   ],
                 ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Text(
                 "Additional properties",
                 style: Theme.of(context).textTheme.titleLarge,
@@ -253,7 +246,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 subtitle: const Text(
-                    "Help to create your own style for single selection using the standard widget. For more flexibility, use singleSelectWidget(Choice){}."),
+                  "Help to create your own style for single selection using the standard widget. For more flexibility, use singleSelectWidget(Choice){}.",
+                ),
               ),
               ListTile(
                 title: Text(
@@ -261,7 +255,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 subtitle: const Text("Apply padding to the entire widget."),
-              )
+              ),
             ],
           ),
         ),
@@ -288,8 +282,11 @@ List<Choice<Car>> choices = [
   Choice<Car>('15', 'Urus', metadata: Car(108, 32.000, 2019)),
   Choice<Car>('16', 'Gallardo LP560-4', metadata: Car(107, 31.000, 2003)),
   Choice<Car>('', 'Bugatti'),
-  Choice<Car>('18', 'Chiron Super Sport 300+',
-      metadata: Car(125, 46.500, 2019)),
+  Choice<Car>(
+    '18',
+    'Chiron Super Sport 300+',
+    metadata: Car(125, 46.500, 2019),
+  ),
   Choice<Car>('19', 'La Voiture Noire', metadata: Car(124, 45.000, 2019)),
   Choice<Car>('20', 'Veyron Super Sport', metadata: Car(123, 43.000, 2008)),
   Choice<Car>('21', 'Divo', metadata: Car(122, 42.000, 2014)),

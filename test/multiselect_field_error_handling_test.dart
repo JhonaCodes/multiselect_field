@@ -44,9 +44,7 @@ void main() {
 
     // Test de manejo de errores en defaultData
     testWidgets('Default data error handling', (tester) async {
-      final List<Choice<String>> testOptions = [
-        Choice('1', 'Option 1'),
-      ];
+      final List<Choice<String>> testOptions = [Choice('1', 'Option 1')];
 
       await tester.pumpWidget(
         MaterialApp(

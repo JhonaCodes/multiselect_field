@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:multiselect_field/core/multi_select.dart';
-import 'package:multiselect_field/core/search_multiselect_field.dart';
 
 void main() {
   group('MultiSelectField Advanced Tests', () {
-
     // Test para verificar el comportamiento de la selección
     testWidgets('Selection behavior', (tester) async {
       final List<Choice<String>> testOptions = [
         Choice('1', 'Option 1'),
         Choice('2', 'Option 2'),
-        Choice('3', 'Option 3')
+        Choice('3', 'Option 3'),
       ];
 
       await tester.pumpWidget(
@@ -34,7 +32,6 @@ void main() {
         ),
       );
 
-
       // Verificar que se pueden seleccionar múltiples opciones
       await tester.tap(find.text('Option 1'));
       await tester.pumpAndSettle();
@@ -55,7 +52,7 @@ void main() {
       final List<Choice<String>> testOptions = [
         Choice('1', 'Option 1'),
         Choice('2', 'Option 2'),
-        Choice('3', 'Option 3')
+        Choice('3', 'Option 3'),
       ];
 
       await tester.pumpWidget(
@@ -84,7 +81,6 @@ void main() {
       await tester.tap(find.text('Option 1'));
       await tester.pumpAndSettle();
 
-
       // Verificar que el campo de búsqueda está presente
       expect(find.text('search-label'), findsAny);
 
@@ -107,7 +103,7 @@ void main() {
         Choice('1', 'Option 1'),
         Choice('2', 'Option 2'),
         Choice('', 'Group 2'),
-        Choice('3', 'Option 3')
+        Choice('3', 'Option 3'),
       ];
 
       await tester.pumpWidget(
@@ -139,7 +135,7 @@ void main() {
     testWidgets('Clean selection behavior', (tester) async {
       final List<Choice<String>> testOptions = [
         Choice('1', 'Option 1'),
-        Choice('2', 'Option 2')
+        Choice('2', 'Option 2'),
       ];
 
       await tester.pumpWidget(
@@ -168,12 +164,11 @@ void main() {
       expect(find.byType(Choice<String>), anyOf([findsNothing]));
     });
 
-
     // Test para el comportamiento de selección de todos
     testWidgets('Select all behavior', (tester) async {
       final List<Choice<String>> testOptions = [
         Choice('1', 'Option 1'),
-        Choice('2', 'Option 2')
+        Choice('2', 'Option 2'),
       ];
 
       await tester.pumpWidget(
@@ -206,7 +201,7 @@ void main() {
     testWidgets('Custom style behavior', (tester) async {
       final List<Choice<String>> testOptions = [
         Choice('1', 'Option 1'),
-        Choice('2', 'Option 2')
+        Choice('2', 'Option 2'),
       ];
 
       await tester.pumpWidget(
@@ -223,20 +218,19 @@ void main() {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 menuStyle: MenuStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.grey),
-                  elevation: MaterialStateProperty.all(8.0),
+                  backgroundColor: WidgetStateProperty.all(Colors.grey),
+                  elevation: WidgetStateProperty.all(8.0),
                 ),
                 menuHeight: 300,
                 menuHeightBaseOnContent: true,
               ),
             ),
-              ),
+          ),
         ),
       );
 
       // Verificar que los estilos se aplican correctamente
       expect(find.byType(DecoratedBox), findsOneWidget);
     });
-
   });
 }

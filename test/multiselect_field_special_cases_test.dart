@@ -6,7 +6,6 @@ import 'package:multiselect_field/core/search_multiselect_field.dart';
 
 void main() {
   group('MultiSelectField Special Cases Tests', () {
-
     // Test de copiar/pegar
     testWidgets('Copy/paste functionality', (tester) async {
       final List<Choice<String>> testOptions = [
@@ -52,9 +51,10 @@ void main() {
                 data: () => testOptions,
                 onSelect: (selected, isFromDefault) {},
                 menuHeight: 300, // Añadir altura explícita
-                menuWidth: 200,  // Añadir ancho explícito
+                menuWidth: 200, // Añadir ancho explícito
                 menuHeightBaseOnContent: true,
-                useTextFilter: true, // Añadir filtro de texto para facilitar la búsqueda
+                useTextFilter:
+                    true, // Añadir filtro de texto para facilitar la búsqueda
               ),
             ),
           ),
@@ -66,7 +66,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Simular drag and drop
-      await tester.drag(find.byType(SearchMultiselectField), const Offset(100, 0));
+      await tester.drag(
+        find.byType(SearchMultiselectField),
+        const Offset(100, 0),
+      );
       await tester.pump();
 
       // Verificar que no hay errores

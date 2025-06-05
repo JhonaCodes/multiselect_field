@@ -1,3 +1,7 @@
+## 1.6.7
+- Improve documentation.
+- Update menu `currentMenuHeight`.
+
 ## 1.6.6
 - Fix margin on section title.
 

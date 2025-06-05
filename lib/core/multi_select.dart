@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:multiselect_field/core/chip_multiselect_field.dart';
 import 'package:multiselect_field/core/search_multiselect_field.dart';
@@ -71,9 +72,63 @@ class MultiSelectField<T> extends StatefulWidget {
   final bool cleanCurrentSelection;
 
   final List<Choice<T>> Function() data;
-  final void Function(List<Choice<T>> choiceList, bool isFromDefaultData)
-      onSelect;
+
+  /// Callback triggered when one or more options are selected.
+  ///
+  /// - [choiceList] is the list of selected items.
+  /// - [isFromDefaultData] indicates whether the selection was derived from [defaultData].
+  ///
+  /// This value will be `true` when:
+  /// - The selection is initialized using [defaultData].
+  /// - [defaultData] is updated dynamically at runtime from an external state source.
+  ///
+  /// It will be `false` when the selection is made directly by the user (e.g., tapping an option).
+  ///
+  /// This flag helps distinguish between automatic selections (driven by logic or external state)
+  /// and manual selections performed by the user.
+  ///
+  /// ### Example usage:
+  /// ```dart
+  /// onSelect: (choiceList, isFromDefaultData) {
+  ///   if (!isFromDefaultData) {
+  ///     // Handle selections made manually by the user.
+  ///     handleUserSelection(choiceList);
+  ///   } else {
+  ///     // Apply logic for selections coming from defaultData.
+  ///     updateFromExternalState(choiceList);
+  ///   }
+  /// }
+  /// ```
+  final void Function(List<Choice<T>> choiceList, bool isFromDefaultData) onSelect;
+
+  /// A list of preselected choices that serve as the default selection
+  /// when the widget is first built or when externally updated.
+  ///
+  /// If [defaultData] is provided:
+  /// - The widget will initialize the selected state based on this list.
+  /// - When [defaultData] is changed externally at runtime (e.g., through a state management update),
+  ///   the selection will automatically update and trigger [onSelect] with `isFromDefaultData = true`.
+  ///
+  /// If [defaultData] is `null`, no selection will be applied by default.
+  ///
+  /// This is useful for syncing the selection state with an external source
+  /// or for pre-filling selections when rendering the widget.
+  ///
+  /// Example:
+  /// ```dart
+  /// MySelectorWidget(
+  ///   defaultData: [Choice(id: 1, label: 'Apple')],
+  ///   onSelect: (choices, isFromDefaultData) {
+  ///     if (isFromDefaultData) {
+  ///       // Handle programmatic selection
+  ///     } else {
+  ///       // Handle user-initiated selection
+  ///     }
+  ///   },
+  /// )
+  /// ```
   final List<Choice<T>>? defaultData;
+
   final bool isMandatory;
   final bool singleSelection;
   final bool useTextFilter;
@@ -154,16 +209,13 @@ class MultiSelectField<T> extends StatefulWidget {
   State<MultiSelectField<T>> createState() => _MultiSelectFieldState<T>();
 }
 
-class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
-    with AutomaticKeepAliveClientMixin {
+class _MultiSelectFieldState<T> extends State<MultiSelectField<T>> with AutomaticKeepAliveClientMixin {
   final bool _isMobile = (defaultTargetPlatform == TargetPlatform.iOS ||
       defaultTargetPlatform == TargetPlatform.android);
   final GlobalKey _selectedItemKey = GlobalKey();
 
   List<Choice<T>> _selectedChoice = [];
   List<Choice<T>> _onFilteredChoice = [];
-
-  Timer? _timer;
 
   /// Something rustic and without animation, but simple and functional,
   /// it will need some time in transition and a little smoothness when changing state.
@@ -217,11 +269,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
       /// Over time this entire implementation should be migrated to [ValueNotifier], with a singleton abstraction.
       ///
 
-      if (!listEquals(_selectedChoice, widget.defaultData!)) {
-        /// [Timer]
-        /// A simple solution to avoid multiple updates in a single action, if necessary.
-        ///
-        _timer = Timer(const Duration(milliseconds: 100), () {
+      if (!listEquals(_selectedChoice, widget.defaultData!) && oldWidget.defaultData != widget.defaultData) {
+        SchedulerBinding.instance.addPostFrameCallback((_){
           log('didUpdateWidget from multiselect lib was called');
           _selectedChoice = widget.defaultData!;
           widget.onSelect(_selectedChoice, true);
@@ -255,7 +304,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
   @override
   void dispose() {
     _focusNode.dispose();
-    _timer?.cancel();
+    _textController.dispose();
     _focusNodeTextField.dispose();
     super.dispose();
   }
@@ -301,10 +350,8 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
               builder: (context, menu, child) {
                 // Step 2: Determine the height of the pop-up menu based on content or predefined value.
                 currentMenuHeight = widget.menuHeightBaseOnContent
-                    ? size
-                        .maxHeight // If the menu height depends on content, use the max height.
-                    : widget.menuHeight ??
-                        300; // Otherwise, use a predefined height or default to 300.
+                    ? size.maxHeight // If the menu height depends on content, use the max height.
+                    : widget.menuHeight ?? double.infinity; // Otherwise, use a predefined height or default to 300.
 
                 return InkWell(
                   hoverColor: Colors.transparent,

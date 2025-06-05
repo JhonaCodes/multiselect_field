@@ -1,6 +1,6 @@
 name: multiselect_field
 description: "A flexible dropdown field supporting single/multiple selection modes, styles, titles, etc"
-version: 1.6.6
+version: 1.6.7
 homepage: https://github.com/JhonaCodes/multiselect_field.git
 
 environment:

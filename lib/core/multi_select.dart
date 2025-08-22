@@ -174,6 +174,27 @@ class MultiSelectField<T> extends StatefulWidget {
   /// Customize the colors for [selected], [hovered], and [unselected] items.
   final ItemColor? itemColor;
 
+  /// Configuration for the scrollbar appearance in the menu dropdown.
+  /// 
+  /// Use [ScrollbarConfig] to customize the scrollbar's visibility and styling.
+  /// If `null`, a default scrollbar configuration will be applied.
+  /// 
+  /// Examples:
+  /// ```dart
+  /// // Basic configuration
+  /// scrollbarConfig: ScrollbarConfig(
+  ///   visible: true,
+  ///   themeData: ScrollbarThemeData(
+  ///     thickness: WidgetStateProperty.all(10.0),
+  ///     thumbColor: WidgetStateProperty.all(Colors.orange),
+  ///   ),
+  /// )
+  /// 
+  /// // Using presets
+  /// scrollbarConfig: ScrollbarConfig.preset(preset: 'thick', color: Colors.blue)
+  /// ```
+  final ScrollbarConfig? scrollbarConfig;
+
   const MultiSelectField({
     super.key,
     required this.data,
@@ -204,6 +225,7 @@ class MultiSelectField<T> extends StatefulWidget {
     this.itemColor,
     this.label,
     this.textStyleLabel,
+    this.scrollbarConfig,
   });
 
   @override
@@ -349,9 +371,32 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
           if (widget.title != null) widget.title!(_selectedChoice.isEmpty),
           LayoutBuilder(
             builder: (context, size) {
-              return MenuAnchor(
-                alignmentOffset: const Offset(0, 5),
-                controller: _menuController,
+              // Get scrollbar configuration with defaults
+              final effectiveScrollbarConfig = widget.scrollbarConfig ?? 
+                ScrollbarConfig(
+                  visible: true,
+                  themeData: ScrollbarThemeData(
+                    thickness: WidgetStateProperty.all(6.0),
+                    thumbColor: WidgetStateProperty.all(Colors.blue.withValues(alpha: 0.7)),
+                    trackColor: WidgetStateProperty.all(Colors.grey.withValues(alpha: 0.3)),
+                    radius: const Radius.circular(4.0),
+                  ),
+                );
+
+              // Apply scrollbar configuration
+              final scrollbarThemeData = effectiveScrollbarConfig.visible 
+                ? effectiveScrollbarConfig.themeData ?? ScrollbarThemeData()
+                : ScrollbarThemeData(
+                    thickness: WidgetStateProperty.all(0.0),
+                    thumbVisibility: WidgetStateProperty.all(false),
+                    trackVisibility: WidgetStateProperty.all(false),
+                  );
+
+              return ScrollbarTheme(
+                data: scrollbarThemeData,
+                child: MenuAnchor(
+                  alignmentOffset: const Offset(0, 5),
+                  controller: _menuController,
                 builder: (context, menu, child) {
                   // Step 2: Determine the height of the pop-up menu based on content or predefined value.
                   currentMenuHeight = widget.menuHeightBaseOnContent
@@ -668,6 +713,7 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
                               ),
                             ),
                     ),
+                ),
               );
             },
           ),
@@ -889,4 +935,129 @@ class ItemColor {
   final Color? unSelected;
 
   ItemColor({this.selected, this.hovered, this.unSelected});
+}
+
+/// Configuration class for customizing the scrollbar appearance in MultiSelectField menu.
+/// 
+/// This class encapsulates all scrollbar-related styling options following Flutter's
+/// theming conventions, similar to how [ScrollbarThemeData] works.
+/// 
+/// Example usage:
+/// ```dart
+/// MultiSelectField(
+///   scrollbarConfig: ScrollbarConfig(
+///     visible: true,
+///     themeData: ScrollbarThemeData(
+///       thickness: WidgetStateProperty.all(12.0),
+///       thumbColor: WidgetStateProperty.all(Colors.orange),
+///       trackColor: WidgetStateProperty.all(Colors.grey[200]),
+///     ),
+///   ),
+/// )
+/// ```
+class ScrollbarConfig {
+  /// Whether the scrollbar should be visible in the menu dropdown.
+  /// 
+  /// If `false`, no scrollbar will be displayed regardless of other settings.
+  /// If `true`, the scrollbar will be visible when the menu content overflows.
+  /// 
+  /// Defaults to `true`.
+  final bool visible;
+
+  /// The scrollbar theme data that defines the appearance of the scrollbar.
+  /// 
+  /// This provides access to all Flutter's built-in scrollbar customization options:
+  /// - `thickness`: The width of the scrollbar track and thumb
+  /// - `thumbColor`: The color of the scrollbar thumb (the draggable part)
+  /// - `trackColor`: The color of the scrollbar track (background)
+  /// - `radius`: The radius of the scrollbar thumb corners
+  /// - `thumbVisibility`: Whether the thumb should always be visible
+  /// - `trackVisibility`: Whether the track should always be visible
+  /// - `interactive`: Whether the scrollbar can be dragged
+  /// - `mainAxisMargin`: Margin along the main axis
+  /// - `crossAxisMargin`: Margin along the cross axis
+  /// 
+  /// If `null`, default Flutter scrollbar styling will be applied.
+  final ScrollbarThemeData? themeData;
+
+  const ScrollbarConfig({
+    this.visible = true,
+    this.themeData,
+  });
+
+  /// Creates a [ScrollbarConfig] with common preset configurations.
+  /// 
+  /// Available presets:
+  /// - `thick`: A thicker scrollbar with enhanced visibility
+  /// - `thin`: A minimal, thin scrollbar
+  /// - `rounded`: A scrollbar with rounded corners
+  /// - `hidden`: A completely hidden scrollbar
+  factory ScrollbarConfig.preset({
+    required String preset,
+    Color? color,
+  }) {
+    final effectiveColor = color ?? Colors.blue;
+    
+    switch (preset.toLowerCase()) {
+      case 'thick':
+        return ScrollbarConfig(
+          visible: true,
+          themeData: ScrollbarThemeData(
+            thickness: WidgetStateProperty.all(12.0),
+            thumbColor: WidgetStateProperty.all(effectiveColor),
+            trackColor: WidgetStateProperty.all(effectiveColor.withValues(alpha: 0.2)),
+            radius: const Radius.circular(6.0),
+            thumbVisibility: WidgetStateProperty.all(true),
+            trackVisibility: WidgetStateProperty.all(true),
+          ),
+        );
+      case 'thin':
+        return ScrollbarConfig(
+          visible: true,
+          themeData: ScrollbarThemeData(
+            thickness: WidgetStateProperty.all(4.0),
+            thumbColor: WidgetStateProperty.all(effectiveColor.withValues(alpha: 0.8)),
+            trackColor: WidgetStateProperty.all(Colors.transparent),
+            radius: const Radius.circular(2.0),
+            thumbVisibility: WidgetStateProperty.all(false),
+            trackVisibility: WidgetStateProperty.all(false),
+          ),
+        );
+      case 'rounded':
+        return ScrollbarConfig(
+          visible: true,
+          themeData: ScrollbarThemeData(
+            thickness: WidgetStateProperty.all(8.0),
+            thumbColor: WidgetStateProperty.all(effectiveColor),
+            trackColor: WidgetStateProperty.all(effectiveColor.withValues(alpha: 0.15)),
+            radius: const Radius.circular(12.0),
+            thumbVisibility: WidgetStateProperty.all(true),
+            trackVisibility: WidgetStateProperty.all(true),
+          ),
+        );
+      case 'hidden':
+        return const ScrollbarConfig(visible: false);
+      default:
+        return ScrollbarConfig(
+          visible: true,
+          themeData: ScrollbarThemeData(
+            thickness: WidgetStateProperty.all(6.0),
+            thumbColor: WidgetStateProperty.all(effectiveColor.withValues(alpha: 0.7)),
+            trackColor: WidgetStateProperty.all(Colors.grey.withValues(alpha: 0.3)),
+            radius: const Radius.circular(3.0),
+          ),
+        );
+    }
+  }
+
+  /// Creates a copy of this [ScrollbarConfig] with the given fields replaced.
+  ScrollbarConfig copyWith({
+    bool? visible,
+    ScrollbarThemeData? themeData,
+  }) {
+    return ScrollbarConfig(
+      visible: visible ?? this.visible,
+      themeData: themeData ?? this.themeData,
+    );
+  }
 }

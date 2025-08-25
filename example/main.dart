@@ -168,6 +168,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 footer: _useFooter
                     ? const Text('Optional Footer Widget')
                     : null,
+                // Scrollbar personalizado usando ScrollbarConfig
+                scrollbarConfig: ScrollbarConfig(
+                  visible: true,
+                  themeData: ScrollbarThemeData(
+                    thickness: WidgetStateProperty.all(10.0),
+                    thumbColor: WidgetStateProperty.all(Colors.orange),
+                    trackColor: WidgetStateProperty.all(Colors.grey.withValues(alpha: 0.2)),
+                    radius: const Radius.circular(5.0),
+                    thumbVisibility: WidgetStateProperty.all(true),
+                    trackVisibility: WidgetStateProperty.all(true),
+                  ),
+                ),
                 data: () => _useGroupingList
                     ? choices
                     : choices

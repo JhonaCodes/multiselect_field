@@ -175,10 +175,10 @@ class MultiSelectField<T> extends StatefulWidget {
   final ItemColor? itemColor;
 
   /// Configuration for the scrollbar appearance in the menu dropdown.
-  /// 
+  ///
   /// Use [ScrollbarConfig] to customize the scrollbar's visibility and styling.
   /// If `null`, a default scrollbar configuration will be applied.
-  /// 
+  ///
   /// Examples:
   /// ```dart
   /// // Basic configuration
@@ -189,7 +189,7 @@ class MultiSelectField<T> extends StatefulWidget {
   ///     thumbColor: WidgetStateProperty.all(Colors.orange),
   ///   ),
   /// )
-  /// 
+  ///
   /// // Using presets
   /// scrollbarConfig: ScrollbarConfig.preset(preset: 'thick', color: Colors.blue)
   /// ```
@@ -372,347 +372,362 @@ class _MultiSelectFieldState<T> extends State<MultiSelectField<T>>
           LayoutBuilder(
             builder: (context, size) {
               // Get scrollbar configuration with defaults
-              final effectiveScrollbarConfig = widget.scrollbarConfig ?? 
-                ScrollbarConfig(
-                  visible: true,
-                  themeData: ScrollbarThemeData(
-                    thickness: WidgetStateProperty.all(6.0),
-                    thumbColor: WidgetStateProperty.all(Colors.blue.withValues(alpha: 0.7)),
-                    trackColor: WidgetStateProperty.all(Colors.grey.withValues(alpha: 0.3)),
-                    radius: const Radius.circular(4.0),
-                  ),
-                );
+              final effectiveScrollbarConfig =
+                  widget.scrollbarConfig ??
+                  ScrollbarConfig(
+                    visible: true,
+                    themeData: ScrollbarThemeData(
+                      thickness: WidgetStateProperty.all(6.0),
+                      thumbColor: WidgetStateProperty.all(
+                        Colors.blue.withValues(alpha: 0.7),
+                      ),
+                      trackColor: WidgetStateProperty.all(
+                        Colors.grey.withValues(alpha: 0.3),
+                      ),
+                      radius: const Radius.circular(4.0),
+                    ),
+                  );
 
               // Apply scrollbar configuration
-              final scrollbarThemeData = effectiveScrollbarConfig.visible 
-                ? effectiveScrollbarConfig.themeData ?? ScrollbarThemeData()
-                : ScrollbarThemeData(
-                    thickness: WidgetStateProperty.all(0.0),
-                    thumbVisibility: WidgetStateProperty.all(false),
-                    trackVisibility: WidgetStateProperty.all(false),
-                  );
+              final scrollbarThemeData = effectiveScrollbarConfig.visible
+                  ? effectiveScrollbarConfig.themeData ?? ScrollbarThemeData()
+                  : ScrollbarThemeData(
+                      thickness: WidgetStateProperty.all(0.0),
+                      thumbVisibility: WidgetStateProperty.all(false),
+                      trackVisibility: WidgetStateProperty.all(false),
+                    );
 
               return ScrollbarTheme(
                 data: scrollbarThemeData,
                 child: MenuAnchor(
                   alignmentOffset: const Offset(0, 5),
                   controller: _menuController,
-                builder: (context, menu, child) {
-                  // Step 2: Determine the height of the pop-up menu based on content or predefined value.
-                  currentMenuHeight = widget.menuHeightBaseOnContent
-                      ? size
-                            .maxHeight // If the menu height depends on content, use the max height.
-                      : widget.menuHeight ??
-                            double
-                                .infinity; // Otherwise, use a predefined height or default to 300.
+                  builder: (context, menu, child) {
+                    // Step 2: Determine the height of the pop-up menu based on content or predefined value.
+                    currentMenuHeight = widget.menuHeightBaseOnContent
+                        ? size
+                              .maxHeight // If the menu height depends on content, use the max height.
+                        : widget.menuHeight ??
+                              double
+                                  .infinity; // Otherwise, use a predefined height or default to 300.
 
-                  return InkWell(
-                    hoverColor: Colors.transparent,
-                    overlayColor: const WidgetStatePropertyAll<Color>(
-                      Colors.transparent,
-                    ),
+                    return InkWell(
+                      hoverColor: Colors.transparent,
+                      overlayColor: const WidgetStatePropertyAll<Color>(
+                        Colors.transparent,
+                      ),
 
-                    /// Help to open menu when click in any part of the current widget.
-                    /// But not when you tap on Edit text widget.
-                    onTap: () {
-                      if (!menu.isOpen) menu.open();
+                      /// Help to open menu when click in any part of the current widget.
+                      /// But not when you tap on Edit text widget.
+                      onTap: () {
+                        if (!menu.isOpen) menu.open();
 
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _scrollToSelectedItem();
-                      });
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          _scrollToSelectedItem();
+                        });
 
-                      /// Help to focus on textField when click on any part of the widget.
-                      if (!_focusNodeTextField.hasFocus) {
-                        _focusNodeTextField.requestFocus();
-                      }
-                      _arrowEnableOrNot();
-                    },
-                    onTapDown: (down) {
-                      _textController.clear();
-                      _arrowEnableOrNot();
-
-                      _onFilteredChoice = widget.data();
-                    },
-                    child: KeyboardListener(
-                      focusNode: _focusNode,
-                      onKeyEvent: (event) {
-                        /// Verify if is keyboard event
-                        if (event.runtimeType == KeyDownEvent) {
-                          /// Back space is delete, this is used for delete element similar to delete text on the widget.
-                          if (event.logicalKey ==
-                              LogicalKeyboardKey.backspace) {
-                            if (_selectedChoice.isNotEmpty &&
-                                _textController.text.isEmpty) {
-                              _addOrRemove(
-                                _selectedChoice[_selectedChoice.length - 1],
-                              );
-                            }
-                          }
-
-                          /// Whe press enter, should be save the current filtered element.
-                          ///
-                          /// Help when you type the element on the widget
-                          if (event.logicalKey == LogicalKeyboardKey.enter) {
-                            if (_textController.text.isNotEmpty) {
-                              ///Filtering element form general list.
-                              Choice<T> elementFiltered = widget
-                                  .data()
-                                  .firstWhere(
-                                    (filter) =>
-                                        filter.value.toLowerCase() ==
-                                        _textController.text.toLowerCase(),
-                                  );
-
-                              _addOrRemove(elementFiltered);
-                            }
-                          }
+                        /// Help to focus on textField when click on any part of the widget.
+                        if (!_focusNodeTextField.hasFocus) {
+                          _focusNodeTextField.requestFocus();
                         }
+                        _arrowEnableOrNot();
                       },
-                      child: Container(
-                        width: size.maxWidth,
-                        constraints: const BoxConstraints(minHeight: 45),
-                        decoration: widget.decoration,
-                        padding: const EdgeInsets.all(5),
-                        margin: const EdgeInsets.only(top: 2),
-                        child: Flex(
-                          direction: Axis.horizontal,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            if (widget.iconLeft != null)
-                              widget.iconLeft!(_menuController.isOpen),
-                            Flexible(
-                              fit: FlexFit.loose,
-                              child: Wrap(
-                                direction: Axis.horizontal,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                alignment: WrapAlignment.start,
-                                runAlignment: WrapAlignment.center,
-                                spacing: 7,
-                                runSpacing: _isMobile ? 0 : 7,
-                                children: [
-                                  if (_selectedChoice.isEmpty &&
-                                      !widget.useTextFilter &&
-                                      widget.label != null)
-                                    Text(
-                                      widget.label!,
-                                      style: widget.textStyleLabel,
-                                    ),
-                                  if (_selectedChoice.isNotEmpty)
-                                    ..._selectedChoice.map((element) {
-                                      if (!widget.singleSelection) {
-                                        return widget.multiSelectWidget != null
-                                            ? widget.multiSelectWidget!(element)
-                                            : ChipMultiselectField(
-                                                title: element.value,
-                                                onDeleted: () =>
-                                                    _addOrRemove(element),
-                                              );
-                                      } else {
-                                        return widget.singleSelectWidget != null
-                                            ? widget.singleSelectWidget!(
-                                                element,
-                                              )
-                                            : Text(
-                                                element.value,
-                                                style:
-                                                    widget
-                                                        .textStyleSingleSelection ??
-                                                    Theme.of(
-                                                      context,
-                                                    ).textTheme.labelLarge,
-                                              );
-                                      }
-                                    }),
-                                  if (widget.useTextFilter &&
-                                      _menuController.isOpen)
-                                    SearchMultiselectField(
-                                      focusNodeTextField: _focusNodeTextField,
-                                      isMobile: _isMobile,
-                                      label: widget.label,
-                                      textStyleLabel: widget.textStyleLabel,
-                                      onTap: () {
-                                        if (!menu.isOpen) menu.open();
-                                      },
-                                      onChange: (value) {
-                                        _textController.text = value;
+                      onTapDown: (down) {
+                        _textController.clear();
+                        _arrowEnableOrNot();
 
-                                        /// Editing text, open list.
-                                        /// this is in case of list was closed, but you start to write.
-                                        if (!menu.isOpen) menu.open();
+                        _onFilteredChoice = widget.data();
+                      },
+                      child: KeyboardListener(
+                        focusNode: _focusNode,
+                        onKeyEvent: (event) {
+                          /// Verify if is keyboard event
+                          if (event.runtimeType == KeyDownEvent) {
+                            /// Back space is delete, this is used for delete element similar to delete text on the widget.
+                            if (event.logicalKey ==
+                                LogicalKeyboardKey.backspace) {
+                              if (_selectedChoice.isNotEmpty &&
+                                  _textController.text.isEmpty) {
+                                _addOrRemove(
+                                  _selectedChoice[_selectedChoice.length - 1],
+                                );
+                              }
+                            }
 
-                                        /// If we write data to the controller, it changes to false so we can see the elements that match our filter.
-                                        _onSelected = false;
+                            /// Whe press enter, should be save the current filtered element.
+                            ///
+                            /// Help when you type the element on the widget
+                            if (event.logicalKey == LogicalKeyboardKey.enter) {
+                              if (_textController.text.isNotEmpty) {
+                                ///Filtering element form general list.
+                                Choice<T> elementFiltered = widget
+                                    .data()
+                                    .firstWhere(
+                                      (filter) =>
+                                          filter.value.toLowerCase() ==
+                                          _textController.text.toLowerCase(),
+                                    );
 
-                                        _searchElement(_textController.text);
-                                      },
-                                    ),
-                                ],
-                              ),
-                            ),
-                            widget.iconRight == null
-                                ? SizedBox(
-                                    height: 40,
-                                    width: 20,
-                                    child: Center(
-                                      child: GestureDetector(
-                                        child: Icon(
-                                          menu.isOpen
-                                              ? Icons.arrow_drop_up
-                                              : Icons.arrow_drop_down,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.secondary,
-                                        ),
+                                _addOrRemove(elementFiltered);
+                              }
+                            }
+                          }
+                        },
+                        child: Container(
+                          width: size.maxWidth,
+                          constraints: const BoxConstraints(minHeight: 45),
+                          decoration: widget.decoration,
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(top: 2),
+                          child: Flex(
+                            direction: Axis.horizontal,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              if (widget.iconLeft != null)
+                                widget.iconLeft!(_menuController.isOpen),
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: Wrap(
+                                  direction: Axis.horizontal,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  alignment: WrapAlignment.start,
+                                  runAlignment: WrapAlignment.center,
+                                  spacing: 7,
+                                  runSpacing: _isMobile ? 0 : 7,
+                                  children: [
+                                    if (_selectedChoice.isEmpty &&
+                                        !widget.useTextFilter &&
+                                        widget.label != null)
+                                      Text(
+                                        widget.label!,
+                                        style: widget.textStyleLabel,
+                                      ),
+                                    if (_selectedChoice.isNotEmpty)
+                                      ..._selectedChoice.map((element) {
+                                        if (!widget.singleSelection) {
+                                          return widget.multiSelectWidget !=
+                                                  null
+                                              ? widget.multiSelectWidget!(
+                                                  element,
+                                                )
+                                              : ChipMultiselectField(
+                                                  title: element.value,
+                                                  onDeleted: () =>
+                                                      _addOrRemove(element),
+                                                );
+                                        } else {
+                                          return widget.singleSelectWidget !=
+                                                  null
+                                              ? widget.singleSelectWidget!(
+                                                  element,
+                                                )
+                                              : Text(
+                                                  element.value,
+                                                  style:
+                                                      widget
+                                                          .textStyleSingleSelection ??
+                                                      Theme.of(
+                                                        context,
+                                                      ).textTheme.labelLarge,
+                                                );
+                                        }
+                                      }),
+                                    if (widget.useTextFilter &&
+                                        _menuController.isOpen)
+                                      SearchMultiselectField(
+                                        focusNodeTextField: _focusNodeTextField,
+                                        isMobile: _isMobile,
+                                        label: widget.label,
+                                        textStyleLabel: widget.textStyleLabel,
                                         onTap: () {
-                                          _menuController.isOpen
-                                              ? _menuController.close()
-                                              : _menuController.open();
+                                          if (!menu.isOpen) menu.open();
+                                        },
+                                        onChange: (value) {
+                                          _textController.text = value;
+
+                                          /// Editing text, open list.
+                                          /// this is in case of list was closed, but you start to write.
+                                          if (!menu.isOpen) menu.open();
+
+                                          /// If we write data to the controller, it changes to false so we can see the elements that match our filter.
+                                          _onSelected = false;
+
+                                          _searchElement(_textController.text);
                                         },
                                       ),
-                                    ),
-                                  )
-                                : widget.iconRight!(_menuController.isOpen),
-                          ],
+                                  ],
+                                ),
+                              ),
+                              widget.iconRight == null
+                                  ? SizedBox(
+                                      height: 40,
+                                      width: 20,
+                                      child: Center(
+                                        child: GestureDetector(
+                                          child: Icon(
+                                            menu.isOpen
+                                                ? Icons.arrow_drop_up
+                                                : Icons.arrow_drop_down,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.secondary,
+                                          ),
+                                          onTap: () {
+                                            _menuController.isOpen
+                                                ? _menuController.close()
+                                                : _menuController.open();
+                                          },
+                                        ),
+                                      ),
+                                    )
+                                  : widget.iconRight!(_menuController.isOpen),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                menuChildren: [
-                  if (widget.selectAllOption && widget.data().isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: CheckboxMenuButton(
-                        value: _selectAllActive,
-                        onChanged: (vale) {
-                          _selectAllActive = !_selectAllActive;
+                    );
+                  },
+                  menuChildren: [
+                    if (widget.selectAllOption && widget.data().isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: CheckboxMenuButton(
+                          value: _selectAllActive,
+                          onChanged: (vale) {
+                            _selectAllActive = !_selectAllActive;
 
-                          _selectedChoice = _selectAllActive ? _cleanData : [];
-                          widget.onSelect(_selectedChoice, false);
-                        },
-                        child: Text("All"),
+                            _selectedChoice = _selectAllActive
+                                ? _cleanData
+                                : [];
+                            widget.onSelect(_selectedChoice, false);
+                          },
+                          child: Text("All"),
+                        ),
                       ),
-                    ),
-                  ..._onFilteredChoice
-                      .where((element) => element.value.isNotEmpty)
-                      .map((result) {
-                        bool isGroupingTitle =
-                            result.key == null || result.key!.isEmpty;
-                        return SizedBox(
-                          width: widget.menuWidthBaseOnContent
-                              ? null
-                              : size.maxWidth,
-                          child: MenuItemButton(
-                            closeOnActivate:
-                                widget.singleSelection ||
-                                widget.data().length == 1,
-                            key:
-                                (!isGroupingTitle && _isSelected(result)) &&
-                                    _selectedChoice.indexOf(result) == 0
-                                ? _selectedItemKey
-                                : null,
-                            trailingIcon: !widget.selectAllOption
-                                ? (!isGroupingTitle && _isSelected(result))
-                                      ? const Icon(
-                                          Icons.check,
-                                          color: Colors.green,
-                                          size: 12,
-                                        )
-                                      : null
-                                : null,
-                            leadingIcon:
-                                widget.selectAllOption && !isGroupingTitle
-                                ? Padding(
-                                    padding: EdgeInsets.only(left: 15),
-                                    child: _isSelected(result)
-                                        ? const Icon(
-                                            Icons.check_box,
-                                            color: Colors.green,
-                                          )
-                                        : Icon(Icons.check_box_outline_blank),
-                                  )
-                                : null,
-                            style:
-                                widget.buttonStyle ??
-                                ButtonStyle(
-                                  alignment: Alignment.centerLeft,
-                                  elevation:
-                                      const WidgetStatePropertyAll<double>(7.5),
-                                  overlayColor: const WidgetStatePropertyAll(
-                                    Colors.transparent,
-                                  ),
-                                  backgroundColor:
-                                      WidgetStateProperty.resolveWith((state) {
-                                        /// Hovered only on web version
-                                        if ((state.contains(
-                                              WidgetState.hovered,
-                                            ) &&
-                                            _isMobile)) {
-                                          return widget.itemColor?.hovered ??
-                                              _currentItemColor.hovered;
-                                        }
-
-                                        /// Color When is element selected
-                                        if ((!isGroupingTitle &&
-                                            _isSelected(result))) {
-                                          return widget.itemColor?.selected ??
-                                              _currentItemColor.selected;
-                                        }
-
-                                        /// Default color, No selected, no hovered.
-                                        return widget.itemColor?.unSelected ??
-                                            _currentItemColor.unSelected;
-                                      }),
-                                ),
-                            onPressed: isGroupingTitle
+                    ..._onFilteredChoice
+                        .where((element) => element.value.isNotEmpty)
+                        .map((result) {
+                          bool isGroupingTitle =
+                              result.key == null || result.key!.isEmpty;
+                          return SizedBox(
+                            width: widget.menuWidthBaseOnContent
                                 ? null
-                                : () {
-                                    _addOrRemove(result);
-                                    if (!widget.singleSelection &&
-                                        widget.useTextFilter) {
-                                      _textController.clear();
-                                    }
-                                  },
-                            child:
-                                widget.itemMenuButton ??
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: isGroupingTitle ? 0 : 10,
+                                : size.maxWidth,
+                            child: MenuItemButton(
+                              closeOnActivate:
+                                  widget.singleSelection ||
+                                  widget.data().length == 1,
+                              key:
+                                  (!isGroupingTitle && _isSelected(result)) &&
+                                      _selectedChoice.indexOf(result) == 0
+                                  ? _selectedItemKey
+                                  : null,
+                              trailingIcon: !widget.selectAllOption
+                                  ? (!isGroupingTitle && _isSelected(result))
+                                        ? const Icon(
+                                            Icons.check,
+                                            color: Colors.green,
+                                            size: 12,
+                                          )
+                                        : null
+                                  : null,
+                              leadingIcon:
+                                  widget.selectAllOption && !isGroupingTitle
+                                  ? Padding(
+                                      padding: EdgeInsets.only(left: 15),
+                                      child: _isSelected(result)
+                                          ? const Icon(
+                                              Icons.check_box,
+                                              color: Colors.green,
+                                            )
+                                          : Icon(Icons.check_box_outline_blank),
+                                    )
+                                  : null,
+                              style:
+                                  widget.buttonStyle ??
+                                  ButtonStyle(
+                                    alignment: Alignment.centerLeft,
+                                    elevation:
+                                        const WidgetStatePropertyAll<double>(
+                                          7.5,
+                                        ),
+                                    overlayColor: const WidgetStatePropertyAll(
+                                      Colors.transparent,
+                                    ),
+                                    backgroundColor:
+                                        WidgetStateProperty.resolveWith((
+                                          state,
+                                        ) {
+                                          /// Hovered only on web version
+                                          if ((state.contains(
+                                                WidgetState.hovered,
+                                              ) &&
+                                              _isMobile)) {
+                                            return widget.itemColor?.hovered ??
+                                                _currentItemColor.hovered;
+                                          }
+
+                                          /// Color When is element selected
+                                          if ((!isGroupingTitle &&
+                                              _isSelected(result))) {
+                                            return widget.itemColor?.selected ??
+                                                _currentItemColor.selected;
+                                          }
+
+                                          /// Default color, No selected, no hovered.
+                                          return widget.itemColor?.unSelected ??
+                                              _currentItemColor.unSelected;
+                                        }),
                                   ),
-                                  child: Text(
-                                    result.value,
-                                    style: isGroupingTitle
-                                        ? widget.titleMenuStyle ??
-                                              Theme.of(
-                                                context,
-                                              ).textTheme.titleMedium
-                                        : widget.itemMenuStyle ??
-                                              Theme.of(
-                                                context,
-                                              ).textTheme.labelMedium,
+                              onPressed: isGroupingTitle
+                                  ? null
+                                  : () {
+                                      _addOrRemove(result);
+                                      if (!widget.singleSelection &&
+                                          widget.useTextFilter) {
+                                        _textController.clear();
+                                      }
+                                    },
+                              child:
+                                  widget.itemMenuButton ??
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: isGroupingTitle ? 0 : 10,
+                                    ),
+                                    child: Text(
+                                      result.value,
+                                      style: isGroupingTitle
+                                          ? widget.titleMenuStyle ??
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.titleMedium
+                                          : widget.itemMenuStyle ??
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.labelMedium,
+                                    ),
                                   ),
-                                ),
-                          ),
-                        );
-                      }),
-                ],
-                style:
-                    widget.menuStyle ??
-                    MenuStyle(
-                      elevation: const WidgetStatePropertyAll<double>(5),
-                      visualDensity: VisualDensity.adaptivePlatformDensity,
-                      maximumSize:
-                          widget.menuWidthBaseOnContent &&
-                              widget.menuHeightBaseOnContent
-                          ? null
-                          : WidgetStatePropertyAll<Size>(
-                              Size(
-                                widget.menuWidth ?? size.maxWidth,
-                                currentMenuHeight,
-                              ),
                             ),
-                    ),
+                          );
+                        }),
+                  ],
+                  style:
+                      widget.menuStyle ??
+                      MenuStyle(
+                        elevation: const WidgetStatePropertyAll<double>(5),
+                        visualDensity: VisualDensity.adaptivePlatformDensity,
+                        maximumSize:
+                            widget.menuWidthBaseOnContent &&
+                                widget.menuHeightBaseOnContent
+                            ? null
+                            : WidgetStatePropertyAll<Size>(
+                                Size(
+                                  widget.menuWidth ?? size.maxWidth,
+                                  currentMenuHeight,
+                                ),
+                              ),
+                      ),
                 ),
               );
             },
@@ -938,10 +953,10 @@ class ItemColor {
 }
 
 /// Configuration class for customizing the scrollbar appearance in MultiSelectField menu.
-/// 
+///
 /// This class encapsulates all scrollbar-related styling options following Flutter's
 /// theming conventions, similar to how [ScrollbarThemeData] works.
-/// 
+///
 /// Example usage:
 /// ```dart
 /// MultiSelectField(
@@ -957,15 +972,15 @@ class ItemColor {
 /// ```
 class ScrollbarConfig {
   /// Whether the scrollbar should be visible in the menu dropdown.
-  /// 
+  ///
   /// If `false`, no scrollbar will be displayed regardless of other settings.
   /// If `true`, the scrollbar will be visible when the menu content overflows.
-  /// 
+  ///
   /// Defaults to `true`.
   final bool visible;
 
   /// The scrollbar theme data that defines the appearance of the scrollbar.
-  /// 
+  ///
   /// This provides access to all Flutter's built-in scrollbar customization options:
   /// - `thickness`: The width of the scrollbar track and thumb
   /// - `thumbColor`: The color of the scrollbar thumb (the draggable part)
@@ -976,28 +991,22 @@ class ScrollbarConfig {
   /// - `interactive`: Whether the scrollbar can be dragged
   /// - `mainAxisMargin`: Margin along the main axis
   /// - `crossAxisMargin`: Margin along the cross axis
-  /// 
+  ///
   /// If `null`, default Flutter scrollbar styling will be applied.
   final ScrollbarThemeData? themeData;
 
-  const ScrollbarConfig({
-    this.visible = true,
-    this.themeData,
-  });
+  const ScrollbarConfig({this.visible = true, this.themeData});
 
   /// Creates a [ScrollbarConfig] with common preset configurations.
-  /// 
+  ///
   /// Available presets:
   /// - `thick`: A thicker scrollbar with enhanced visibility
   /// - `thin`: A minimal, thin scrollbar
   /// - `rounded`: A scrollbar with rounded corners
   /// - `hidden`: A completely hidden scrollbar
-  factory ScrollbarConfig.preset({
-    required String preset,
-    Color? color,
-  }) {
+  factory ScrollbarConfig.preset({required String preset, Color? color}) {
     final effectiveColor = color ?? Colors.blue;
-    
+
     switch (preset.toLowerCase()) {
       case 'thick':
         return ScrollbarConfig(
@@ -1005,7 +1014,9 @@ class ScrollbarConfig {
           themeData: ScrollbarThemeData(
             thickness: WidgetStateProperty.all(12.0),
             thumbColor: WidgetStateProperty.all(effectiveColor),
-            trackColor: WidgetStateProperty.all(effectiveColor.withValues(alpha: 0.2)),
+            trackColor: WidgetStateProperty.all(
+              effectiveColor.withValues(alpha: 0.2),
+            ),
             radius: const Radius.circular(6.0),
             thumbVisibility: WidgetStateProperty.all(true),
             trackVisibility: WidgetStateProperty.all(true),
@@ -1016,7 +1027,9 @@ class ScrollbarConfig {
           visible: true,
           themeData: ScrollbarThemeData(
             thickness: WidgetStateProperty.all(4.0),
-            thumbColor: WidgetStateProperty.all(effectiveColor.withValues(alpha: 0.8)),
+            thumbColor: WidgetStateProperty.all(
+              effectiveColor.withValues(alpha: 0.8),
+            ),
             trackColor: WidgetStateProperty.all(Colors.transparent),
             radius: const Radius.circular(2.0),
             thumbVisibility: WidgetStateProperty.all(false),
@@ -1029,7 +1042,9 @@ class ScrollbarConfig {
           themeData: ScrollbarThemeData(
             thickness: WidgetStateProperty.all(8.0),
             thumbColor: WidgetStateProperty.all(effectiveColor),
-            trackColor: WidgetStateProperty.all(effectiveColor.withValues(alpha: 0.15)),
+            trackColor: WidgetStateProperty.all(
+              effectiveColor.withValues(alpha: 0.15),
+            ),
             radius: const Radius.circular(12.0),
             thumbVisibility: WidgetStateProperty.all(true),
             trackVisibility: WidgetStateProperty.all(true),
@@ -1042,8 +1057,12 @@ class ScrollbarConfig {
           visible: true,
           themeData: ScrollbarThemeData(
             thickness: WidgetStateProperty.all(6.0),
-            thumbColor: WidgetStateProperty.all(effectiveColor.withValues(alpha: 0.7)),
-            trackColor: WidgetStateProperty.all(Colors.grey.withValues(alpha: 0.3)),
+            thumbColor: WidgetStateProperty.all(
+              effectiveColor.withValues(alpha: 0.7),
+            ),
+            trackColor: WidgetStateProperty.all(
+              Colors.grey.withValues(alpha: 0.3),
+            ),
             radius: const Radius.circular(3.0),
           ),
         );
@@ -1051,10 +1070,7 @@ class ScrollbarConfig {
   }
 
   /// Creates a copy of this [ScrollbarConfig] with the given fields replaced.
-  ScrollbarConfig copyWith({
-    bool? visible,
-    ScrollbarThemeData? themeData,
-  }) {
+  ScrollbarConfig copyWith({bool? visible, ScrollbarThemeData? themeData}) {
     return ScrollbarConfig(
       visible: visible ?? this.visible,
       themeData: themeData ?? this.themeData,

@@ -31,7 +31,7 @@ Add the dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  multiselect_field: ^1.6.7
+  multiselect_field: ^1.6.8
 ```
 
 Then, install the dependencies using:
@@ -87,16 +87,28 @@ class MyWidget extends StatelessWidget {
 - **`decoration`**: `Decoration?`. Custom decoration for the widget.
 - **`padding`**: `EdgeInsetsGeometry?`. Defines the internal padding of the widget.
 - **`textStyleSingleSelection`**: `TextStyle?`. Text style for single selection.
+- **`scrollbarConfig`**: `ScrollbarConfig`. Modify the size, color, margins, etc.
 
-### Advanced Example
+### Advanced Example with scrollbarConfig
 
 ```dart
 MultiSelectField<String>(
   data: () => [
-    Choice(key: 'apple', value: 'Apple'),
-    Choice(key: 'banana', value: 'Banana'),
-    Choice(key: 'orange', value: 'Orange'),
-  ],
+      Choice(key: 'apple', value: 'Apple'),
+      Choice(key: 'banana', value: 'Banana'),
+      Choice(key: 'orange', value: 'Orange'),
+    ],
+    scrollbarConfig: ScrollbarConfig(
+      visible: true,
+      themeData: ScrollbarThemeData(
+      thickness: WidgetStateProperty.all(10.0),
+      thumbColor: WidgetStateProperty.all(Colors.orange),
+      trackColor: WidgetStateProperty.all(Colors.grey.withValues(alpha: 0.2)),
+      radius: const Radius.circular(5.0),
+      thumbVisibility: WidgetStateProperty.all(true),
+      trackVisibility: WidgetStateProperty.all(true),
+    ),
+  ),
   defaultData: [Choice(key: 'banana', value: 'Banana')],
   ///[isFromDefault] Helps to know if current selected element is from default data or not.
   onSelect: (selectedItems, isFromDefaultData) {

@@ -1,3 +1,6 @@
+## 1.6.8
+- New feature `ScrollbarConfig`, Now we can modify the size, color, margins, etc. of our scrollbar in a very easy way.
+
 ## 1.6.7
 - Improve documentation.
 - Update menu `currentMenuHeight`.

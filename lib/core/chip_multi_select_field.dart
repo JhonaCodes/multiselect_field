@@ -67,6 +67,19 @@ class ChipMultiSelectField<T> extends MultiSelectField<T> {
   /// Controller for programmatic menu control.
   final MenuController? controller;
 
+  /// Text style for group titles in the menu.
+  final TextStyle? titleMenuStyle;
+
+  /// Text style for items in the menu.
+  final TextStyle? itemMenuStyle;
+
+  /// Padding for group titles in the menu.
+  final EdgeInsetsGeometry? titleMenuPadding;
+
+  /// Size configuration for proportional scaling.
+  /// Use [ChipSize.small], [ChipSize.medium], [ChipSize.large] or custom.
+  final ChipSize? chipSize;
+
   const ChipMultiSelectField({
     super.key,
     required this.label,
@@ -87,6 +100,10 @@ class ChipMultiSelectField<T> extends MultiSelectField<T> {
     this.singleSelection = false,
     this.selectAllOption = false,
     this.controller,
+    this.titleMenuStyle,
+    this.itemMenuStyle,
+    this.titleMenuPadding,
+    this.chipSize,
   }) : super.internal();
 
   @override
@@ -199,44 +216,54 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (widget.selectAllOption && choices.isNotEmpty)
-          CheckboxListTile(
+          ListTile(
+            leading: Checkbox(
+              value: _selectAllActive,
+              onChanged: (_) => _toggleSelectAll(),
+            ),
             title: const Text('All'),
-            value: _selectAllActive,
-            onChanged: (_) => _toggleSelectAll(),
-            controlAffinity: ListTileControlAffinity.leading,
             dense: true,
+            onTap: _toggleSelectAll,
           ),
         ...choices.where((c) => c.value.isNotEmpty).map((choice) {
           final isGroupTitle = choice.key == null || choice.key!.isEmpty;
 
           if (isGroupTitle) {
             return Padding(
-              padding: const EdgeInsets.only(left: 16, top: 8, bottom: 4),
+              padding: widget.titleMenuPadding ?? const EdgeInsets.only(left: 16, top: 12, bottom: 4),
               child: Text(
                 choice.value,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: widget.titleMenuStyle ??
+                    Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             );
           }
 
+          final itemStyle = widget.itemMenuStyle ?? Theme.of(context).textTheme.bodyMedium;
+
           if (widget.singleSelection) {
-            return RadioListTile<String>(
-              title: Text(choice.value),
-              value: choice.key!,
-              groupValue: _selectedChoices.isNotEmpty ? _selectedChoices.first.key : null,
-              onChanged: (_) => _toggleSelection(choice),
+            final isSelected = _isSelected(choice);
+            return ListTile(
+              leading: Icon(
+                isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                color: isSelected ? Theme.of(context).primaryColor : null,
+              ),
+              title: Text(choice.value, style: itemStyle),
               dense: true,
+              onTap: () => _toggleSelection(choice),
             );
           }
 
-          return CheckboxListTile(
-            title: Text(choice.value),
-            value: _isSelected(choice),
-            onChanged: (_) => _toggleSelection(choice),
-            controlAffinity: ListTileControlAffinity.leading,
+          return ListTile(
+            leading: Checkbox(
+              value: _isSelected(choice),
+              onChanged: (_) => _toggleSelection(choice),
+            ),
+            title: Text(choice.value, style: itemStyle),
             dense: true,
+            onTap: () => _toggleSelection(choice),
           );
         }),
       ],
@@ -247,6 +274,7 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final chipStyle = widget.chipStyle ?? ChipStyle.withColor(theme.primaryColor);
+    final chipSize = widget.chipSize ?? ChipSize.medium;
 
     final effectiveBackgroundColor = _isOpen
         ? (chipStyle.activeBackgroundColor ?? chipStyle.backgroundColor ?? Colors.transparent)
@@ -263,6 +291,13 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
     final effectiveIconColor = _isOpen
         ? (chipStyle.activeIconColor ?? chipStyle.iconColor ?? Colors.grey.shade600)
         : (chipStyle.iconColor ?? Colors.grey.shade600);
+
+    // Size values - chipSize takes priority, then chipStyle, then defaults
+    final effectivePadding = chipStyle.padding ?? chipSize.padding;
+    final effectiveBorderRadius = chipStyle.borderRadius ?? BorderRadius.circular(chipSize.borderRadius);
+    final effectiveIconSize = chipStyle.iconSize ?? chipSize.iconSize;
+    final effectiveFontSize = chipStyle.textStyle?.fontSize ?? chipSize.fontSize;
+    final effectiveSpacing = chipSize.spacing;
 
     // Build display label with selection count
     String displayLabel = widget.label;
@@ -323,14 +358,13 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
               }
             }
                 : null,
-            borderRadius: chipStyle.borderRadius ?? BorderRadius.circular(20),
+            borderRadius: effectiveBorderRadius,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
-              padding: chipStyle.padding ??
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: effectivePadding,
               decoration: BoxDecoration(
                 color: effectiveBackgroundColor,
-                borderRadius: chipStyle.borderRadius ?? BorderRadius.circular(20),
+                borderRadius: effectiveBorderRadius,
                 border: Border.all(
                   color: effectiveBorderColor,
                   width: 1,
@@ -341,26 +375,27 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
                 children: [
                   if (widget.leading != null) ...[
                     widget.leading!,
-                    const SizedBox(width: 6),
+                    SizedBox(width: effectiveSpacing),
                   ],
                   Text(
                     displayLabel,
-                    style: (chipStyle.textStyle ?? theme.textTheme.labelLarge)?.copyWith(
+                    style: TextStyle(
+                      fontSize: effectiveFontSize,
                       color: effectiveTextColor,
                     ),
                   ),
                   if (widget.trailing != null) ...[
-                    const SizedBox(width: 6),
+                    SizedBox(width: effectiveSpacing),
                     widget.trailing!,
                   ],
                   if (widget.showDropdownIcon) ...[
-                    const SizedBox(width: 4),
+                    SizedBox(width: effectiveSpacing),
                     AnimatedRotation(
                       turns: _isOpen ? 0.5 : 0,
                       duration: const Duration(milliseconds: 150),
                       child: Icon(
                         chipStyle.icon ?? Icons.arrow_drop_down,
-                        size: chipStyle.iconSize ?? 20,
+                        size: effectiveIconSize,
                         color: effectiveIconColor,
                       ),
                     ),

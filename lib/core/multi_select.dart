@@ -111,6 +111,7 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     Widget? menuFooter,
     ChipStyle? chipStyle,
     ChipMenuStyle? menuStyle,
+    ChipSize? chipSize,
     VoidCallback? onMenuOpened,
     VoidCallback? onMenuClosed,
     bool enabled,
@@ -120,6 +121,9 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     bool singleSelection,
     bool selectAllOption,
     MenuController? controller,
+    TextStyle? titleMenuStyle,
+    TextStyle? itemMenuStyle,
+    EdgeInsetsGeometry? titleMenuPadding,
   }) = ChipMultiSelectField<T>;
 }
 
@@ -238,6 +242,89 @@ class ScrollbarConfig {
   }
 }
 
+/// Size configuration for proportional chip scaling.
+///
+/// Use predefined sizes [small], [medium], [large] or create custom sizes.
+/// All dimensions are proportionally scaled for visual consistency.
+///
+/// Example:
+/// ```dart
+/// MultiSelectField<String>.chip(
+///   label: 'Filter',
+///   chipSize: ChipSize.small,
+///   // ...
+/// )
+/// ```
+class ChipSize {
+  /// Font size for the chip label.
+  final double fontSize;
+
+  /// Icon size for the dropdown arrow.
+  final double iconSize;
+
+  /// Padding inside the chip.
+  final EdgeInsets padding;
+
+  /// Border radius of the chip.
+  final double borderRadius;
+
+  /// Spacing between label and icon.
+  final double spacing;
+
+  const ChipSize({
+    required this.fontSize,
+    required this.iconSize,
+    required this.padding,
+    required this.borderRadius,
+    this.spacing = 4,
+  });
+
+  /// Extra small chip - minimal footprint.
+  static const extraSmall = ChipSize(
+    fontSize: 11,
+    iconSize: 14,
+    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+    borderRadius: 12,
+    spacing: 2,
+  );
+
+  /// Small chip - compact size.
+  static const small = ChipSize(
+    fontSize: 12,
+    iconSize: 16,
+    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+    borderRadius: 14,
+    spacing: 3,
+  );
+
+  /// Medium chip - default size.
+  static const medium = ChipSize(
+    fontSize: 14,
+    iconSize: 20,
+    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    borderRadius: 20,
+    spacing: 4,
+  );
+
+  /// Large chip - prominent size.
+  static const large = ChipSize(
+    fontSize: 16,
+    iconSize: 24,
+    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+    borderRadius: 24,
+    spacing: 6,
+  );
+
+  /// Extra large chip - maximum visibility.
+  static const extraLarge = ChipSize(
+    fontSize: 18,
+    iconSize: 28,
+    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+    borderRadius: 28,
+    spacing: 8,
+  );
+}
+
 /// Style configuration for chip appearance.
 class ChipStyle {
   final Color? backgroundColor;
@@ -281,6 +368,27 @@ class ChipStyle {
       activeTextColor: primaryColor,
       iconColor: Colors.grey.shade600,
       activeIconColor: primaryColor,
+    );
+  }
+
+  /// Creates a chip style with color and size combined.
+  factory ChipStyle.styled({
+    required Color color,
+    ChipSize size = ChipSize.medium,
+  }) {
+    return ChipStyle(
+      backgroundColor: Colors.transparent,
+      activeBackgroundColor: color.withValues(alpha: 0.1),
+      borderColor: Colors.grey.withValues(alpha: 0.4),
+      activeBorderColor: color,
+      textColor: Colors.grey.shade700,
+      activeTextColor: color,
+      iconColor: Colors.grey.shade600,
+      activeIconColor: color,
+      padding: size.padding,
+      borderRadius: BorderRadius.circular(size.borderRadius),
+      iconSize: size.iconSize,
+      textStyle: TextStyle(fontSize: size.fontSize),
     );
   }
 }

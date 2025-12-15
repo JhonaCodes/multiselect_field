@@ -1,3 +1,14 @@
+## 1.7.0
+### New Feature: `MultiSelectField.chip()`
+Compact chip-style dropdown for space-constrained areas like filter bars.
+
+- **`MultiSelectField<T>.chip()`**: New factory constructor for chip variant.
+- **`ChipSize`**: Proportional sizing system (extraSmall, small, medium, large, extraLarge) or custom sizes.
+- **`ChipStyle`**: Color and appearance configuration with `withColor()` and `styled()` factories.
+- **`ChipMenuStyle`**: Menu dimensions and style configuration.
+- **Customizable menu**: `titleMenuStyle`, `itemMenuStyle`, `titleMenuPadding` for group titles.
+- **Flexible content**: Use `data` for auto-generated lists or `menuContent` for custom widgets.
+
 ## 1.6.8
 - New feature `ScrollbarConfig`, Now we can modify the size, color, margins, etc. of our scrollbar in a very easy way.
 

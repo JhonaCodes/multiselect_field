@@ -31,7 +31,7 @@ Add the dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  multiselect_field: ^1.6.8
+  multiselect_field: ^1.7.0
 ```
 
 Then, install the dependencies using:
@@ -129,6 +129,63 @@ MultiSelectField<String>(
     },
   ),
 );
+```
+
+### Chip Variant - Compact Dropdown
+
+Use `MultiSelectField.chip()` for space-constrained areas like filter bars:
+
+```dart
+MultiSelectField<String>.chip(
+  label: 'Status',
+  chipSize: ChipSize.small,
+  chipStyle: ChipStyle.withColor(Colors.blue),
+  singleSelection: true,
+  data: () => [
+    Choice(null, 'Priority'),  // Group title
+    Choice('high', 'High'),
+    Choice('medium', 'Medium'),
+    Choice('low', 'Low'),
+  ],
+  onSelect: (selected, _) {
+    print(selected.map((c) => c.key).toList());
+  },
+)
+```
+
+#### ChipSize Options
+
+```dart
+ChipSize.extraSmall  // Minimal footprint
+ChipSize.small       // Compact
+ChipSize.medium      // Default
+ChipSize.large       // Prominent
+ChipSize.extraLarge  // Maximum visibility
+
+// Or create custom sizes:
+const mySize = ChipSize(
+  fontSize: 12,
+  iconSize: 16,
+  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+  borderRadius: 12,
+  spacing: 4,
+);
+```
+
+#### Custom Menu Content
+
+```dart
+MultiSelectField<String>.chip(
+  label: 'Date',
+  menuContent: Column(
+    children: [
+      ListTile(title: Text('Today')),
+      ListTile(title: Text('This week')),
+      Divider(),
+      CalendarDatePicker(...),
+    ],
+  ),
+)
 ```
 
 ## Some screen captures

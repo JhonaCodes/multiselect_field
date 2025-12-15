@@ -30,3 +30,4 @@ build/
 test/failures
 /example/multiexample/
 /example/scrollbar_example.dart
+/.claude/

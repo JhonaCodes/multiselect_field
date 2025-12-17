@@ -26,10 +26,7 @@ void main() {
             body: MultiSelectField<String>.chip(
               label: 'Status',
               chipStyle: ChipStyle.withColor(Colors.blue),
-              data: () => [
-                Choice('1', 'Active'),
-                Choice('2', 'Inactive'),
-              ],
+              data: () => [Choice('1', 'Active'), Choice('2', 'Inactive')],
             ),
           ),
         ),
@@ -46,10 +43,7 @@ void main() {
               label: 'Category',
               leading: const Icon(Icons.category, size: 16),
               chipStyle: ChipStyle.withColor(Colors.green),
-              data: () => [
-                Choice('1', 'Tech'),
-                Choice('2', 'Health'),
-              ],
+              data: () => [Choice('1', 'Tech'), Choice('2', 'Health')],
             ),
           ),
         ),
@@ -65,10 +59,7 @@ void main() {
           home: Scaffold(
             body: MultiSelectField<String>.chip(
               label: 'Filter',
-              data: () => [
-                Choice('1', 'Option 1'),
-                Choice('2', 'Option 2'),
-              ],
+              data: () => [Choice('1', 'Option 1'), Choice('2', 'Option 2')],
             ),
           ),
         ),
@@ -90,10 +81,7 @@ void main() {
             body: MultiSelectField<String>.chip(
               label: 'Filter',
               singleSelection: true,
-              data: () => [
-                Choice('1', 'Option 1'),
-                Choice('2', 'Option 2'),
-              ],
+              data: () => [Choice('1', 'Option 1'), Choice('2', 'Option 2')],
               onSelect: (selected, _) {
                 selectedKey = selected.isNotEmpty ? selected.first.key : null;
               },
@@ -111,7 +99,9 @@ void main() {
       expect(selectedKey, '1');
     });
 
-    testWidgets('selects multiple items in multi selection mode', (tester) async {
+    testWidgets('selects multiple items in multi selection mode', (
+      tester,
+    ) async {
       List<String> selectedKeys = [];
 
       await tester.pumpWidget(
@@ -120,10 +110,7 @@ void main() {
             body: MultiSelectField<String>.chip(
               label: 'Filter',
               singleSelection: false,
-              data: () => [
-                Choice('1', 'Option 1'),
-                Choice('2', 'Option 2'),
-              ],
+              data: () => [Choice('1', 'Option 1'), Choice('2', 'Option 2')],
               onSelect: (selected, _) {
                 selectedKeys = selected.map((c) => c.key!).toList();
               },
@@ -335,10 +322,7 @@ void main() {
     });
 
     test('styled creates correct style with size', () {
-      final style = ChipStyle.styled(
-        color: Colors.red,
-        size: ChipSize.small,
-      );
+      final style = ChipStyle.styled(color: Colors.red, size: ChipSize.small);
 
       expect(style.activeBorderColor, Colors.red);
       expect(style.iconSize, ChipSize.small.iconSize);

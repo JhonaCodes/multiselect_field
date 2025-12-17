@@ -19,7 +19,8 @@ class ChipMultiSelectField<T> extends MultiSelectField<T> {
   final List<Choice<T>> Function()? data;
 
   /// Callback when selection changes.
-  final void Function(List<Choice<T>> choiceList, bool isFromDefaultData)? onSelect;
+  final void Function(List<Choice<T>> choiceList, bool isFromDefaultData)?
+  onSelect;
 
   /// Pre-selected choices.
   final List<Choice<T>>? defaultData;
@@ -107,7 +108,8 @@ class ChipMultiSelectField<T> extends MultiSelectField<T> {
   }) : super.internal();
 
   @override
-  State<ChipMultiSelectField<T>> createState() => _ChipMultiSelectFieldState<T>();
+  State<ChipMultiSelectField<T>> createState() =>
+      _ChipMultiSelectFieldState<T>();
 }
 
 class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
@@ -129,7 +131,8 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
   @override
   void didUpdateWidget(covariant ChipMultiSelectField<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.controller != null && widget.controller != oldWidget.controller) {
+    if (widget.controller != null &&
+        widget.controller != oldWidget.controller) {
       _menuController = widget.controller!;
     }
 
@@ -172,7 +175,9 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
 
       // Update select all state
       if (widget.data != null) {
-        final allData = widget.data!().where((e) => e.key != null && e.key!.isNotEmpty).toList();
+        final allData = widget.data!()
+            .where((e) => e.key != null && e.key!.isNotEmpty)
+            .toList();
         _selectAllActive = isSameData(_selectedChoices, allData);
       }
     });
@@ -230,10 +235,13 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
 
           if (isGroupTitle) {
             return Padding(
-              padding: widget.titleMenuPadding ?? const EdgeInsets.only(left: 16, top: 12, bottom: 4),
+              padding:
+                  widget.titleMenuPadding ??
+                  const EdgeInsets.only(left: 16, top: 12, bottom: 4),
               child: Text(
                 choice.value,
-                style: widget.titleMenuStyle ??
+                style:
+                    widget.titleMenuStyle ??
                     Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -241,13 +249,16 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
             );
           }
 
-          final itemStyle = widget.itemMenuStyle ?? Theme.of(context).textTheme.bodyMedium;
+          final itemStyle =
+              widget.itemMenuStyle ?? Theme.of(context).textTheme.bodyMedium;
 
           if (widget.singleSelection) {
             final isSelected = _isSelected(choice);
             return ListTile(
               leading: Icon(
-                isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                isSelected
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
                 color: isSelected ? Theme.of(context).primaryColor : null,
               ),
               title: Text(choice.value, style: itemStyle),
@@ -273,30 +284,41 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final chipStyle = widget.chipStyle ?? ChipStyle.withColor(theme.primaryColor);
+    final chipStyle =
+        widget.chipStyle ?? ChipStyle.withColor(theme.primaryColor);
     final chipSize = widget.chipSize ?? ChipSize.medium;
 
     final effectiveBackgroundColor = _isOpen
-        ? (chipStyle.activeBackgroundColor ?? chipStyle.backgroundColor ?? Colors.transparent)
+        ? (chipStyle.activeBackgroundColor ??
+              chipStyle.backgroundColor ??
+              Colors.transparent)
         : (chipStyle.backgroundColor ?? Colors.transparent);
 
     final effectiveBorderColor = _isOpen
-        ? (chipStyle.activeBorderColor ?? chipStyle.borderColor ?? Colors.grey.withValues(alpha: 0.4))
+        ? (chipStyle.activeBorderColor ??
+              chipStyle.borderColor ??
+              Colors.grey.withValues(alpha: 0.4))
         : (chipStyle.borderColor ?? Colors.grey.withValues(alpha: 0.4));
 
     final effectiveTextColor = _isOpen
-        ? (chipStyle.activeTextColor ?? chipStyle.textColor ?? theme.textTheme.labelLarge?.color)
+        ? (chipStyle.activeTextColor ??
+              chipStyle.textColor ??
+              theme.textTheme.labelLarge?.color)
         : (chipStyle.textColor ?? theme.textTheme.labelLarge?.color);
 
     final effectiveIconColor = _isOpen
-        ? (chipStyle.activeIconColor ?? chipStyle.iconColor ?? Colors.grey.shade600)
+        ? (chipStyle.activeIconColor ??
+              chipStyle.iconColor ??
+              Colors.grey.shade600)
         : (chipStyle.iconColor ?? Colors.grey.shade600);
 
     // Size values - chipSize takes priority, then chipStyle, then defaults
     final effectivePadding = chipStyle.padding ?? chipSize.padding;
-    final effectiveBorderRadius = chipStyle.borderRadius ?? BorderRadius.circular(chipSize.borderRadius);
+    final effectiveBorderRadius =
+        chipStyle.borderRadius ?? BorderRadius.circular(chipSize.borderRadius);
     final effectiveIconSize = chipStyle.iconSize ?? chipSize.iconSize;
-    final effectiveFontSize = chipStyle.textStyle?.fontSize ?? chipSize.fontSize;
+    final effectiveFontSize =
+        chipStyle.textStyle?.fontSize ?? chipSize.fontSize;
     final effectiveSpacing = chipSize.spacing;
 
     // Build display label with selection count
@@ -314,22 +336,23 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
       alignmentOffset: widget.menuStyle?.offset ?? const Offset(0, 5),
       onOpen: () => _handleMenuStateChange(true),
       onClose: () => _handleMenuStateChange(false),
-      style: widget.menuStyle?.menuStyle ??
+      style:
+          widget.menuStyle?.menuStyle ??
           MenuStyle(
             elevation: const WidgetStatePropertyAll<double>(8),
             shape: WidgetStatePropertyAll<OutlinedBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             padding: const WidgetStatePropertyAll<EdgeInsets>(EdgeInsets.zero),
-            maximumSize: widget.menuStyle?.width != null || widget.menuStyle?.height != null
+            maximumSize:
+                widget.menuStyle?.width != null ||
+                    widget.menuStyle?.height != null
                 ? WidgetStatePropertyAll<Size>(
-              Size(
-                widget.menuStyle?.width ?? double.infinity,
-                widget.menuStyle?.height ?? double.infinity,
-              ),
-            )
+                    Size(
+                      widget.menuStyle?.width ?? double.infinity,
+                      widget.menuStyle?.height ?? double.infinity,
+                    ),
+                  )
                 : null,
           ),
       menuChildren: [
@@ -351,12 +374,12 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
           child: InkWell(
             onTap: widget.enabled
                 ? () {
-              if (controller.isOpen) {
-                controller.close();
-              } else {
-                controller.open();
-              }
-            }
+                    if (controller.isOpen) {
+                      controller.close();
+                    } else {
+                      controller.open();
+                    }
+                  }
                 : null,
             borderRadius: effectiveBorderRadius,
             child: AnimatedContainer(
@@ -365,10 +388,7 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
               decoration: BoxDecoration(
                 color: effectiveBackgroundColor,
                 borderRadius: effectiveBorderRadius,
-                border: Border.all(
-                  color: effectiveBorderColor,
-                  width: 1,
-                ),
+                border: Border.all(color: effectiveBorderColor, width: 1),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,

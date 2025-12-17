@@ -20,7 +20,8 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final Widget Function(Choice<T> choiceList)? multiSelectWidget;
   final bool cleanCurrentSelection;
   final List<Choice<T>> Function() data;
-  final void Function(List<Choice<T>> choiceList, bool isFromDefaultData) onSelect;
+  final void Function(List<Choice<T>> choiceList, bool isFromDefaultData)
+  onSelect;
   final List<Choice<T>>? defaultData;
   final bool isMandatory;
   final bool singleSelection;
@@ -78,14 +79,16 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   }) : super.internal();
 
   @override
-  State<StandardMultiSelectField<T>> createState() => _StandardMultiSelectFieldState<T>();
+  State<StandardMultiSelectField<T>> createState() =>
+      _StandardMultiSelectFieldState<T>();
 }
 
-class _StandardMultiSelectFieldState<T> extends State<StandardMultiSelectField<T>>
+class _StandardMultiSelectFieldState<T>
+    extends State<StandardMultiSelectField<T>>
     with AutomaticKeepAliveClientMixin {
   final bool _isMobile =
       (defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.android);
+      defaultTargetPlatform == TargetPlatform.android);
   final GlobalKey _selectedItemKey = GlobalKey();
 
   List<Choice<T>> _selectedChoice = [];
@@ -189,27 +192,27 @@ class _StandardMultiSelectFieldState<T> extends State<StandardMultiSelectField<T
             builder: (context, size) {
               final effectiveScrollbarConfig =
                   widget.scrollbarConfig ??
-                      ScrollbarConfig(
-                        visible: true,
-                        themeData: ScrollbarThemeData(
-                          thickness: WidgetStateProperty.all(6.0),
-                          thumbColor: WidgetStateProperty.all(
-                            Colors.blue.withValues(alpha: 0.7),
-                          ),
-                          trackColor: WidgetStateProperty.all(
-                            Colors.grey.withValues(alpha: 0.3),
-                          ),
-                          radius: const Radius.circular(4.0),
-                        ),
-                      );
+                  ScrollbarConfig(
+                    visible: true,
+                    themeData: ScrollbarThemeData(
+                      thickness: WidgetStateProperty.all(6.0),
+                      thumbColor: WidgetStateProperty.all(
+                        Colors.blue.withValues(alpha: 0.7),
+                      ),
+                      trackColor: WidgetStateProperty.all(
+                        Colors.grey.withValues(alpha: 0.3),
+                      ),
+                      radius: const Radius.circular(4.0),
+                    ),
+                  );
 
               final scrollbarThemeData = effectiveScrollbarConfig.visible
                   ? effectiveScrollbarConfig.themeData ?? ScrollbarThemeData()
                   : ScrollbarThemeData(
-                thickness: WidgetStateProperty.all(0.0),
-                thumbVisibility: WidgetStateProperty.all(false),
-                trackVisibility: WidgetStateProperty.all(false),
-              );
+                      thickness: WidgetStateProperty.all(0.0),
+                      thumbVisibility: WidgetStateProperty.all(false),
+                      trackVisibility: WidgetStateProperty.all(false),
+                    );
 
               return ScrollbarTheme(
                 data: scrollbarThemeData,
@@ -247,7 +250,8 @@ class _StandardMultiSelectFieldState<T> extends State<StandardMultiSelectField<T
                         focusNode: _focusNode,
                         onKeyEvent: (event) {
                           if (event.runtimeType == KeyDownEvent) {
-                            if (event.logicalKey == LogicalKeyboardKey.backspace) {
+                            if (event.logicalKey ==
+                                LogicalKeyboardKey.backspace) {
                               if (_selectedChoice.isNotEmpty &&
                                   _textController.text.isEmpty) {
                                 _addOrRemove(
@@ -262,9 +266,9 @@ class _StandardMultiSelectFieldState<T> extends State<StandardMultiSelectField<T
                                     .data()
                                     .firstWhere(
                                       (filter) =>
-                                  filter.value.toLowerCase() ==
-                                      _textController.text.toLowerCase(),
-                                );
+                                          filter.value.toLowerCase() ==
+                                          _textController.text.toLowerCase(),
+                                    );
                                 _addOrRemove(elementFiltered);
                               }
                             }
@@ -303,24 +307,35 @@ class _StandardMultiSelectFieldState<T> extends State<StandardMultiSelectField<T
                                     if (_selectedChoice.isNotEmpty)
                                       ..._selectedChoice.map((element) {
                                         if (!widget.singleSelection) {
-                                          return widget.multiSelectWidget != null
-                                              ? widget.multiSelectWidget!(element)
+                                          return widget.multiSelectWidget !=
+                                                  null
+                                              ? widget.multiSelectWidget!(
+                                                  element,
+                                                )
                                               : ChipMultiselectField(
-                                            title: element.value,
-                                            onDeleted: () =>
-                                                _addOrRemove(element),
-                                          );
+                                                  title: element.value,
+                                                  onDeleted: () =>
+                                                      _addOrRemove(element),
+                                                );
                                         } else {
-                                          return widget.singleSelectWidget != null
-                                              ? widget.singleSelectWidget!(element)
+                                          return widget.singleSelectWidget !=
+                                                  null
+                                              ? widget.singleSelectWidget!(
+                                                  element,
+                                                )
                                               : Text(
-                                            element.value,
-                                            style: widget.textStyleSingleSelection ??
-                                                Theme.of(context).textTheme.labelLarge,
-                                          );
+                                                  element.value,
+                                                  style:
+                                                      widget
+                                                          .textStyleSingleSelection ??
+                                                      Theme.of(
+                                                        context,
+                                                      ).textTheme.labelLarge,
+                                                );
                                         }
                                       }),
-                                    if (widget.useTextFilter && _menuController.isOpen)
+                                    if (widget.useTextFilter &&
+                                        _menuController.isOpen)
                                       SearchMultiselectField(
                                         focusNodeTextField: _focusNodeTextField,
                                         isMobile: _isMobile,
@@ -341,24 +356,26 @@ class _StandardMultiSelectFieldState<T> extends State<StandardMultiSelectField<T
                               ),
                               widget.iconRight == null
                                   ? SizedBox(
-                                height: 40,
-                                width: 20,
-                                child: Center(
-                                  child: GestureDetector(
-                                    child: Icon(
-                                      menu.isOpen
-                                          ? Icons.arrow_drop_up
-                                          : Icons.arrow_drop_down,
-                                      color: Theme.of(context).colorScheme.secondary,
-                                    ),
-                                    onTap: () {
-                                      _menuController.isOpen
-                                          ? _menuController.close()
-                                          : _menuController.open();
-                                    },
-                                  ),
-                                ),
-                              )
+                                      height: 40,
+                                      width: 20,
+                                      child: Center(
+                                        child: GestureDetector(
+                                          child: Icon(
+                                            menu.isOpen
+                                                ? Icons.arrow_drop_up
+                                                : Icons.arrow_drop_down,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.secondary,
+                                          ),
+                                          onTap: () {
+                                            _menuController.isOpen
+                                                ? _menuController.close()
+                                                : _menuController.open();
+                                          },
+                                        ),
+                                      ),
+                                    )
                                   : widget.iconRight!(_menuController.isOpen),
                             ],
                           ),
@@ -374,7 +391,9 @@ class _StandardMultiSelectFieldState<T> extends State<StandardMultiSelectField<T
                           value: _selectAllActive,
                           onChanged: (vale) {
                             _selectAllActive = !_selectAllActive;
-                            _selectedChoice = _selectAllActive ? _cleanData : [];
+                            _selectedChoice = _selectAllActive
+                                ? _cleanData
+                                : [];
                             widget.onSelect(_selectedChoice, false);
                           },
                           child: Text("All"),
@@ -383,97 +402,120 @@ class _StandardMultiSelectFieldState<T> extends State<StandardMultiSelectField<T
                     ..._onFilteredChoice
                         .where((element) => element.value.isNotEmpty)
                         .map((result) {
-                      bool isGroupingTitle = result.key == null || result.key!.isEmpty;
-                      return SizedBox(
-                        width: widget.menuWidthBaseOnContent ? null : size.maxWidth,
-                        child: MenuItemButton(
-                          closeOnActivate:
-                          widget.singleSelection || widget.data().length == 1,
-                          key: (!isGroupingTitle && _isSelected(result)) &&
-                              _selectedChoice.indexOf(result) == 0
-                              ? _selectedItemKey
-                              : null,
-                          trailingIcon: !widget.selectAllOption
-                              ? (!isGroupingTitle && _isSelected(result))
-                              ? const Icon(
-                            Icons.check,
-                            color: Colors.green,
-                            size: 12,
-                          )
-                              : null
-                              : null,
-                          leadingIcon: widget.selectAllOption && !isGroupingTitle
-                              ? Padding(
-                            padding: EdgeInsets.only(left: 15),
-                            child: _isSelected(result)
-                                ? const Icon(
-                              Icons.check_box,
-                              color: Colors.green,
-                            )
-                                : Icon(Icons.check_box_outline_blank),
-                          )
-                              : null,
-                          style: widget.buttonStyle ??
-                              ButtonStyle(
-                                alignment: Alignment.centerLeft,
-                                elevation: const WidgetStatePropertyAll<double>(7.5),
-                                overlayColor:
-                                const WidgetStatePropertyAll(Colors.transparent),
-                                backgroundColor:
-                                WidgetStateProperty.resolveWith((state) {
-                                  if ((state.contains(WidgetState.hovered) &&
-                                      _isMobile)) {
-                                    return widget.itemColor?.hovered ??
-                                        _currentItemColor.hovered;
-                                  }
-                                  if ((!isGroupingTitle && _isSelected(result))) {
-                                    return widget.itemColor?.selected ??
-                                        _currentItemColor.selected;
-                                  }
-                                  return widget.itemColor?.unSelected ??
-                                      _currentItemColor.unSelected;
-                                }),
-                              ),
-                          onPressed: isGroupingTitle
-                              ? null
-                              : () {
-                            _addOrRemove(result);
-                            if (!widget.singleSelection &&
-                                widget.useTextFilter) {
-                              _textController.clear();
-                            }
-                          },
-                          child: widget.itemMenuButton ??
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: isGroupingTitle ? 0 : 10,
-                                ),
-                                child: Text(
-                                  result.value,
-                                  style: isGroupingTitle
-                                      ? widget.titleMenuStyle ??
-                                      Theme.of(context).textTheme.titleMedium
-                                      : widget.itemMenuStyle ??
-                                      Theme.of(context).textTheme.labelMedium,
-                                ),
-                              ),
-                        ),
-                      );
-                    }),
+                          bool isGroupingTitle =
+                              result.key == null || result.key!.isEmpty;
+                          return SizedBox(
+                            width: widget.menuWidthBaseOnContent
+                                ? null
+                                : size.maxWidth,
+                            child: MenuItemButton(
+                              closeOnActivate:
+                                  widget.singleSelection ||
+                                  widget.data().length == 1,
+                              key:
+                                  (!isGroupingTitle && _isSelected(result)) &&
+                                      _selectedChoice.indexOf(result) == 0
+                                  ? _selectedItemKey
+                                  : null,
+                              trailingIcon: !widget.selectAllOption
+                                  ? (!isGroupingTitle && _isSelected(result))
+                                        ? const Icon(
+                                            Icons.check,
+                                            color: Colors.green,
+                                            size: 12,
+                                          )
+                                        : null
+                                  : null,
+                              leadingIcon:
+                                  widget.selectAllOption && !isGroupingTitle
+                                  ? Padding(
+                                      padding: EdgeInsets.only(left: 15),
+                                      child: _isSelected(result)
+                                          ? const Icon(
+                                              Icons.check_box,
+                                              color: Colors.green,
+                                            )
+                                          : Icon(Icons.check_box_outline_blank),
+                                    )
+                                  : null,
+                              style:
+                                  widget.buttonStyle ??
+                                  ButtonStyle(
+                                    alignment: Alignment.centerLeft,
+                                    elevation:
+                                        const WidgetStatePropertyAll<double>(
+                                          7.5,
+                                        ),
+                                    overlayColor: const WidgetStatePropertyAll(
+                                      Colors.transparent,
+                                    ),
+                                    backgroundColor:
+                                        WidgetStateProperty.resolveWith((
+                                          state,
+                                        ) {
+                                          if ((state.contains(
+                                                WidgetState.hovered,
+                                              ) &&
+                                              _isMobile)) {
+                                            return widget.itemColor?.hovered ??
+                                                _currentItemColor.hovered;
+                                          }
+                                          if ((!isGroupingTitle &&
+                                              _isSelected(result))) {
+                                            return widget.itemColor?.selected ??
+                                                _currentItemColor.selected;
+                                          }
+                                          return widget.itemColor?.unSelected ??
+                                              _currentItemColor.unSelected;
+                                        }),
+                                  ),
+                              onPressed: isGroupingTitle
+                                  ? null
+                                  : () {
+                                      _addOrRemove(result);
+                                      if (!widget.singleSelection &&
+                                          widget.useTextFilter) {
+                                        _textController.clear();
+                                      }
+                                    },
+                              child:
+                                  widget.itemMenuButton ??
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: isGroupingTitle ? 0 : 10,
+                                    ),
+                                    child: Text(
+                                      result.value,
+                                      style: isGroupingTitle
+                                          ? widget.titleMenuStyle ??
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.titleMedium
+                                          : widget.itemMenuStyle ??
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.labelMedium,
+                                    ),
+                                  ),
+                            ),
+                          );
+                        }),
                   ],
-                  style: widget.menuStyle ??
+                  style:
+                      widget.menuStyle ??
                       MenuStyle(
                         elevation: const WidgetStatePropertyAll<double>(5),
                         visualDensity: VisualDensity.adaptivePlatformDensity,
                         maximumSize:
-                        widget.menuWidthBaseOnContent && widget.menuHeightBaseOnContent
+                            widget.menuWidthBaseOnContent &&
+                                widget.menuHeightBaseOnContent
                             ? null
                             : WidgetStatePropertyAll<Size>(
-                          Size(
-                            widget.menuWidth ?? size.maxWidth,
-                            currentMenuHeight,
-                          ),
-                        ),
+                                Size(
+                                  widget.menuWidth ?? size.maxWidth,
+                                  currentMenuHeight,
+                                ),
+                              ),
                       ),
                 ),
               );
@@ -491,8 +533,9 @@ class _StandardMultiSelectFieldState<T> extends State<StandardMultiSelectField<T
     return _selectedChoice
         .where(
           (element) =>
-      (val.key != null || val.key!.isNotEmpty) && element.key == val.key,
-    )
+              (val.key != null || val.key!.isNotEmpty) &&
+              element.key == val.key,
+        )
         .isNotEmpty;
   }
 
@@ -510,13 +553,13 @@ class _StandardMultiSelectFieldState<T> extends State<StandardMultiSelectField<T
       _onFilteredChoice = _onSelected
           ? widget.data()
           : widget
-          .data()
-          .where(
-            (e) => e.value.toLowerCase().contains(
-          text.toLowerCase().toString(),
-        ),
-      )
-          .toList();
+                .data()
+                .where(
+                  (e) => e.value.toLowerCase().contains(
+                    text.toLowerCase().toString(),
+                  ),
+                )
+                .toList();
     });
   }
 

@@ -36,7 +36,8 @@ abstract class MultiSelectField<T> extends StatefulWidget {
   const factory MultiSelectField({
     Key? key,
     required List<Choice<T>> Function() data,
-    required void Function(List<Choice<T>> choiceList, bool isFromDefaultData) onSelect,
+    required void Function(List<Choice<T>> choiceList, bool isFromDefaultData)
+    onSelect,
     Widget Function(bool isEmpty)? title,
     Widget? footer,
     Widget Function(Choice<T> choiceList)? singleSelectWidget,
@@ -189,7 +190,9 @@ class ScrollbarConfig {
           themeData: ScrollbarThemeData(
             thickness: WidgetStateProperty.all(12.0),
             thumbColor: WidgetStateProperty.all(effectiveColor),
-            trackColor: WidgetStateProperty.all(effectiveColor.withValues(alpha: 0.2)),
+            trackColor: WidgetStateProperty.all(
+              effectiveColor.withValues(alpha: 0.2),
+            ),
             radius: const Radius.circular(6.0),
             thumbVisibility: WidgetStateProperty.all(true),
             trackVisibility: WidgetStateProperty.all(true),
@@ -200,7 +203,9 @@ class ScrollbarConfig {
           visible: true,
           themeData: ScrollbarThemeData(
             thickness: WidgetStateProperty.all(4.0),
-            thumbColor: WidgetStateProperty.all(effectiveColor.withValues(alpha: 0.8)),
+            thumbColor: WidgetStateProperty.all(
+              effectiveColor.withValues(alpha: 0.8),
+            ),
             trackColor: WidgetStateProperty.all(Colors.transparent),
             radius: const Radius.circular(2.0),
             thumbVisibility: WidgetStateProperty.all(false),
@@ -213,7 +218,9 @@ class ScrollbarConfig {
           themeData: ScrollbarThemeData(
             thickness: WidgetStateProperty.all(8.0),
             thumbColor: WidgetStateProperty.all(effectiveColor),
-            trackColor: WidgetStateProperty.all(effectiveColor.withValues(alpha: 0.15)),
+            trackColor: WidgetStateProperty.all(
+              effectiveColor.withValues(alpha: 0.15),
+            ),
             radius: const Radius.circular(12.0),
             thumbVisibility: WidgetStateProperty.all(true),
             trackVisibility: WidgetStateProperty.all(true),
@@ -226,8 +233,12 @@ class ScrollbarConfig {
           visible: true,
           themeData: ScrollbarThemeData(
             thickness: WidgetStateProperty.all(6.0),
-            thumbColor: WidgetStateProperty.all(effectiveColor.withValues(alpha: 0.7)),
-            trackColor: WidgetStateProperty.all(Colors.grey.withValues(alpha: 0.3)),
+            thumbColor: WidgetStateProperty.all(
+              effectiveColor.withValues(alpha: 0.7),
+            ),
+            trackColor: WidgetStateProperty.all(
+              Colors.grey.withValues(alpha: 0.3),
+            ),
             radius: const Radius.circular(3.0),
           ),
         );
@@ -400,12 +411,7 @@ class ChipMenuStyle {
   final MenuStyle? menuStyle;
   final Offset? offset;
 
-  const ChipMenuStyle({
-    this.width,
-    this.height,
-    this.menuStyle,
-    this.offset,
-  });
+  const ChipMenuStyle({this.width, this.height, this.menuStyle, this.offset});
 }
 
 /// Utility function to compare two Choice lists.

@@ -36,7 +36,7 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final Widget Function(bool menuState)? iconLeft;
   final Widget Function(bool menuState)? iconRight;
   final ButtonStyle? buttonStyle;
-  final Widget? itemMenuButton;
+  final Widget Function(Choice<T> choice)? itemMenuButton;
   final TextStyle? titleMenuStyle;
   final TextStyle? itemMenuStyle;
   final String? label;
@@ -478,25 +478,26 @@ class _StandardMultiSelectFieldState<T>
                                         _textController.clear();
                                       }
                                     },
-                              child:
-                                  widget.itemMenuButton ??
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: isGroupingTitle ? 0 : 10,
-                                    ),
-                                    child: Text(
-                                      result.value,
-                                      style: isGroupingTitle
-                                          ? widget.titleMenuStyle ??
-                                                Theme.of(
-                                                  context,
-                                                ).textTheme.titleMedium
-                                          : widget.itemMenuStyle ??
-                                                Theme.of(
-                                                  context,
-                                                ).textTheme.labelMedium,
-                                    ),
+                              child: switch (widget.itemMenuButton) {
+                                null => Padding(
+                                  padding: EdgeInsets.only(
+                                    left: isGroupingTitle ? 0 : 10,
                                   ),
+                                  child: Text(
+                                    result.value,
+                                    style: isGroupingTitle
+                                        ? widget.titleMenuStyle ??
+                                              Theme.of(
+                                                context,
+                                              ).textTheme.titleMedium
+                                        : widget.itemMenuStyle ??
+                                              Theme.of(
+                                                context,
+                                              ).textTheme.labelMedium,
+                                  ),
+                                ),
+                                _ => widget.itemMenuButton!(result),
+                              },
                             ),
                           );
                         }),

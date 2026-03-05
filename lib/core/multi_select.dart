@@ -57,7 +57,7 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     Widget Function(bool menuState)? iconLeft,
     Widget Function(bool menuState)? iconRight,
     ButtonStyle? buttonStyle,
-    Widget? itemMenuButton,
+    Widget Function(Choice<T> choiceList)? itemMenuButton,
     TextStyle? titleMenuStyle,
     TextStyle? itemMenuStyle,
     String? label,

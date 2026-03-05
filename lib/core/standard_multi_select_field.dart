@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:multiselect_field/core/multi_select.dart';
 import 'package:multiselect_field/core/chip_multiselect_field.dart';
 import 'package:multiselect_field/core/search_multiselect_field.dart';
+import 'package:multiselect_field/core/standard_multi_select_extension.dart';
 
 /// Standard implementation of [MultiSelectField].
 ///
@@ -36,6 +37,7 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final Widget Function(bool menuState)? iconLeft;
   final Widget Function(bool menuState)? iconRight;
   final ButtonStyle? buttonStyle;
+  final ButtonStyle? selectedItemButtonStyle;
   final Widget Function(Choice<T> choice)? itemMenuButton;
   final TextStyle? titleMenuStyle;
   final TextStyle? itemMenuStyle;
@@ -58,6 +60,7 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
     this.menuWidthBaseOnContent = false,
     this.itemMenuButton,
     this.buttonStyle,
+    this.selectedItemButtonStyle,
     this.iconLeft,
     this.iconRight,
     this.menuStyle,
@@ -108,12 +111,6 @@ class _StandardMultiSelectFieldState<T>
       .data()
       .where((ele) => ele.key != null || ele.key!.isNotEmpty)
       .toList();
-
-  ItemColor get _currentItemColor => ItemColor(
-    selected: Colors.blueAccent.shade100.withAlpha(50),
-    unSelected: Colors.transparent,
-    hovered: Colors.blueAccent.shade100.withAlpha(30),
-  );
 
   @override
   void initState() {
@@ -438,37 +435,14 @@ class _StandardMultiSelectFieldState<T>
                                           : Icon(Icons.check_box_outline_blank),
                                     )
                                   : null,
-                              style:
-                                  widget.buttonStyle ??
-                                  ButtonStyle(
-                                    alignment: Alignment.centerLeft,
-                                    elevation:
-                                        const WidgetStatePropertyAll<double>(
-                                          7.5,
-                                        ),
-                                    overlayColor: const WidgetStatePropertyAll(
-                                      Colors.transparent,
-                                    ),
-                                    backgroundColor:
-                                        WidgetStateProperty.resolveWith((
-                                          state,
-                                        ) {
-                                          if ((state.contains(
-                                                WidgetState.hovered,
-                                              ) &&
-                                              _isMobile)) {
-                                            return widget.itemColor?.hovered ??
-                                                _currentItemColor.hovered;
-                                          }
-                                          if ((!isGroupingTitle &&
-                                              _isSelected(result))) {
-                                            return widget.itemColor?.selected ??
-                                                _currentItemColor.selected;
-                                          }
-                                          return widget.itemColor?.unSelected ??
-                                              _currentItemColor.unSelected;
-                                        }),
-                                  ),
+                              style: context.resolveItemStyle(
+                                isGroupingTitle: isGroupingTitle,
+                                isSelected: !isGroupingTitle && _isSelected(result),
+                                isMobile: _isMobile,
+                                selectedItemButtonStyle: widget.selectedItemButtonStyle,
+                                buttonStyle: widget.buttonStyle,
+                                itemColor: widget.itemColor,
+                              ),
                               onPressed: isGroupingTitle
                                   ? null
                                   : () {

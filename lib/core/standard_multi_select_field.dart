@@ -37,7 +37,10 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final Widget Function(bool menuState)? iconLeft;
   final Widget Function(bool menuState)? iconRight;
   final ButtonStyle? buttonStyle;
+  final bool mergeSelectedStyle;
   final ButtonStyle? selectedItemButtonStyle;
+  final EdgeInsetsGeometry? itemPadding;
+  final EdgeInsetsGeometry? selectedItemPadding;
   final Widget Function(Choice<T> choice)? itemMenuButton;
   final TextStyle? titleMenuStyle;
   final TextStyle? itemMenuStyle;
@@ -60,7 +63,10 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
     this.menuWidthBaseOnContent = false,
     this.itemMenuButton,
     this.buttonStyle,
+    this.mergeSelectedStyle = false,
     this.selectedItemButtonStyle,
+    this.itemPadding,
+    this.selectedItemPadding,
     this.iconLeft,
     this.iconRight,
     this.menuStyle,
@@ -401,77 +407,84 @@ class _StandardMultiSelectFieldState<T>
                         .map((result) {
                           bool isGroupingTitle =
                               result.key == null || result.key!.isEmpty;
+                          final isSelected = !isGroupingTitle && _isSelected(result);
+
                           return SizedBox(
                             width: widget.menuWidthBaseOnContent
                                 ? null
                                 : size.maxWidth,
-                            child: MenuItemButton(
-                              closeOnActivate:
-                                  widget.singleSelection ||
-                                  widget.data().length == 1,
-                              key:
-                                  (!isGroupingTitle && _isSelected(result)) &&
-                                      _selectedChoice.indexOf(result) == 0
-                                  ? _selectedItemKey
-                                  : null,
-                              trailingIcon: !widget.selectAllOption
-                                  ? (!isGroupingTitle && _isSelected(result))
-                                        ? const Icon(
-                                            Icons.check,
-                                            color: Colors.green,
-                                            size: 12,
-                                          )
-                                        : null
-                                  : null,
-                              leadingIcon:
-                                  widget.selectAllOption && !isGroupingTitle
-                                  ? Padding(
-                                      padding: EdgeInsets.only(left: 15),
-                                      child: _isSelected(result)
+                            child: Padding(
+                              padding: (isSelected && widget.selectedItemPadding != null)
+                                  ? widget.selectedItemPadding!
+                                  : widget.itemPadding ?? EdgeInsets.zero,
+                              child: MenuItemButton(
+                                closeOnActivate:
+                                    widget.singleSelection ||
+                                    widget.data().length == 1,
+                                key: isSelected &&
+                                        _selectedChoice.indexOf(result) == 0
+                                    ? _selectedItemKey
+                                    : null,
+                                trailingIcon: !widget.selectAllOption
+                                    ? isSelected
                                           ? const Icon(
-                                              Icons.check_box,
+                                              Icons.check,
                                               color: Colors.green,
+                                              size: 12,
                                             )
-                                          : Icon(Icons.check_box_outline_blank),
-                                    )
-                                  : null,
-                              style: context.resolveItemStyle(
-                                isGroupingTitle: isGroupingTitle,
-                                isSelected: !isGroupingTitle && _isSelected(result),
-                                isMobile: _isMobile,
-                                selectedItemButtonStyle: widget.selectedItemButtonStyle,
-                                buttonStyle: widget.buttonStyle,
-                                itemColor: widget.itemColor,
-                              ),
-                              onPressed: isGroupingTitle
-                                  ? null
-                                  : () {
-                                      _addOrRemove(result);
-                                      if (!widget.singleSelection &&
-                                          widget.useTextFilter) {
-                                        _textController.clear();
-                                      }
-                                    },
-                              child: switch (widget.itemMenuButton) {
-                                null => Padding(
-                                  padding: EdgeInsets.only(
-                                    left: isGroupingTitle ? 0 : 10,
-                                  ),
-                                  child: Text(
-                                    result.value,
-                                    style: isGroupingTitle
-                                        ? widget.titleMenuStyle ??
-                                              Theme.of(
-                                                context,
-                                              ).textTheme.titleMedium
-                                        : widget.itemMenuStyle ??
-                                              Theme.of(
-                                                context,
-                                              ).textTheme.labelMedium,
-                                  ),
+                                          : null
+                                    : null,
+                                leadingIcon:
+                                    widget.selectAllOption && !isGroupingTitle
+                                    ? Padding(
+                                        padding: EdgeInsets.only(left: 15),
+                                        child: isSelected
+                                            ? const Icon(
+                                                Icons.check_box,
+                                                color: Colors.green,
+                                              )
+                                            : Icon(Icons.check_box_outline_blank),
+                                      )
+                                    : null,
+                                style: context.resolveItemStyle(
+                                  isGroupingTitle: isGroupingTitle,
+                                  isSelected: isSelected,
+                                  isMobile: _isMobile,
+                                  selectedItemButtonStyle: widget.selectedItemButtonStyle,
+                                  mergeSelectedStyle: widget.mergeSelectedStyle,
+                                  buttonStyle: widget.buttonStyle,
+                                  itemColor: widget.itemColor,
                                 ),
-                                _ => widget.itemMenuButton!(result),
-                              },
+                                onPressed: isGroupingTitle
+                                    ? null
+                                    : () {
+                                        _addOrRemove(result);
+                                        if (!widget.singleSelection &&
+                                            widget.useTextFilter) {
+                                          _textController.clear();
+                                        }
+                                      },
+                                child: switch (widget.itemMenuButton) {
+                                  null => Padding(
+                                    padding: EdgeInsets.only(
+                                      left: isGroupingTitle ? 0 : 10,
+                                    ),
+                                    child: Text(
+                                      result.value,
+                                      style: isGroupingTitle
+                                          ? widget.titleMenuStyle ??
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.titleMedium
+                                          : widget.itemMenuStyle ??
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.labelMedium,
+                                    ),
+                                  ),
+                                  _ => widget.itemMenuButton!(result),
+                                },
+                              ),
                             ),
                           );
                         }),

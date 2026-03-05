@@ -20,39 +20,46 @@ extension MultiSelectStyleExtension on BuildContext {
 
   /// Resolves which [ButtonStyle] to apply to a menu item.
   ///
-  /// Priority order (first match wins):
-  /// 1. [selectedItemButtonStyle] — if the item is selected and not a group title
+  /// When [mergeSelectedStyle] is `false` (default):
+  /// 1. [selectedItemButtonStyle] replaces entirely if the item is selected
   /// 2. [buttonStyle] — user-provided global style for all items
-  /// 3. Default built-in style with dynamic background color resolution
+  /// 3. Default built-in style
   ///
-  /// This separation allows users to customize selected items independently
-  /// from the rest, which was not possible when a single [buttonStyle]
-  /// controlled every item.
+  /// When [mergeSelectedStyle] is `true`:
+  /// 1. Resolves the base style (buttonStyle or default)
+  /// 2. Merges [selectedItemButtonStyle] on top — only the properties
+  ///    defined in [selectedItemButtonStyle] override the base, the rest
+  ///    are preserved from the current style.
   ButtonStyle resolveItemStyle({
     required bool isGroupingTitle,
     required bool isSelected,
     required bool isMobile,
     ButtonStyle? selectedItemButtonStyle,
+    bool mergeSelectedStyle = false,
     ButtonStyle? buttonStyle,
     ItemColor? itemColor,
   }) {
-    return switch ((isSelected && !isGroupingTitle, selectedItemButtonStyle, buttonStyle)) {
-      (true, final style?, _) => style,
-      (_, _, final style?) => style,
-      _ => ButtonStyle(
-        alignment: Alignment.centerLeft,
-        elevation: const WidgetStatePropertyAll<double>(7.5),
-        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-        backgroundColor: WidgetStateProperty.resolveWith((state) {
-          return resolveItemBackgroundColor(
-            widgetState: state,
-            isGroupingTitle: isGroupingTitle,
-            isSelected: isSelected,
-            isMobile: isMobile,
-            itemColor: itemColor,
-          );
-        }),
-      ),
+    final baseStyle = buttonStyle ?? ButtonStyle(
+      alignment: Alignment.centerLeft,
+      elevation: const WidgetStatePropertyAll<double>(7.5),
+      overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+      backgroundColor: WidgetStateProperty.resolveWith((state) {
+        return resolveItemBackgroundColor(
+          widgetState: state,
+          isGroupingTitle: isGroupingTitle,
+          isSelected: isSelected,
+          isMobile: isMobile,
+          itemColor: itemColor,
+        );
+      }),
+    );
+
+    final isItemSelected = isSelected && !isGroupingTitle;
+
+    return switch ((isItemSelected, selectedItemButtonStyle, mergeSelectedStyle)) {
+      (true, final selected?, true) => baseStyle.merge(selected),
+      (true, final selected?, false) => selected,
+      _ => baseStyle,
     };
   }
 

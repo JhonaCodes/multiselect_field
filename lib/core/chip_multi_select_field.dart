@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:multiselect_field/core/multi_select.dart';
+import 'package:multiselect_field/core/chip_multi_select_extension.dart';
 
 /// Chip variant implementation of [MultiSelectField].
 ///
@@ -153,6 +154,25 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
     }
   }
 
+  ChipStyle get _chipStyle =>
+      widget.chipStyle ?? ChipStyle.withColor(Theme.of(context).primaryColor);
+
+  ChipSize get _chipSize => widget.chipSize ?? ChipSize.medium;
+
+  ({Color background, Color border, Color? text, Color icon}) get _colors =>
+      context.resolveChipColors(isOpen: _isOpen, chipStyle: _chipStyle);
+
+  ({EdgeInsetsGeometry padding, BorderRadius borderRadius, double iconSize, double fontSize, double spacing})
+      get _dimensions =>
+          context.resolveChipDimensions(chipStyle: _chipStyle, chipSize: _chipSize);
+
+  String get _displayLabel => context.resolveChipDisplayLabel<T>(
+    label: widget.label,
+    selectedChoices: _selectedChoices,
+    singleSelection: widget.singleSelection,
+    hasData: widget.data != null,
+  );
+
   bool _isSelected(Choice<T> choice) {
     return _selectedChoices.any((c) => c.key == choice.key);
   }
@@ -173,7 +193,6 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
         }
       }
 
-      // Update select all state
       if (widget.data != null) {
         final allData = widget.data!()
             .where((e) => e.key != null && e.key!.isNotEmpty)
@@ -203,133 +222,8 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
     widget.onSelect?.call(_selectedChoices, false);
   }
 
-  Widget _buildMenuContent() {
-    // If custom content provided, use it
-    if (widget.menuContent != null) {
-      return widget.menuContent!;
-    }
-
-    // Otherwise, build from data
-    if (widget.data == null) {
-      return const SizedBox.shrink();
-    }
-
-    final choices = widget.data!();
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (widget.selectAllOption && choices.isNotEmpty)
-          ListTile(
-            leading: Checkbox(
-              value: _selectAllActive,
-              onChanged: (_) => _toggleSelectAll(),
-            ),
-            title: const Text('All'),
-            dense: true,
-            onTap: _toggleSelectAll,
-          ),
-        ...choices.where((c) => c.value.isNotEmpty).map((choice) {
-          final isGroupTitle = choice.key == null || choice.key!.isEmpty;
-
-          if (isGroupTitle) {
-            return Padding(
-              padding:
-                  widget.titleMenuPadding ??
-                  const EdgeInsets.only(left: 16, top: 12, bottom: 4),
-              child: Text(
-                choice.value,
-                style:
-                    widget.titleMenuStyle ??
-                    Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            );
-          }
-
-          final itemStyle =
-              widget.itemMenuStyle ?? Theme.of(context).textTheme.bodyMedium;
-
-          if (widget.singleSelection) {
-            final isSelected = _isSelected(choice);
-            return ListTile(
-              leading: Icon(
-                isSelected
-                    ? Icons.radio_button_checked
-                    : Icons.radio_button_unchecked,
-                color: isSelected ? Theme.of(context).primaryColor : null,
-              ),
-              title: Text(choice.value, style: itemStyle),
-              dense: true,
-              onTap: () => _toggleSelection(choice),
-            );
-          }
-
-          return ListTile(
-            leading: Checkbox(
-              value: _isSelected(choice),
-              onChanged: (_) => _toggleSelection(choice),
-            ),
-            title: Text(choice.value, style: itemStyle),
-            dense: true,
-            onTap: () => _toggleSelection(choice),
-          );
-        }),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final chipStyle =
-        widget.chipStyle ?? ChipStyle.withColor(theme.primaryColor);
-    final chipSize = widget.chipSize ?? ChipSize.medium;
-
-    final effectiveBackgroundColor = _isOpen
-        ? (chipStyle.activeBackgroundColor ??
-              chipStyle.backgroundColor ??
-              Colors.transparent)
-        : (chipStyle.backgroundColor ?? Colors.transparent);
-
-    final effectiveBorderColor = _isOpen
-        ? (chipStyle.activeBorderColor ??
-              chipStyle.borderColor ??
-              Colors.grey.withValues(alpha: 0.4))
-        : (chipStyle.borderColor ?? Colors.grey.withValues(alpha: 0.4));
-
-    final effectiveTextColor = _isOpen
-        ? (chipStyle.activeTextColor ??
-              chipStyle.textColor ??
-              theme.textTheme.labelLarge?.color)
-        : (chipStyle.textColor ?? theme.textTheme.labelLarge?.color);
-
-    final effectiveIconColor = _isOpen
-        ? (chipStyle.activeIconColor ??
-              chipStyle.iconColor ??
-              Colors.grey.shade600)
-        : (chipStyle.iconColor ?? Colors.grey.shade600);
-
-    // Size values - chipSize takes priority, then chipStyle, then defaults
-    final effectivePadding = chipStyle.padding ?? chipSize.padding;
-    final effectiveBorderRadius =
-        chipStyle.borderRadius ?? BorderRadius.circular(chipSize.borderRadius);
-    final effectiveIconSize = chipStyle.iconSize ?? chipSize.iconSize;
-    final effectiveFontSize =
-        chipStyle.textStyle?.fontSize ?? chipSize.fontSize;
-    final effectiveSpacing = chipSize.spacing;
-
-    // Build display label with selection count
-    String displayLabel = widget.label;
-    if (_selectedChoices.isNotEmpty && widget.data != null) {
-      if (widget.singleSelection) {
-        displayLabel = _selectedChoices.first.value;
-      } else {
-        displayLabel = '${widget.label} (${_selectedChoices.length})';
-      }
-    }
 
     return MenuAnchor(
       controller: _menuController,
@@ -362,7 +256,20 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (widget.menuHeader != null) widget.menuHeader!,
-              _buildMenuContent(),
+              ChipMenuContent<T>(
+                menuContent: widget.menuContent,
+                data: widget.data,
+                selectAllOption: widget.selectAllOption,
+                singleSelection: widget.singleSelection,
+                selectAllActive: _selectAllActive,
+                selectedChoices: _selectedChoices,
+                titleMenuStyle: widget.titleMenuStyle,
+                itemMenuStyle: widget.itemMenuStyle,
+                titleMenuPadding: widget.titleMenuPadding,
+                onToggleSelection: _toggleSelection,
+                onToggleSelectAll: _toggleSelectAll,
+                isSelected: _isSelected,
+              ),
               if (widget.menuFooter != null) widget.menuFooter!,
             ],
           ),
@@ -373,50 +280,46 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
           color: Colors.transparent,
           child: InkWell(
             onTap: widget.enabled
-                ? () {
-                    if (controller.isOpen) {
-                      controller.close();
-                    } else {
-                      controller.open();
-                    }
-                  }
+                ? () => controller.isOpen
+                    ? controller.close()
+                    : controller.open()
                 : null,
-            borderRadius: effectiveBorderRadius,
+            borderRadius: _dimensions.borderRadius,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
-              padding: effectivePadding,
+              padding: _dimensions.padding,
               decoration: BoxDecoration(
-                color: effectiveBackgroundColor,
-                borderRadius: effectiveBorderRadius,
-                border: Border.all(color: effectiveBorderColor, width: 1),
+                color: _colors.background,
+                borderRadius: _dimensions.borderRadius,
+                border: Border.all(color: _colors.border, width: 1),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (widget.leading != null) ...[
                     widget.leading!,
-                    SizedBox(width: effectiveSpacing),
+                    SizedBox(width: _dimensions.spacing),
                   ],
                   Text(
-                    displayLabel,
+                    _displayLabel,
                     style: TextStyle(
-                      fontSize: effectiveFontSize,
-                      color: effectiveTextColor,
+                      fontSize: _dimensions.fontSize,
+                      color: _colors.text,
                     ),
                   ),
                   if (widget.trailing != null) ...[
-                    SizedBox(width: effectiveSpacing),
+                    SizedBox(width: _dimensions.spacing),
                     widget.trailing!,
                   ],
                   if (widget.showDropdownIcon) ...[
-                    SizedBox(width: effectiveSpacing),
+                    SizedBox(width: _dimensions.spacing),
                     AnimatedRotation(
                       turns: _isOpen ? 0.5 : 0,
                       duration: const Duration(milliseconds: 150),
                       child: Icon(
-                        chipStyle.icon ?? Icons.arrow_drop_down,
-                        size: effectiveIconSize,
-                        color: effectiveIconColor,
+                        _chipStyle.icon ?? Icons.arrow_drop_down,
+                        size: _dimensions.iconSize,
+                        color: _colors.icon,
                       ),
                     ),
                   ],
@@ -426,6 +329,114 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
           ),
         );
       },
+    );
+  }
+}
+
+/// Renders the dropdown menu content for [ChipMultiSelectField].
+///
+/// Separated as a widget to avoid rebuilding the entire chip when
+/// only the menu content changes, and to keep the parent's build
+/// method focused on chip layout.
+class ChipMenuContent<T> extends StatelessWidget {
+  final Widget? menuContent;
+  final List<Choice<T>> Function()? data;
+  final bool selectAllOption;
+  final bool singleSelection;
+  final bool selectAllActive;
+  final List<Choice<T>> selectedChoices;
+  final TextStyle? titleMenuStyle;
+  final TextStyle? itemMenuStyle;
+  final EdgeInsetsGeometry? titleMenuPadding;
+  final void Function(Choice<T>) onToggleSelection;
+  final VoidCallback onToggleSelectAll;
+  final bool Function(Choice<T>) isSelected;
+
+  const ChipMenuContent({
+    super.key,
+    this.menuContent,
+    this.data,
+    required this.selectAllOption,
+    required this.singleSelection,
+    required this.selectAllActive,
+    required this.selectedChoices,
+    this.titleMenuStyle,
+    this.itemMenuStyle,
+    this.titleMenuPadding,
+    required this.onToggleSelection,
+    required this.onToggleSelectAll,
+    required this.isSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (menuContent != null) return menuContent!;
+    if (data == null) return const SizedBox.shrink();
+
+    final choices = data!();
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (selectAllOption && choices.isNotEmpty)
+          ListTile(
+            leading: Checkbox(
+              value: selectAllActive,
+              onChanged: (_) => onToggleSelectAll(),
+            ),
+            title: const Text('All'),
+            dense: true,
+            onTap: onToggleSelectAll,
+          ),
+        ...choices.where((c) => c.value.isNotEmpty).map((choice) {
+          final isGroupTitle = choice.key == null || choice.key!.isEmpty;
+
+          if (isGroupTitle) {
+            return Padding(
+              padding:
+                  titleMenuPadding ??
+                  const EdgeInsets.only(left: 16, top: 12, bottom: 4),
+              child: Text(
+                choice.value,
+                style:
+                    titleMenuStyle ??
+                    Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            );
+          }
+
+          final itemStyle =
+              itemMenuStyle ?? Theme.of(context).textTheme.bodyMedium;
+          final selected = isSelected(choice);
+
+          if (singleSelection) {
+            return ListTile(
+              leading: Icon(
+                selected
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
+                color: selected ? Theme.of(context).primaryColor : null,
+              ),
+              title: Text(choice.value, style: itemStyle),
+              dense: true,
+              onTap: () => onToggleSelection(choice),
+            );
+          }
+
+          return ListTile(
+            leading: Checkbox(
+              value: selected,
+              onChanged: (_) => onToggleSelection(choice),
+            ),
+            title: Text(choice.value, style: itemStyle),
+            dense: true,
+            onTap: () => onToggleSelection(choice),
+          );
+        }),
+      ],
     );
   }
 }

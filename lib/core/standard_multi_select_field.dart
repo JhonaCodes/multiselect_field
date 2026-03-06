@@ -45,6 +45,7 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final TextStyle? titleMenuStyle;
   final TextStyle? itemMenuStyle;
   final String? label;
+  final bool staticLabel;
   final TextStyle? textStyleLabel;
   final bool selectAllOption;
   final ItemColor? itemColor;
@@ -83,6 +84,7 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
     this.selectAllOption = false,
     this.itemColor,
     this.label,
+    this.staticLabel = false,
     this.textStyleLabel,
     this.scrollbarConfig,
   }) : super.internal();
@@ -300,7 +302,7 @@ class _StandardMultiSelectFieldState<T>
                                   spacing: 7,
                                   runSpacing: _isMobile ? 0 : 7,
                                   children: [
-                                    if (_selectedChoice.isEmpty &&
+                                    if ((_selectedChoice.isEmpty || widget.staticLabel) &&
                                         !widget.useTextFilter &&
                                         widget.label != null)
                                       Text(

@@ -295,10 +295,10 @@ class _StandardMultiSelectFieldState<T>
                           margin: const EdgeInsets.only(top: 2),
                           child: Flex(
                             direction: Axis.horizontal,
-                            mainAxisSize: widget.fieldWidth != null
+                            mainAxisSize: widget.fieldWidth == FieldWidth.fitContent
                                 ? MainAxisSize.min
                                 : MainAxisSize.max,
-                            mainAxisAlignment: widget.fieldWidth != null
+                            mainAxisAlignment: widget.fieldWidth == FieldWidth.fitContent
                                 ? MainAxisAlignment.start
                                 : MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,

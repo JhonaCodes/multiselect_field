@@ -12,7 +12,7 @@ class BottomSheetMultiSelectField<T> extends MultiSelectField<T> {
   final String label;
   final List<Choice<T>> Function()? data;
   final void Function(List<Choice<T>> choiceList, bool isFromDefaultData)?
-      onSelect;
+  onSelect;
   final void Function(List<Choice<T>> selectedItems)? onChanged;
   final List<Choice<T>>? defaultData;
   final Widget? menuContent;
@@ -103,8 +103,7 @@ class _BottomSheetMultiSelectFieldState<T>
       }
 
       if (widget.data != null) {
-        final allData = widget
-            .data!()
+        final allData = widget.data!()
             .where((e) => e.key != null && e.key!.isNotEmpty)
             .toList();
         _selectAllActive = isSameData(_selectedChoices, allData);
@@ -124,8 +123,7 @@ class _BottomSheetMultiSelectFieldState<T>
     setState(() {
       _selectAllActive = !_selectAllActive;
       if (_selectAllActive && widget.data != null) {
-        _selectedChoices = widget
-            .data!()
+        _selectedChoices = widget.data!()
             .where((e) => e.key != null && e.key!.isNotEmpty)
             .toList();
       } else {

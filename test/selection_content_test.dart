@@ -55,8 +55,9 @@ void main() {
       expect(find.text('Custom Content'), findsOneWidget);
     });
 
-    testWidgets('renders empty when no data and no menuContent',
-        (tester) async {
+    testWidgets('renders empty when no data and no menuContent', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -128,8 +129,7 @@ void main() {
       expect(find.text('Item 2'), findsOneWidget);
     });
 
-    testWidgets('shows radio buttons in single selection mode',
-        (tester) async {
+    testWidgets('shows radio buttons in single selection mode', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -195,8 +195,9 @@ void main() {
       expect(tappedChoice?.key, '1');
     });
 
-    testWidgets('calls onToggleSelectAll when select all tapped',
-        (tester) async {
+    testWidgets('calls onToggleSelectAll when select all tapped', (
+      tester,
+    ) async {
       var selectAllCalled = false;
 
       await tester.pumpWidget(

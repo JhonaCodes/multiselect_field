@@ -18,7 +18,9 @@ final groupedChoices = [
 
 Widget wrap(Widget child) {
   return MaterialApp(
-    home: Scaffold(body: Padding(padding: const EdgeInsets.all(20), child: child)),
+    home: Scaffold(
+      body: Padding(padding: const EdgeInsets.all(20), child: child),
+    ),
   );
 }
 
@@ -28,35 +30,41 @@ void main() {
   // =========================================================================
   group('BottomSheet - Trigger', () {
     testWidgets('renders label trigger', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+          ),
         ),
-      ));
+      );
 
       expect(find.text('Categories'), findsOneWidget);
     });
 
     testWidgets('renders custom child trigger', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          child: const Icon(Icons.filter_list, key: Key('trigger')),
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            child: const Icon(Icons.filter_list, key: Key('trigger')),
+          ),
         ),
-      ));
+      );
 
       expect(find.byKey(const Key('trigger')), findsOneWidget);
     });
 
     testWidgets('opens sheet on tap', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -64,13 +72,15 @@ void main() {
     });
 
     testWidgets('does not open when disabled', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          enabled: false,
-          data: () => testChoices,
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            enabled: false,
+            data: () => testChoices,
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -84,13 +94,16 @@ void main() {
   group('BottomSheet - Selection', () {
     testWidgets('multi selection: select multiple items', (tester) async {
       final selected = <List<String>>[];
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          onSelect: (items, _) => selected.add(items.map((e) => e.key!).toList()),
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            onSelect: (items, _) =>
+                selected.add(items.map((e) => e.key!).toList()),
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -106,13 +119,16 @@ void main() {
 
     testWidgets('multi selection: deselect on re-tap', (tester) async {
       final selected = <List<String>>[];
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          onSelect: (items, _) => selected.add(items.map((e) => e.key!).toList()),
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            onSelect: (items, _) =>
+                selected.add(items.map((e) => e.key!).toList()),
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -126,14 +142,17 @@ void main() {
 
     testWidgets('single selection: replaces previous', (tester) async {
       final selected = <List<String>>[];
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Category',
-          singleSelection: true,
-          data: () => testChoices,
-          onSelect: (items, _) => selected.add(items.map((e) => e.key!).toList()),
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Category',
+            singleSelection: true,
+            data: () => testChoices,
+            onSelect: (items, _) =>
+                selected.add(items.map((e) => e.key!).toList()),
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Category'));
       await tester.pumpAndSettle();
@@ -156,14 +175,17 @@ void main() {
 
     testWidgets('select all option works', (tester) async {
       final selected = <List<String>>[];
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          selectAllOption: true,
-          onSelect: (items, _) => selected.add(items.map((e) => e.key!).toList()),
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            selectAllOption: true,
+            onSelect: (items, _) =>
+                selected.add(items.map((e) => e.key!).toList()),
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -185,13 +207,15 @@ void main() {
   group('BottomSheet - Callbacks', () {
     testWidgets('onOpened fires', (tester) async {
       bool opened = false;
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          onOpened: () => opened = true,
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            onOpened: () => opened = true,
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -200,13 +224,15 @@ void main() {
 
     testWidgets('onClosed fires when dismissed', (tester) async {
       bool closed = false;
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          onClosed: () => closed = true,
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            onClosed: () => closed = true,
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -219,14 +245,16 @@ void main() {
 
     testWidgets('onChanged fires on user action only', (tester) async {
       final changed = <int>[];
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          defaultData: [Choice<String>('1', 'Option 1')],
-          onChanged: (items) => changed.add(items.length),
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            defaultData: [Choice<String>('1', 'Option 1')],
+            onChanged: (items) => changed.add(items.length),
+          ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       expect(changed, isEmpty); // NOT fired on default data
@@ -241,14 +269,16 @@ void main() {
     testWidgets('both onSelect and onChanged fire', (tester) async {
       int selectCount = 0;
       int changedCount = 0;
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          onSelect: (_, __) => selectCount++,
-          onChanged: (_) => changedCount++,
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            onSelect: (_, _) => selectCount++,
+            onChanged: (_) => changedCount++,
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -265,35 +295,44 @@ void main() {
   // =========================================================================
   group('BottomSheet - Display label', () {
     testWidgets('shows label when empty', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+          ),
         ),
-      ));
+      );
       expect(find.text('Categories'), findsOneWidget);
     });
 
     testWidgets('shows count for multi selection', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          defaultData: [Choice<String>('1', 'Option 1'), Choice<String>('2', 'Option 2')],
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            defaultData: [
+              Choice<String>('1', 'Option 1'),
+              Choice<String>('2', 'Option 2'),
+            ],
+          ),
         ),
-      ));
+      );
       expect(find.text('Categories (2)'), findsOneWidget);
     });
 
     testWidgets('shows value for single selection', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Category',
-          singleSelection: true,
-          data: () => testChoices,
-          defaultData: [Choice<String>('1', 'Option 1')],
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Category',
+            singleSelection: true,
+            data: () => testChoices,
+            defaultData: [Choice<String>('1', 'Option 1')],
+          ),
         ),
-      ));
+      );
       expect(find.text('Option 1'), findsOneWidget);
     });
   });
@@ -303,36 +342,45 @@ void main() {
   // =========================================================================
   group('BottomSheet - Default data', () {
     testWidgets('initializes with defaultData', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          defaultData: [Choice<String>('1', 'Option 1')],
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            defaultData: [Choice<String>('1', 'Option 1')],
+          ),
         ),
-      ));
+      );
       expect(find.text('Categories (1)'), findsOneWidget);
     });
 
     testWidgets('didUpdateWidget reflects new defaultData', (tester) async {
       final key = GlobalKey();
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          key: key,
-          label: 'Categories',
-          data: () => testChoices,
-          defaultData: [Choice<String>('1', 'Option 1')],
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            key: key,
+            label: 'Categories',
+            data: () => testChoices,
+            defaultData: [Choice<String>('1', 'Option 1')],
+          ),
         ),
-      ));
+      );
       expect(find.text('Categories (1)'), findsOneWidget);
 
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          key: key,
-          label: 'Categories',
-          data: () => testChoices,
-          defaultData: [Choice<String>('1', 'Option 1'), Choice<String>('2', 'Option 2')],
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            key: key,
+            label: 'Categories',
+            data: () => testChoices,
+            defaultData: [
+              Choice<String>('1', 'Option 1'),
+              Choice<String>('2', 'Option 2'),
+            ],
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
       expect(find.text('Categories (2)'), findsOneWidget);
     });
@@ -342,15 +390,19 @@ void main() {
   // CONTENT
   // =========================================================================
   group('BottomSheet - Content', () {
-    testWidgets('menuHeader and menuFooter render inside sheet', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          menuHeader: const Text('Pick items'),
-          menuFooter: const Text('Done'),
+    testWidgets('menuHeader and menuFooter render inside sheet', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            menuHeader: const Text('Pick items'),
+            menuFooter: const Text('Done'),
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -359,13 +411,15 @@ void main() {
     });
 
     testWidgets('menuContent overrides data list', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          menuContent: const Text('Custom widget'),
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            menuContent: const Text('Custom widget'),
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -374,12 +428,14 @@ void main() {
     });
 
     testWidgets('group titles render', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => groupedChoices,
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => groupedChoices,
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -393,15 +449,17 @@ void main() {
   // =========================================================================
   group('BottomSheet - Style', () {
     testWidgets('custom backgroundColor applies', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          bottomSheetStyle: const BottomSheetStyle(
-            backgroundColor: Colors.red,
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            bottomSheetStyle: const BottomSheetStyle(
+              backgroundColor: Colors.red,
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -411,15 +469,15 @@ void main() {
     });
 
     testWidgets('showDragHandle false hides handle', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          bottomSheetStyle: const BottomSheetStyle(
-            showDragHandle: false,
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            bottomSheetStyle: const BottomSheetStyle(showDragHandle: false),
           ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -432,12 +490,14 @@ void main() {
   // =========================================================================
   group('BottomSheet - closeOnSelect', () {
     testWidgets('sheet stays open after selection by default', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -449,14 +509,18 @@ void main() {
       expect(find.text('Option 2'), findsOneWidget);
     });
 
-    testWidgets('sheet closes after selection when closeOnSelect=true', (tester) async {
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          closeOnSelect: true,
+    testWidgets('sheet closes after selection when closeOnSelect=true', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            closeOnSelect: true,
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();
@@ -470,14 +534,17 @@ void main() {
 
     testWidgets('onSelect still fires when closeOnSelect=true', (tester) async {
       final selected = <List<String>>[];
-      await tester.pumpWidget(wrap(
-        MultiSelectField<String>.bottomSheet(
-          label: 'Categories',
-          data: () => testChoices,
-          closeOnSelect: true,
-          onSelect: (items, _) => selected.add(items.map((e) => e.key!).toList()),
+      await tester.pumpWidget(
+        wrap(
+          MultiSelectField<String>.bottomSheet(
+            label: 'Categories',
+            data: () => testChoices,
+            closeOnSelect: true,
+            onSelect: (items, _) =>
+                selected.add(items.map((e) => e.key!).toList()),
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Categories'));
       await tester.pumpAndSettle();

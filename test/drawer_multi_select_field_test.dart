@@ -69,9 +69,9 @@ void main() {
 
     testWidgets('multi selection works', (tester) async {
       List<Choice<String>>? selected;
-      await tester.pumpWidget(buildApp(
-        onSelect: (choices, _) => selected = choices,
-      ));
+      await tester.pumpWidget(
+        buildApp(onSelect: (choices, _) => selected = choices),
+      );
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
@@ -88,10 +88,12 @@ void main() {
 
     testWidgets('single selection works', (tester) async {
       List<Choice<String>>? selected;
-      await tester.pumpWidget(buildApp(
-        singleSelection: true,
-        onSelect: (choices, _) => selected = choices,
-      ));
+      await tester.pumpWidget(
+        buildApp(
+          singleSelection: true,
+          onSelect: (choices, _) => selected = choices,
+        ),
+      );
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
@@ -109,10 +111,12 @@ void main() {
 
     testWidgets('select all works', (tester) async {
       List<Choice<String>>? selected;
-      await tester.pumpWidget(buildApp(
-        selectAllOption: true,
-        onSelect: (choices, _) => selected = choices,
-      ));
+      await tester.pumpWidget(
+        buildApp(
+          selectAllOption: true,
+          onSelect: (choices, _) => selected = choices,
+        ),
+      );
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
@@ -123,16 +127,18 @@ void main() {
     });
 
     testWidgets('renders header and footer', (tester) async {
-      await tester.pumpWidget(buildApp(
-        menuHeader: const Padding(
-          padding: EdgeInsets.all(16),
-          child: Text('Header'),
+      await tester.pumpWidget(
+        buildApp(
+          menuHeader: const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text('Header'),
+          ),
+          menuFooter: const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text('Footer'),
+          ),
         ),
-        menuFooter: const Padding(
-          padding: EdgeInsets.all(16),
-          child: Text('Footer'),
-        ),
-      ));
+      );
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
@@ -142,9 +148,9 @@ void main() {
     });
 
     testWidgets('renders custom menuContent', (tester) async {
-      await tester.pumpWidget(buildApp(
-        menuContent: const Text('Custom Content'),
-      ));
+      await tester.pumpWidget(
+        buildApp(menuContent: const Text('Custom Content')),
+      );
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
@@ -171,10 +177,12 @@ void main() {
 
     testWidgets('default data pre-selects items', (tester) async {
       List<Choice<String>>? lastSelected;
-      await tester.pumpWidget(buildApp(
-        defaultData: [Choice<String>('1', 'Alpha')],
-        onSelect: (choices, _) => lastSelected = choices,
-      ));
+      await tester.pumpWidget(
+        buildApp(
+          defaultData: [Choice<String>('1', 'Alpha')],
+          onSelect: (choices, _) => lastSelected = choices,
+        ),
+      );
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
@@ -214,9 +222,9 @@ void main() {
             onOpened: onOpened,
             onClosed: onClosed,
             enabled: enabled,
-            child: child,
             singleSelection: singleSelection,
             selectAllOption: selectAllOption,
+            child: child,
           ),
         ),
       );
@@ -228,9 +236,9 @@ void main() {
     });
 
     testWidgets('renders custom child trigger', (tester) async {
-      await tester.pumpWidget(buildOverlayApp(
-        child: const Text('Custom Trigger'),
-      ));
+      await tester.pumpWidget(
+        buildOverlayApp(child: const Text('Custom Trigger')),
+      );
       expect(find.text('Custom Trigger'), findsOneWidget);
     });
 
@@ -257,10 +265,12 @@ void main() {
     testWidgets('calls onOpened/onClosed', (tester) async {
       var opened = false;
       var closed = false;
-      await tester.pumpWidget(buildOverlayApp(
-        onOpened: () => opened = true,
-        onClosed: () => closed = true,
-      ));
+      await tester.pumpWidget(
+        buildOverlayApp(
+          onOpened: () => opened = true,
+          onClosed: () => closed = true,
+        ),
+      );
 
       await tester.tap(find.text('Overlay'));
       await tester.pumpAndSettle();
@@ -274,9 +284,9 @@ void main() {
 
     testWidgets('multi selection works', (tester) async {
       List<Choice<String>>? selected;
-      await tester.pumpWidget(buildOverlayApp(
-        onSelect: (choices, _) => selected = choices,
-      ));
+      await tester.pumpWidget(
+        buildOverlayApp(onSelect: (choices, _) => selected = choices),
+      );
 
       await tester.tap(find.text('Overlay'));
       await tester.pumpAndSettle();
@@ -292,10 +302,12 @@ void main() {
 
     testWidgets('single selection works', (tester) async {
       List<Choice<String>>? selected;
-      await tester.pumpWidget(buildOverlayApp(
-        singleSelection: true,
-        onSelect: (choices, _) => selected = choices,
-      ));
+      await tester.pumpWidget(
+        buildOverlayApp(
+          singleSelection: true,
+          onSelect: (choices, _) => selected = choices,
+        ),
+      );
 
       await tester.tap(find.text('Overlay'));
       await tester.pumpAndSettle();
@@ -308,10 +320,12 @@ void main() {
 
     testWidgets('select all works', (tester) async {
       List<Choice<String>>? selected;
-      await tester.pumpWidget(buildOverlayApp(
-        selectAllOption: true,
-        onSelect: (choices, _) => selected = choices,
-      ));
+      await tester.pumpWidget(
+        buildOverlayApp(
+          selectAllOption: true,
+          onSelect: (choices, _) => selected = choices,
+        ),
+      );
 
       await tester.tap(find.text('Overlay'));
       await tester.pumpAndSettle();
@@ -322,9 +336,11 @@ void main() {
     });
 
     testWidgets('drawer position left aligns to left', (tester) async {
-      await tester.pumpWidget(buildOverlayApp(
-        drawerStyle: const DrawerStyle(position: DrawerPosition.left),
-      ));
+      await tester.pumpWidget(
+        buildOverlayApp(
+          drawerStyle: const DrawerStyle(position: DrawerPosition.left),
+        ),
+      );
 
       await tester.tap(find.text('Overlay'));
       await tester.pumpAndSettle();
@@ -334,18 +350,25 @@ void main() {
     });
 
     testWidgets('default data updates label', (tester) async {
-      await tester.pumpWidget(buildOverlayApp(
-        defaultData: [Choice<String>('1', 'Alpha'), Choice<String>('2', 'Beta')],
-      ));
+      await tester.pumpWidget(
+        buildOverlayApp(
+          defaultData: [
+            Choice<String>('1', 'Alpha'),
+            Choice<String>('2', 'Beta'),
+          ],
+        ),
+      );
 
       expect(find.text('Overlay (2)'), findsOneWidget);
     });
 
     testWidgets('header and footer render', (tester) async {
-      await tester.pumpWidget(buildOverlayApp(
-        menuHeader: const Text('Header'),
-        menuFooter: const Text('Footer'),
-      ));
+      await tester.pumpWidget(
+        buildOverlayApp(
+          menuHeader: const Text('Header'),
+          menuFooter: const Text('Footer'),
+        ),
+      );
 
       await tester.tap(find.text('Overlay'));
       await tester.pumpAndSettle();

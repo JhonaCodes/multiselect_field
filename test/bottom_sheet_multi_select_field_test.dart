@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:multiselect_field/core/multi_select.dart';
-import 'package:multiselect_field/core/bottom_sheet_multi_select_field.dart';
 
 void main() {
   final testChoices = [
@@ -39,9 +38,9 @@ void main() {
           onOpened: onOpened,
           onClosed: onClosed,
           enabled: enabled,
-          child: child,
           singleSelection: singleSelection,
           selectAllOption: selectAllOption,
+          child: child,
         ),
       ),
     );
@@ -54,9 +53,7 @@ void main() {
     });
 
     testWidgets('renders custom child trigger', (tester) async {
-      await tester.pumpWidget(buildApp(
-        child: const Text('Custom Trigger'),
-      ));
+      await tester.pumpWidget(buildApp(child: const Text('Custom Trigger')));
       expect(find.text('Custom Trigger'), findsOneWidget);
       expect(find.text('Test'), findsNothing);
     });
@@ -107,9 +104,9 @@ void main() {
 
     testWidgets('multi selection works', (tester) async {
       List<Choice<String>>? selected;
-      await tester.pumpWidget(buildApp(
-        onSelect: (choices, _) => selected = choices,
-      ));
+      await tester.pumpWidget(
+        buildApp(onSelect: (choices, _) => selected = choices),
+      );
 
       await tester.tap(find.text('Test'));
       await tester.pumpAndSettle();
@@ -128,10 +125,12 @@ void main() {
 
     testWidgets('single selection works', (tester) async {
       List<Choice<String>>? selected;
-      await tester.pumpWidget(buildApp(
-        singleSelection: true,
-        onSelect: (choices, _) => selected = choices,
-      ));
+      await tester.pumpWidget(
+        buildApp(
+          singleSelection: true,
+          onSelect: (choices, _) => selected = choices,
+        ),
+      );
 
       await tester.tap(find.text('Test'));
       await tester.pumpAndSettle();
@@ -145,10 +144,12 @@ void main() {
 
     testWidgets('select all option works', (tester) async {
       List<Choice<String>>? selected;
-      await tester.pumpWidget(buildApp(
-        selectAllOption: true,
-        onSelect: (choices, _) => selected = choices,
-      ));
+      await tester.pumpWidget(
+        buildApp(
+          selectAllOption: true,
+          onSelect: (choices, _) => selected = choices,
+        ),
+      );
 
       await tester.tap(find.text('Test'));
       await tester.pumpAndSettle();
@@ -160,16 +161,18 @@ void main() {
     });
 
     testWidgets('shows header and footer in sheet', (tester) async {
-      await tester.pumpWidget(buildApp(
-        menuHeader: const Padding(
-          padding: EdgeInsets.all(16),
-          child: Text('Sheet Header'),
+      await tester.pumpWidget(
+        buildApp(
+          menuHeader: const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text('Sheet Header'),
+          ),
+          menuFooter: const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text('Sheet Footer'),
+          ),
         ),
-        menuFooter: const Padding(
-          padding: EdgeInsets.all(16),
-          child: Text('Sheet Footer'),
-        ),
-      ));
+      );
 
       await tester.tap(find.text('Test'));
       await tester.pumpAndSettle();
@@ -179,9 +182,9 @@ void main() {
     });
 
     testWidgets('renders custom menuContent', (tester) async {
-      await tester.pumpWidget(buildApp(
-        menuContent: const Text('Custom Sheet Content'),
-      ));
+      await tester.pumpWidget(
+        buildApp(menuContent: const Text('Custom Sheet Content')),
+      );
 
       await tester.tap(find.text('Test'));
       await tester.pumpAndSettle();
@@ -190,18 +193,16 @@ void main() {
     });
 
     testWidgets('default data pre-selects items', (tester) async {
-      await tester.pumpWidget(buildApp(
-        defaultData: [Choice<String>('1', 'Alpha')],
-      ));
+      await tester.pumpWidget(
+        buildApp(defaultData: [Choice<String>('1', 'Alpha')]),
+      );
 
       // Label should reflect selection count
       expect(find.text('Test (1)'), findsOneWidget);
     });
 
     testWidgets('label updates with selection count', (tester) async {
-      await tester.pumpWidget(buildApp(
-        onSelect: (_, __) {},
-      ));
+      await tester.pumpWidget(buildApp(onSelect: (_, _) {}));
 
       await tester.tap(find.text('Test'));
       await tester.pumpAndSettle();
@@ -220,10 +221,12 @@ void main() {
     });
 
     testWidgets('single selection shows value in label', (tester) async {
-      await tester.pumpWidget(buildApp(
-        singleSelection: true,
-        defaultData: [Choice<String>('1', 'Alpha')],
-      ));
+      await tester.pumpWidget(
+        buildApp(
+          singleSelection: true,
+          defaultData: [Choice<String>('1', 'Alpha')],
+        ),
+      );
 
       expect(find.text('Alpha'), findsOneWidget);
     });
@@ -236,9 +239,7 @@ void main() {
         Choice<String>('2', 'Item B'),
       ];
 
-      await tester.pumpWidget(buildApp(
-        data: () => groupedChoices,
-      ));
+      await tester.pumpWidget(buildApp(data: () => groupedChoices));
 
       await tester.tap(find.text('Test'));
       await tester.pumpAndSettle();
@@ -248,13 +249,15 @@ void main() {
     });
 
     testWidgets('custom bottom sheet style applies', (tester) async {
-      await tester.pumpWidget(buildApp(
-        bottomSheetStyle: const BottomSheetStyle(
-          backgroundColor: Colors.amber,
-          showDragHandle: false,
-          maxHeightFraction: 0.4,
+      await tester.pumpWidget(
+        buildApp(
+          bottomSheetStyle: const BottomSheetStyle(
+            backgroundColor: Colors.amber,
+            showDragHandle: false,
+            maxHeightFraction: 0.4,
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Test'));
       await tester.pumpAndSettle();

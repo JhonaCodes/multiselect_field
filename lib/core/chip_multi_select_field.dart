@@ -167,9 +167,15 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
   ({Color background, Color border, Color? text, Color icon}) get _colors =>
       context.resolveChipColors(isOpen: _isOpen, chipStyle: _chipStyle);
 
-  ({EdgeInsetsGeometry padding, BorderRadius borderRadius, double iconSize, double fontSize, double spacing})
-      get _dimensions =>
-          context.resolveChipDimensions(chipStyle: _chipStyle, chipSize: _chipSize);
+  ({
+    EdgeInsetsGeometry padding,
+    BorderRadius borderRadius,
+    double iconSize,
+    double fontSize,
+    double spacing,
+  })
+  get _dimensions =>
+      context.resolveChipDimensions(chipStyle: _chipStyle, chipSize: _chipSize);
 
   String get _displayLabel => context.resolveChipDisplayLabel<T>(
     label: widget.label,
@@ -231,7 +237,6 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
 
   @override
   Widget build(BuildContext context) {
-
     return MenuAnchor(
       controller: _menuController,
       alignmentOffset: widget.menuStyle?.offset ?? const Offset(0, 5),
@@ -287,9 +292,8 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
           color: Colors.transparent,
           child: InkWell(
             onTap: widget.enabled
-                ? () => controller.isOpen
-                    ? controller.close()
-                    : controller.open()
+                ? () =>
+                      controller.isOpen ? controller.close() : controller.open()
                 : null,
             borderRadius: _dimensions.borderRadius,
             child: AnimatedContainer(

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:multiselect_field/core/multi_select.dart';
 
-
 /// Extends [BuildContext] with style resolution methods for
 /// [StandardMultiSelectField] menu items.
 ///
 /// Centralizes all style-related decisions so the widget only
 /// consumes the final resolved values without embedding conditional logic.
 extension MultiSelectStyleExtension on BuildContext {
-
   /// Default color scheme applied to menu items when no custom [ItemColor]
   /// is provided. These values provide subtle visual feedback without
   /// competing with the app's primary theme.
@@ -39,24 +37,30 @@ extension MultiSelectStyleExtension on BuildContext {
     ButtonStyle? buttonStyle,
     ItemColor? itemColor,
   }) {
-    final baseStyle = buttonStyle ?? ButtonStyle(
-      alignment: Alignment.centerLeft,
-      elevation: const WidgetStatePropertyAll<double>(7.5),
-      overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-      backgroundColor: WidgetStateProperty.resolveWith((state) {
-        return resolveItemBackgroundColor(
-          widgetState: state,
-          isGroupingTitle: isGroupingTitle,
-          isSelected: isSelected,
-          isMobile: isMobile,
-          itemColor: itemColor,
+    final baseStyle =
+        buttonStyle ??
+        ButtonStyle(
+          alignment: Alignment.centerLeft,
+          elevation: const WidgetStatePropertyAll<double>(7.5),
+          overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+          backgroundColor: WidgetStateProperty.resolveWith((state) {
+            return resolveItemBackgroundColor(
+              widgetState: state,
+              isGroupingTitle: isGroupingTitle,
+              isSelected: isSelected,
+              isMobile: isMobile,
+              itemColor: itemColor,
+            );
+          }),
         );
-      }),
-    );
 
     final isItemSelected = isSelected && !isGroupingTitle;
 
-    return switch ((isItemSelected, selectedItemButtonStyle, mergeSelectedStyle)) {
+    return switch ((
+      isItemSelected,
+      selectedItemButtonStyle,
+      mergeSelectedStyle,
+    )) {
       (true, final selected?, true) => baseStyle.merge(selected),
       (true, final selected?, false) => selected,
       _ => baseStyle,
@@ -80,7 +84,10 @@ extension MultiSelectStyleExtension on BuildContext {
     ItemColor? itemColor,
   }) {
     final colors = itemColor ?? _defaultItemColor;
-    return switch ((widgetState.contains(WidgetState.hovered) && isMobile, isSelected && !isGroupingTitle)) {
+    return switch ((
+      widgetState.contains(WidgetState.hovered) && isMobile,
+      isSelected && !isGroupingTitle,
+    )) {
       (true, _) => colors.hovered ?? _defaultItemColor.hovered,
       (_, true) => colors.selected ?? _defaultItemColor.selected,
       _ => colors.unSelected ?? _defaultItemColor.unSelected,

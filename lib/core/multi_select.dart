@@ -38,8 +38,7 @@ abstract class MultiSelectField<T> extends StatefulWidget {
   const factory MultiSelectField({
     Key? key,
     required List<Choice<T>> Function() data,
-    void Function(List<Choice<T>> choiceList, bool isFromDefaultData)?
-    onSelect,
+    void Function(List<Choice<T>> choiceList, bool isFromDefaultData)? onSelect,
     void Function(List<Choice<T>> selectedItems)? onChanged,
     Widget Function(bool isEmpty)? title,
     Widget? footer,

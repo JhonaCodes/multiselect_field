@@ -287,9 +287,9 @@ class SelectionContentPreview<T> extends StatelessWidget {
               padding: const EdgeInsets.only(left: 16, top: 12, bottom: 4),
               child: Text(
                 choice.value,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
             );
           }

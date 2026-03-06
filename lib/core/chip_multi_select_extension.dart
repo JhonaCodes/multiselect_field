@@ -12,33 +12,33 @@ extension ChipMultiSelectStyleExtension on BuildContext {
   ///
   /// When the menu is open, active variants take priority.
   /// Falls back to inactive variants, then to sensible defaults.
-  ({Color background, Color border, Color? text, Color icon}) resolveChipColors({
-    required bool isOpen,
-    required ChipStyle chipStyle,
-  }) {
+  ({Color background, Color border, Color? text, Color icon})
+  resolveChipColors({required bool isOpen, required ChipStyle chipStyle}) {
     final theme = Theme.of(this);
 
     return isOpen
         ? (
-            background: chipStyle.activeBackgroundColor ??
+            background:
+                chipStyle.activeBackgroundColor ??
                 chipStyle.backgroundColor ??
                 Colors.transparent,
-            border: chipStyle.activeBorderColor ??
+            border:
+                chipStyle.activeBorderColor ??
                 chipStyle.borderColor ??
                 Colors.grey.withValues(alpha: 0.4),
-            text: chipStyle.activeTextColor ??
+            text:
+                chipStyle.activeTextColor ??
                 chipStyle.textColor ??
                 theme.textTheme.labelLarge?.color,
-            icon: chipStyle.activeIconColor ??
+            icon:
+                chipStyle.activeIconColor ??
                 chipStyle.iconColor ??
                 Colors.grey.shade600,
           )
         : (
             background: chipStyle.backgroundColor ?? Colors.transparent,
-            border: chipStyle.borderColor ??
-                Colors.grey.withValues(alpha: 0.4),
-            text: chipStyle.textColor ??
-                theme.textTheme.labelLarge?.color,
+            border: chipStyle.borderColor ?? Colors.grey.withValues(alpha: 0.4),
+            text: chipStyle.textColor ?? theme.textTheme.labelLarge?.color,
             icon: chipStyle.iconColor ?? Colors.grey.shade600,
           );
   }
@@ -54,14 +54,16 @@ extension ChipMultiSelectStyleExtension on BuildContext {
     double iconSize,
     double fontSize,
     double spacing,
-  }) resolveChipDimensions({
+  })
+  resolveChipDimensions({
     required ChipStyle chipStyle,
     required ChipSize chipSize,
   }) {
     return (
       padding: chipStyle.padding ?? chipSize.padding,
       borderRadius:
-          chipStyle.borderRadius ?? BorderRadius.circular(chipSize.borderRadius),
+          chipStyle.borderRadius ??
+          BorderRadius.circular(chipSize.borderRadius),
       iconSize: chipStyle.iconSize ?? chipSize.iconSize,
       fontSize: chipStyle.textStyle?.fontSize ?? chipSize.fontSize,
       spacing: chipSize.spacing,

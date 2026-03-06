@@ -300,16 +300,21 @@ class _StandardMultiSelectFieldState<T>
                           margin: const EdgeInsets.only(top: 2),
                           child: Flex(
                             direction: Axis.horizontal,
-                            mainAxisSize: widget.fieldWidth == FieldWidth.fitContent
+                            mainAxisSize:
+                                widget.fieldWidth == FieldWidth.fitContent
                                 ? MainAxisSize.min
                                 : MainAxisSize.max,
-                            mainAxisAlignment: widget.fieldWidth == FieldWidth.fitContent
+                            mainAxisAlignment:
+                                widget.fieldWidth == FieldWidth.fitContent
                                 ? MainAxisAlignment.start
                                 : MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               if (widget.iconLeft != null)
-                                widget.iconLeft!(_menuController.isOpen, _selectedChoice.first),
+                                widget.iconLeft!(
+                                  _menuController.isOpen,
+                                  _selectedChoice.first,
+                                ),
                               Flexible(
                                 fit: FlexFit.loose,
                                 child: Wrap(
@@ -320,7 +325,8 @@ class _StandardMultiSelectFieldState<T>
                                   spacing: 7,
                                   runSpacing: _isMobile ? 0 : 7,
                                   children: [
-                                    if ((_selectedChoice.isEmpty || widget.staticLabel) &&
+                                    if ((_selectedChoice.isEmpty ||
+                                            widget.staticLabel) &&
                                         !widget.useTextFilter &&
                                         widget.label != null)
                                       Text(
@@ -329,9 +335,6 @@ class _StandardMultiSelectFieldState<T>
                                       ),
                                     if (_selectedChoice.isNotEmpty)
                                       ..._selectedChoice.map((element) {
-
-
-
                                         if (!widget.singleSelection) {
                                           return widget.multiSelectWidget !=
                                                   null
@@ -343,8 +346,12 @@ class _StandardMultiSelectFieldState<T>
                                                   onDeleted: () =>
                                                       _addOrRemove(element),
                                                 );
-                                        } else if(!widget.staticLabel){
-                                          return widget.singleSelectWidget != null ? widget.singleSelectWidget!(element,)
+                                        } else if (!widget.staticLabel) {
+                                          return widget.singleSelectWidget !=
+                                                  null
+                                              ? widget.singleSelectWidget!(
+                                                  element,
+                                                )
                                               : Text(
                                                   element.value,
                                                   style:
@@ -354,10 +361,9 @@ class _StandardMultiSelectFieldState<T>
                                                         context,
                                                       ).textTheme.labelLarge,
                                                 );
-                                        }else{
+                                        } else {
                                           return SizedBox.shrink();
                                         }
-
                                       }),
                                     if (widget.useTextFilter &&
                                         _menuController.isOpen)
@@ -381,15 +387,22 @@ class _StandardMultiSelectFieldState<T>
                               ),
                               widget.iconRight == null
                                   ? Padding(
-                                      padding: EdgeInsets.only(left: widget.iconSpacing),
+                                      padding: EdgeInsets.only(
+                                        left: widget.iconSpacing,
+                                      ),
                                       child: Icon(
                                         menu.isOpen
                                             ? Icons.arrow_drop_up
                                             : Icons.arrow_drop_down,
-                                        color: Theme.of(context).colorScheme.secondary,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.secondary,
                                       ),
                                     )
-                                  : widget.iconRight!(_menuController.isOpen, _selectedChoice.first),
+                                  : widget.iconRight!(
+                                      _menuController.isOpen,
+                                      _selectedChoice.first,
+                                    ),
                             ],
                           ),
                         ),
@@ -418,14 +431,17 @@ class _StandardMultiSelectFieldState<T>
                         .map((result) {
                           bool isGroupingTitle =
                               result.key == null || result.key!.isEmpty;
-                          final isSelected = !isGroupingTitle && _isSelected(result);
+                          final isSelected =
+                              !isGroupingTitle && _isSelected(result);
 
                           return SizedBox(
                             width: widget.menuWidthBaseOnContent
                                 ? null
                                 : size.maxWidth,
                             child: Padding(
-                              padding: (isSelected && widget.selectedItemPadding != null)
+                              padding:
+                                  (isSelected &&
+                                      widget.selectedItemPadding != null)
                                   ? widget.selectedItemPadding!
                                   : widget.itemPadding ?? EdgeInsets.zero,
                               child: MenuItemButton(
@@ -433,7 +449,8 @@ class _StandardMultiSelectFieldState<T>
                                     widget.closeOnSelect ||
                                     widget.singleSelection ||
                                     widget.data().length == 1,
-                                key: isSelected &&
+                                key:
+                                    isSelected &&
                                         _selectedChoice.indexOf(result) == 0
                                     ? _selectedItemKey
                                     : null,
@@ -455,14 +472,17 @@ class _StandardMultiSelectFieldState<T>
                                                 Icons.check_box,
                                                 color: Colors.green,
                                               )
-                                            : Icon(Icons.check_box_outline_blank),
+                                            : Icon(
+                                                Icons.check_box_outline_blank,
+                                              ),
                                       )
                                     : null,
                                 style: context.resolveItemStyle(
                                   isGroupingTitle: isGroupingTitle,
                                   isSelected: isSelected,
                                   isMobile: _isMobile,
-                                  selectedItemButtonStyle: widget.selectedItemButtonStyle,
+                                  selectedItemButtonStyle:
+                                      widget.selectedItemButtonStyle,
                                   mergeSelectedStyle: widget.mergeSelectedStyle,
                                   buttonStyle: widget.buttonStyle,
                                   itemColor: widget.itemColor,

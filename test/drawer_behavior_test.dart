@@ -27,19 +27,21 @@ void main() {
   group('Drawer - Scaffold mode', () {
     testWidgets('renders selection content directly', (tester) async {
       final scaffoldKey = GlobalKey<ScaffoldState>();
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              data: () => testChoices,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                scaffoldKey: scaffoldKey,
+                data: () => testChoices,
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       scaffoldKey.currentState!.openEndDrawer();
       await tester.pumpAndSettle();
@@ -52,20 +54,23 @@ void main() {
       final scaffoldKey = GlobalKey<ScaffoldState>();
       final selected = <List<String>>[];
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              data: () => testChoices,
-              onSelect: (items, _) => selected.add(items.map((e) => e.key!).toList()),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                scaffoldKey: scaffoldKey,
+                data: () => testChoices,
+                onSelect: (items, _) =>
+                    selected.add(items.map((e) => e.key!).toList()),
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       scaffoldKey.currentState!.openEndDrawer();
       await tester.pumpAndSettle();
@@ -83,21 +88,24 @@ void main() {
       final scaffoldKey = GlobalKey<ScaffoldState>();
       final selected = <List<String>>[];
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              singleSelection: true,
-              data: () => testChoices,
-              onSelect: (items, _) => selected.add(items.map((e) => e.key!).toList()),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                scaffoldKey: scaffoldKey,
+                singleSelection: true,
+                data: () => testChoices,
+                onSelect: (items, _) =>
+                    selected.add(items.map((e) => e.key!).toList()),
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       scaffoldKey.currentState!.openEndDrawer();
       await tester.pumpAndSettle();
@@ -115,21 +123,24 @@ void main() {
       final scaffoldKey = GlobalKey<ScaffoldState>();
       final selected = <List<String>>[];
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              selectAllOption: true,
-              data: () => testChoices,
-              onSelect: (items, _) => selected.add(items.map((e) => e.key!).toList()),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                scaffoldKey: scaffoldKey,
+                selectAllOption: true,
+                data: () => testChoices,
+                onSelect: (items, _) =>
+                    selected.add(items.map((e) => e.key!).toList()),
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       scaffoldKey.currentState!.openEndDrawer();
       await tester.pumpAndSettle();
@@ -146,20 +157,22 @@ void main() {
     testWidgets('default data pre-selects items', (tester) async {
       final scaffoldKey = GlobalKey<ScaffoldState>();
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              data: () => testChoices,
-              defaultData: [Choice<String>('1', 'Option 1')],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                scaffoldKey: scaffoldKey,
+                data: () => testChoices,
+                defaultData: [Choice<String>('1', 'Option 1')],
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       scaffoldKey.currentState!.openEndDrawer();
       await tester.pumpAndSettle();
@@ -172,21 +185,23 @@ void main() {
     testWidgets('header and footer render', (tester) async {
       final scaffoldKey = GlobalKey<ScaffoldState>();
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              data: () => testChoices,
-              menuHeader: const Text('Filters'),
-              menuFooter: const Text('Apply'),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                scaffoldKey: scaffoldKey,
+                data: () => testChoices,
+                menuHeader: const Text('Filters'),
+                menuFooter: const Text('Apply'),
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       scaffoldKey.currentState!.openEndDrawer();
       await tester.pumpAndSettle();
@@ -198,20 +213,22 @@ void main() {
     testWidgets('menuContent overrides data list', (tester) async {
       final scaffoldKey = GlobalKey<ScaffoldState>();
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              data: () => testChoices,
-              menuContent: const Text('Custom'),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                scaffoldKey: scaffoldKey,
+                data: () => testChoices,
+                menuContent: const Text('Custom'),
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       scaffoldKey.currentState!.openEndDrawer();
       await tester.pumpAndSettle();
@@ -223,19 +240,21 @@ void main() {
     testWidgets('group titles render', (tester) async {
       final scaffoldKey = GlobalKey<ScaffoldState>();
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              data: () => groupedChoices,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                scaffoldKey: scaffoldKey,
+                data: () => groupedChoices,
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       scaffoldKey.currentState!.openEndDrawer();
       await tester.pumpAndSettle();
@@ -250,41 +269,47 @@ void main() {
   // =========================================================================
   group('Drawer - Overlay mode', () {
     testWidgets('renders trigger with label', (tester) async {
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: MultiSelectField<String>.drawer(
-            label: 'Filters',
-            data: () => testChoices,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: MultiSelectField<String>.drawer(
+              label: 'Filters',
+              data: () => testChoices,
+            ),
           ),
         ),
-      ));
+      );
 
       expect(find.text('Filters'), findsOneWidget);
     });
 
     testWidgets('renders custom child trigger', (tester) async {
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: MultiSelectField<String>.drawer(
-            label: 'Filters',
-            data: () => testChoices,
-            child: const Icon(Icons.menu, key: Key('trigger')),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: MultiSelectField<String>.drawer(
+              label: 'Filters',
+              data: () => testChoices,
+              child: const Icon(Icons.menu, key: Key('trigger')),
+            ),
           ),
         ),
-      ));
+      );
 
       expect(find.byKey(const Key('trigger')), findsOneWidget);
     });
 
     testWidgets('opens overlay on tap', (tester) async {
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: MultiSelectField<String>.drawer(
-            label: 'Filters',
-            data: () => testChoices,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: MultiSelectField<String>.drawer(
+              label: 'Filters',
+              data: () => testChoices,
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Filters'));
       await tester.pumpAndSettle();
@@ -292,15 +317,17 @@ void main() {
     });
 
     testWidgets('does not open when disabled', (tester) async {
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: MultiSelectField<String>.drawer(
-            label: 'Filters',
-            enabled: false,
-            data: () => testChoices,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: MultiSelectField<String>.drawer(
+              label: 'Filters',
+              enabled: false,
+              data: () => testChoices,
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Filters'));
       await tester.pumpAndSettle();
@@ -309,15 +336,18 @@ void main() {
 
     testWidgets('multi selection works in overlay', (tester) async {
       final selected = <List<String>>[];
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: MultiSelectField<String>.drawer(
-            label: 'Filters',
-            data: () => testChoices,
-            onSelect: (items, _) => selected.add(items.map((e) => e.key!).toList()),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: MultiSelectField<String>.drawer(
+              label: 'Filters',
+              data: () => testChoices,
+              onSelect: (items, _) =>
+                  selected.add(items.map((e) => e.key!).toList()),
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Filters'));
       await tester.pumpAndSettle();
@@ -335,16 +365,18 @@ void main() {
       bool opened = false;
       bool closed = false;
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: MultiSelectField<String>.drawer(
-            label: 'Filters',
-            data: () => testChoices,
-            onOpened: () => opened = true,
-            onClosed: () => closed = true,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: MultiSelectField<String>.drawer(
+              label: 'Filters',
+              data: () => testChoices,
+              onOpened: () => opened = true,
+              onClosed: () => closed = true,
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Filters'));
       await tester.pumpAndSettle();
@@ -357,15 +389,20 @@ void main() {
     });
 
     testWidgets('display label updates with selection', (tester) async {
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: MultiSelectField<String>.drawer(
-            label: 'Filters',
-            data: () => testChoices,
-            defaultData: [Choice<String>('1', 'Option 1'), Choice<String>('2', 'Option 2')],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: MultiSelectField<String>.drawer(
+              label: 'Filters',
+              data: () => testChoices,
+              defaultData: [
+                Choice<String>('1', 'Option 1'),
+                Choice<String>('2', 'Option 2'),
+              ],
+            ),
           ),
         ),
-      ));
+      );
 
       expect(find.text('Filters (2)'), findsOneWidget);
     });
@@ -379,20 +416,22 @@ void main() {
       final scaffoldKey = GlobalKey<ScaffoldState>();
       final changed = <int>[];
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              data: () => testChoices,
-              onChanged: (items) => changed.add(items.length),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                scaffoldKey: scaffoldKey,
+                data: () => testChoices,
+                onChanged: (items) => changed.add(items.length),
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       scaffoldKey.currentState!.openEndDrawer();
       await tester.pumpAndSettle();
@@ -406,21 +445,23 @@ void main() {
       final scaffoldKey = GlobalKey<ScaffoldState>();
       final changed = <int>[];
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              data: () => testChoices,
-              defaultData: [Choice<String>('1', 'Option 1')],
-              onChanged: (items) => changed.add(items.length),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                scaffoldKey: scaffoldKey,
+                data: () => testChoices,
+                defaultData: [Choice<String>('1', 'Option 1')],
+                onChanged: (items) => changed.add(items.length),
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
       expect(changed, isEmpty);
@@ -436,23 +477,25 @@ void main() {
       final store = MultiSelectKeyStore.of<String>('testFilter');
       store.registerScaffold(scaffoldKey);
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              keyDrawer: 'testFilter',
-              scaffoldKey: scaffoldKey,
-              data: () => testChoices,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                keyDrawer: 'testFilter',
+                scaffoldKey: scaffoldKey,
+                data: () => testChoices,
+              ),
+            ),
+            body: ElevatedButton(
+              onPressed: () => store.openDrawer(),
+              child: const Text('Open'),
             ),
           ),
-          body: ElevatedButton(
-            onPressed: () => store.openDrawer(),
-            child: const Text('Open'),
-          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
@@ -464,20 +507,22 @@ void main() {
       final store = MultiSelectKeyStore.of<String>('testClose');
       store.registerScaffold(scaffoldKey);
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              keyDrawer: 'testClose',
-              scaffoldKey: scaffoldKey,
-              data: () => testChoices,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                keyDrawer: 'testClose',
+                scaffoldKey: scaffoldKey,
+                data: () => testChoices,
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       store.openDrawer();
       await tester.pumpAndSettle();
@@ -519,26 +564,30 @@ void main() {
       expect(fresh, isNotNull);
     });
 
-    testWidgets('left position uses openDrawer instead of openEndDrawer', (tester) async {
+    testWidgets('left position uses openDrawer instead of openEndDrawer', (
+      tester,
+    ) async {
       final scaffoldKey = GlobalKey<ScaffoldState>();
       final store = MultiSelectKeyStore.of<String>('leftDrawer');
       store.registerScaffold(scaffoldKey, position: DrawerPosition.left);
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          drawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              keyDrawer: 'leftDrawer',
-              scaffoldKey: scaffoldKey,
-              drawerStyle: const DrawerStyle(position: DrawerPosition.left),
-              data: () => testChoices,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            drawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                keyDrawer: 'leftDrawer',
+                scaffoldKey: scaffoldKey,
+                drawerStyle: const DrawerStyle(position: DrawerPosition.left),
+                data: () => testChoices,
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       store.openDrawer();
       await tester.pumpAndSettle();
@@ -550,22 +599,26 @@ void main() {
   // CLOSE ON SELECT
   // =========================================================================
   group('Drawer - closeOnSelect', () {
-    testWidgets('scaffold drawer stays open after selection by default', (tester) async {
+    testWidgets('scaffold drawer stays open after selection by default', (
+      tester,
+    ) async {
       final scaffoldKey = GlobalKey<ScaffoldState>();
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              data: () => testChoices,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                scaffoldKey: scaffoldKey,
+                data: () => testChoices,
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       scaffoldKey.currentState!.openEndDrawer();
       await tester.pumpAndSettle();
@@ -577,77 +630,91 @@ void main() {
       expect(find.text('Option 2'), findsOneWidget);
     });
 
-    testWidgets('scaffold drawer closes after selection when closeOnSelect=true', (tester) async {
-      final scaffoldKey = GlobalKey<ScaffoldState>();
+    testWidgets(
+      'scaffold drawer closes after selection when closeOnSelect=true',
+      (tester) async {
+        final scaffoldKey = GlobalKey<ScaffoldState>();
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              closeOnSelect: true,
-              data: () => testChoices,
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              key: scaffoldKey,
+              endDrawer: Drawer(
+                child: DrawerMultiSelectField<String>(
+                  label: 'Filter',
+                  scaffoldKey: scaffoldKey,
+                  closeOnSelect: true,
+                  data: () => testChoices,
+                ),
+              ),
+              body: const SizedBox(),
             ),
           ),
-          body: const SizedBox(),
-        ),
-      ));
+        );
 
-      scaffoldKey.currentState!.openEndDrawer();
-      await tester.pumpAndSettle();
+        scaffoldKey.currentState!.openEndDrawer();
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Option 1'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Option 1'));
+        await tester.pumpAndSettle();
 
-      // Drawer should be closed
-      expect(find.text('Option 2'), findsNothing);
-    });
+        // Drawer should be closed
+        expect(find.text('Option 2'), findsNothing);
+      },
+    );
 
-    testWidgets('overlay drawer closes after selection when closeOnSelect=true', (tester) async {
-      final selected = <List<String>>[];
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: MultiSelectField<String>.drawer(
-            label: 'Filters',
-            data: () => testChoices,
-            closeOnSelect: true,
-            onSelect: (items, _) => selected.add(items.map((e) => e.key!).toList()),
+    testWidgets(
+      'overlay drawer closes after selection when closeOnSelect=true',
+      (tester) async {
+        final selected = <List<String>>[];
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: MultiSelectField<String>.drawer(
+                label: 'Filters',
+                data: () => testChoices,
+                closeOnSelect: true,
+                onSelect: (items, _) =>
+                    selected.add(items.map((e) => e.key!).toList()),
+              ),
+            ),
           ),
-        ),
-      ));
+        );
 
-      await tester.tap(find.text('Filters'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Filters'));
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Option 1'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Option 1'));
+        await tester.pumpAndSettle();
 
-      // Overlay should be closed
-      expect(find.text('Option 2'), findsNothing);
-      expect(selected.last, ['1']);
-    });
+        // Overlay should be closed
+        expect(find.text('Option 2'), findsNothing);
+        expect(selected.last, ['1']);
+      },
+    );
 
     testWidgets('onSelect still fires when closeOnSelect=true', (tester) async {
       final scaffoldKey = GlobalKey<ScaffoldState>();
       final selected = <List<String>>[];
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          key: scaffoldKey,
-          endDrawer: Drawer(
-            child: DrawerMultiSelectField<String>(
-              label: 'Filter',
-              scaffoldKey: scaffoldKey,
-              closeOnSelect: true,
-              data: () => testChoices,
-              onSelect: (items, _) => selected.add(items.map((e) => e.key!).toList()),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            key: scaffoldKey,
+            endDrawer: Drawer(
+              child: DrawerMultiSelectField<String>(
+                label: 'Filter',
+                scaffoldKey: scaffoldKey,
+                closeOnSelect: true,
+                data: () => testChoices,
+                onSelect: (items, _) =>
+                    selected.add(items.map((e) => e.key!).toList()),
+              ),
             ),
+            body: const SizedBox(),
           ),
-          body: const SizedBox(),
         ),
-      ));
+      );
 
       scaffoldKey.currentState!.openEndDrawer();
       await tester.pumpAndSettle();

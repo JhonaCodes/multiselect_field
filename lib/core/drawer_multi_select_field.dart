@@ -38,7 +38,7 @@ class DrawerMultiSelectField<T> extends MultiSelectField<T> {
   final String label;
   final List<Choice<T>> Function()? data;
   final void Function(List<Choice<T>> choiceList, bool isFromDefaultData)?
-      onSelect;
+  onSelect;
   final void Function(List<Choice<T>> selectedItems)? onChanged;
   final List<Choice<T>>? defaultData;
   final Widget? menuContent;
@@ -90,8 +90,7 @@ class DrawerMultiSelectField<T> extends MultiSelectField<T> {
       _DrawerMultiSelectFieldState<T>();
 }
 
-class _DrawerMultiSelectFieldState<T>
-    extends State<DrawerMultiSelectField<T>> {
+class _DrawerMultiSelectFieldState<T> extends State<DrawerMultiSelectField<T>> {
   List<Choice<T>> _selectedChoices = [];
   bool _selectAllActive = false;
 
@@ -149,8 +148,7 @@ class _DrawerMultiSelectFieldState<T>
       }
 
       if (widget.data != null) {
-        final allData = widget
-            .data!()
+        final allData = widget.data!()
             .where((e) => e.key != null && e.key!.isNotEmpty)
             .toList();
         _selectAllActive = isSameData(_selectedChoices, allData);
@@ -183,8 +181,7 @@ class _DrawerMultiSelectFieldState<T>
     setState(() {
       _selectAllActive = !_selectAllActive;
       if (_selectAllActive && widget.data != null) {
-        _selectedChoices = widget
-            .data!()
+        _selectedChoices = widget.data!()
             .where((e) => e.key != null && e.key!.isNotEmpty)
             .toList();
       } else {
@@ -216,8 +213,7 @@ class _DrawerMultiSelectFieldState<T>
       titleMenuStyle: widget.titleMenuStyle,
       itemMenuStyle: widget.itemMenuStyle,
       titleMenuPadding: widget.titleMenuPadding,
-      onToggleSelection: (choice) =>
-          _toggleSelection(choice, overlaySetState),
+      onToggleSelection: (choice) => _toggleSelection(choice, overlaySetState),
       onToggleSelectAll: () => _toggleSelectAll(overlaySetState),
       isSelected: _isSelected,
     );
@@ -267,8 +263,10 @@ class _DrawerMultiSelectFieldState<T>
         );
 
         return SlideTransition(
-          position: Tween<Offset>(begin: beginOffset, end: Offset.zero)
-              .animate(curved),
+          position: Tween<Offset>(
+            begin: beginOffset,
+            end: Offset.zero,
+          ).animate(curved),
           child: Align(
             alignment: position == DrawerPosition.right
                 ? Alignment.centerRight
@@ -282,7 +280,8 @@ class _DrawerMultiSelectFieldState<T>
                     child: Container(
                       width: style?.width ?? 300,
                       decoration: BoxDecoration(
-                        color: style?.backgroundColor ??
+                        color:
+                            style?.backgroundColor ??
                             Theme.of(context).scaffoldBackgroundColor,
                         borderRadius: style?.borderRadius,
                         boxShadow: style?.boxShadow,

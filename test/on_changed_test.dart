@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:multiselect_field/multiselect_field.dart';
-import 'package:multiselect_field/core/drawer_multi_select_field.dart';
 
 final testChoices = [
   Choice<String>('1', 'Option 1'),

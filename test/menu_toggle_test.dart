@@ -8,10 +8,7 @@ final testChoices = [
   Choice<String>('3', 'Option 3'),
 ];
 
-Widget buildTestWidget({
-  FieldWidth? fieldWidth,
-  double iconSpacing = 0,
-}) {
+Widget buildTestWidget({FieldWidth? fieldWidth, double iconSpacing = 0}) {
   return MaterialApp(
     home: Scaffold(
       body: Padding(
@@ -84,35 +81,37 @@ void main() {
       expect(find.text('Option 1'), findsOneWidget);
     });
 
-    testWidgets('icon shows arrow_drop_up when open, arrow_drop_down when closed', (tester) async {
-      await tester.pumpWidget(buildTestWidget());
+    testWidgets(
+      'icon shows arrow_drop_up when open, arrow_drop_down when closed',
+      (tester) async {
+        await tester.pumpWidget(buildTestWidget());
 
-      // Closed: arrow_drop_down
-      expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_drop_up), findsNothing);
+        // Closed: arrow_drop_down
+        expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
+        expect(find.byIcon(Icons.arrow_drop_up), findsNothing);
 
-      // Open
-      await tester.tap(find.byType(InkWell).first);
-      await tester.pumpAndSettle();
+        // Open
+        await tester.tap(find.byType(InkWell).first);
+        await tester.pumpAndSettle();
 
-      // Open: arrow_drop_up
-      expect(find.byIcon(Icons.arrow_drop_up), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_drop_down), findsNothing);
+        // Open: arrow_drop_up
+        expect(find.byIcon(Icons.arrow_drop_up), findsOneWidget);
+        expect(find.byIcon(Icons.arrow_drop_down), findsNothing);
 
-      // Close
-      await tester.tap(find.byType(InkWell).first);
-      await tester.pumpAndSettle();
+        // Close
+        await tester.tap(find.byType(InkWell).first);
+        await tester.pumpAndSettle();
 
-      // Closed again: arrow_drop_down
-      expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_drop_up), findsNothing);
-    });
+        // Closed again: arrow_drop_down
+        expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
+        expect(find.byIcon(Icons.arrow_drop_up), findsNothing);
+      },
+    );
 
     testWidgets('toggle works with fitContent', (tester) async {
-      await tester.pumpWidget(buildTestWidget(
-        fieldWidth: FieldWidth.fitContent,
-        iconSpacing: 2,
-      ));
+      await tester.pumpWidget(
+        buildTestWidget(fieldWidth: FieldWidth.fitContent, iconSpacing: 2),
+      );
 
       // Open
       await tester.tap(find.byType(InkWell).first);
@@ -126,9 +125,9 @@ void main() {
     });
 
     testWidgets('toggle works with fixed width', (tester) async {
-      await tester.pumpWidget(buildTestWidget(
-        fieldWidth: FieldWidth.fixed(200),
-      ));
+      await tester.pumpWidget(
+        buildTestWidget(fieldWidth: FieldWidth.fixed(200)),
+      );
 
       // Open
       await tester.tap(find.byType(InkWell).first);

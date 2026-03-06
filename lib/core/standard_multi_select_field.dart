@@ -241,11 +241,14 @@ class _StandardMultiSelectFieldState<T>
                         Colors.transparent,
                       ),
                       onTap: () {
-                        if (!menu.isOpen) menu.open();
-
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          _scrollToSelectedItem();
-                        });
+                        if (menu.isOpen) {
+                          menu.close();
+                        } else {
+                          menu.open();
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _scrollToSelectedItem();
+                          });
+                        }
 
                         if (!_focusNodeTextField.hasFocus) {
                           _focusNodeTextField.requestFocus();
@@ -377,18 +380,11 @@ class _StandardMultiSelectFieldState<T>
                               widget.iconRight == null
                                   ? Padding(
                                       padding: EdgeInsets.only(left: widget.iconSpacing),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          _menuController.isOpen
-                                              ? _menuController.close()
-                                              : _menuController.open();
-                                        },
-                                        child: Icon(
-                                          menu.isOpen
-                                              ? Icons.arrow_drop_up
-                                              : Icons.arrow_drop_down,
-                                          color: Theme.of(context).colorScheme.secondary,
-                                        ),
+                                      child: Icon(
+                                        menu.isOpen
+                                            ? Icons.arrow_drop_up
+                                            : Icons.arrow_drop_down,
+                                        color: Theme.of(context).colorScheme.secondary,
                                       ),
                                     )
                                   : widget.iconRight!(_menuController.isOpen, _selectedChoice.first),

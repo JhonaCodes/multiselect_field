@@ -1,3 +1,27 @@
+## 2.0.0
+### Breaking Changes
+- **`onSelect` is now optional** in the Standard variant. Previously `required`, it is now nullable across all variants. You can use `onSelect`, `onChanged`, or both.
+
+### New Feature: `onChanged` callback
+Simple callback that fires **only on user interaction**, never on default data changes. Available in all 4 variants.
+
+- **`onChanged: (List<Choice<T>> selectedItems) {}`**: No `isFromDefaultData` flag — just the selected items.
+- **`onSelect`** remains unchanged (still receives the `isFromDefaultData` flag).
+- Both are optional. Use `onChanged` when you only care about user-driven selections, `onSelect` when you need to distinguish default data.
+
+### New Feature: `FieldWidth` — Field width control
+Control the Standard variant width without wrapping in `SizedBox`.
+
+- **`FieldWidth.fitContent`**: Field shrinks to fit its label/chips (compact inline selector).
+- **`FieldWidth.fixed(double)`**: Field uses a specific width in pixels.
+- **Default (`null`)**: Fills available width (unchanged behavior).
+
+### New Feature: `iconSpacing` — Dropdown icon spacing
+Control the gap between the label/chips area and the dropdown arrow icon in the Standard variant.
+
+- **`iconSpacing`**: `double`, defaults to `0` (minimal gap). Only applies when `iconRight` is null.
+- The default dropdown icon no longer uses a fixed `SizedBox(40x20)` wrapper, resulting in a tighter layout by default.
+
 ## 1.8.0
 ### New Display Modes: `.drawer()` and `.bottomSheet()`
 Two new factory constructors for opening the selection menu in a drawer or bottom sheet.

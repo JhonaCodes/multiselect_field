@@ -51,6 +51,8 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final bool selectAllOption;
   final ItemColor? itemColor;
   final ScrollbarConfig? scrollbarConfig;
+  final double iconSpacing;
+  final FieldWidth? fieldWidth;
 
   const StandardMultiSelectField({
     super.key,
@@ -89,6 +91,8 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
     this.staticLabel = false,
     this.textStyleLabel,
     this.scrollbarConfig,
+    this.iconSpacing = 0,
+    this.fieldWidth,
   }) : super.internal();
 
   @override
@@ -282,14 +286,21 @@ class _StandardMultiSelectFieldState<T>
                           }
                         },
                         child: Container(
-                          width: size.maxWidth,
+                          width: widget.fieldWidth == null
+                              ? size.maxWidth
+                              : widget.fieldWidth!.value,
                           constraints: const BoxConstraints(minHeight: 45),
                           decoration: widget.decoration,
                           padding: const EdgeInsets.all(5),
                           margin: const EdgeInsets.only(top: 2),
                           child: Flex(
                             direction: Axis.horizontal,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: widget.fieldWidth != null
+                                ? MainAxisSize.min
+                                : MainAxisSize.max,
+                            mainAxisAlignment: widget.fieldWidth != null
+                                ? MainAxisAlignment.start
+                                : MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               if (widget.iconLeft != null)
@@ -364,24 +375,19 @@ class _StandardMultiSelectFieldState<T>
                                 ),
                               ),
                               widget.iconRight == null
-                                  ? SizedBox(
-                                      height: 40,
-                                      width: 20,
-                                      child: Center(
-                                        child: GestureDetector(
-                                          child: Icon(
-                                            menu.isOpen
-                                                ? Icons.arrow_drop_up
-                                                : Icons.arrow_drop_down,
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.secondary,
-                                          ),
-                                          onTap: () {
-                                            _menuController.isOpen
-                                                ? _menuController.close()
-                                                : _menuController.open();
-                                          },
+                                  ? Padding(
+                                      padding: EdgeInsets.only(left: widget.iconSpacing),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          _menuController.isOpen
+                                              ? _menuController.close()
+                                              : _menuController.open();
+                                        },
+                                        child: Icon(
+                                          menu.isOpen
+                                              ? Icons.arrow_drop_up
+                                              : Icons.arrow_drop_down,
+                                          color: Theme.of(context).colorScheme.secondary,
                                         ),
                                       ),
                                     )

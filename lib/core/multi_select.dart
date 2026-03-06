@@ -73,7 +73,9 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     bool selectAllOption,
     ItemColor? itemColor,
     ScrollbarConfig? scrollbarConfig,
-    bool staticLabel
+    bool staticLabel,
+    double iconSpacing,
+    FieldWidth? fieldWidth,
   }) = StandardMultiSelectField<T>;
 
   /// Creates a compact chip-style [MultiSelectField].
@@ -605,6 +607,26 @@ class BottomSheetStyle {
     this.animationDuration,
     this.animationCurve,
   });
+}
+
+/// Controls the field width behavior for [MultiSelectField].
+///
+/// - `null` (default): fills available width
+/// - [FieldWidth.fitContent]: shrinks to fit label/chips
+/// - [FieldWidth.fixed]: uses a specific width in pixels
+class FieldWidth {
+  final double? value;
+  const FieldWidth(this.value);
+
+  /// Field shrinks to fit its content.
+  static const fitContent = FieldWidth(null);
+
+  /// Field uses a fixed width in pixels.
+  const factory FieldWidth.fixed(double width) = _FixedFieldWidth;
+}
+
+class _FixedFieldWidth extends FieldWidth {
+  const _FixedFieldWidth(super.width);
 }
 
 /// Utility function to compare two Choice lists.

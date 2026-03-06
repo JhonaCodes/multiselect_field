@@ -26,6 +26,7 @@ class BottomSheetMultiSelectField<T> extends MultiSelectField<T> {
   final bool singleSelection;
   final bool selectAllOption;
   final bool useTextFilter;
+  final bool closeOnSelect;
   final TextStyle? titleMenuStyle;
   final TextStyle? itemMenuStyle;
   final EdgeInsetsGeometry? titleMenuPadding;
@@ -48,6 +49,7 @@ class BottomSheetMultiSelectField<T> extends MultiSelectField<T> {
     this.singleSelection = false,
     this.selectAllOption = false,
     this.useTextFilter = false,
+    this.closeOnSelect = false,
     this.titleMenuStyle,
     this.itemMenuStyle,
     this.titleMenuPadding,
@@ -112,6 +114,10 @@ class _BottomSheetMultiSelectFieldState<T>
     sheetSetState(() {});
     widget.onSelect?.call(_selectedChoices, false);
     widget.onChanged?.call(_selectedChoices);
+
+    if (widget.closeOnSelect) {
+      Navigator.of(context).pop();
+    }
   }
 
   void _toggleSelectAll(StateSetter sheetSetState) {

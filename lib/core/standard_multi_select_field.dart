@@ -123,7 +123,7 @@ class _StandardMultiSelectFieldState<T>
 
   List<Choice<T>> get _cleanData => widget
       .data()
-      .where((ele) => ele.key != null || ele.key!.isNotEmpty)
+      .where((ele) => ele.key != null && ele.key!.isNotEmpty)
       .toList();
 
   @override

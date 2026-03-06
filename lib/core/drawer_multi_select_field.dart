@@ -54,6 +54,7 @@ class DrawerMultiSelectField<T> extends MultiSelectField<T> {
   final bool singleSelection;
   final bool selectAllOption;
   final bool useTextFilter;
+  final bool closeOnSelect;
   final TextStyle? titleMenuStyle;
   final TextStyle? itemMenuStyle;
   final EdgeInsetsGeometry? titleMenuPadding;
@@ -78,6 +79,7 @@ class DrawerMultiSelectField<T> extends MultiSelectField<T> {
     this.singleSelection = false,
     this.selectAllOption = false,
     this.useTextFilter = false,
+    this.closeOnSelect = false,
     this.titleMenuStyle,
     this.itemMenuStyle,
     this.titleMenuPadding,
@@ -158,6 +160,23 @@ class _DrawerMultiSelectFieldState<T>
     overlaySetState?.call(() {});
     widget.onSelect?.call(_selectedChoices, false);
     widget.onChanged?.call(_selectedChoices);
+
+    if (widget.closeOnSelect) {
+      _closeDrawer();
+    }
+  }
+
+  void _closeDrawer() {
+    if (_isScaffoldMode) {
+      final position = widget.drawerStyle?.position ?? DrawerPosition.right;
+      if (position == DrawerPosition.left) {
+        widget.scaffoldKey!.currentState?.closeDrawer();
+      } else {
+        widget.scaffoldKey!.currentState?.closeEndDrawer();
+      }
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   void _toggleSelectAll([StateSetter? overlaySetState]) {

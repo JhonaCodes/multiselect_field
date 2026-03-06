@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:multiselect_field/core/standard_multi_select_field.dart';
 import 'package:multiselect_field/core/chip_multi_select_field.dart';
+import 'package:multiselect_field/core/drawer_multi_select_field.dart';
+import 'package:multiselect_field/core/bottom_sheet_multi_select_field.dart';
 
 /// Base abstract class for MultiSelectField variants.
 ///
@@ -69,6 +71,7 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     bool selectAllOption,
     ItemColor? itemColor,
     ScrollbarConfig? scrollbarConfig,
+    bool staticLabel
   }) = StandardMultiSelectField<T>;
 
   /// Creates a compact chip-style [MultiSelectField].
@@ -130,6 +133,100 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     TextStyle? itemMenuStyle,
     EdgeInsetsGeometry? titleMenuPadding,
   }) = ChipMultiSelectField<T>;
+
+  /// Creates a [MultiSelectField] that opens a bottom sheet for selection.
+  ///
+  /// Displays a trigger widget (customizable via [child]) that, when tapped,
+  /// opens a modal bottom sheet with the selection list.
+  ///
+  /// Example:
+  /// ```dart
+  /// MultiSelectField<String>.bottomSheet(
+  ///   label: 'Categories',
+  ///   data: () => categoryChoices,
+  ///   onSelect: (selected, _) => updateCategories(selected),
+  /// )
+  /// ```
+  const factory MultiSelectField.bottomSheet({
+    Key? key,
+    required String label,
+    List<Choice<T>> Function()? data,
+    void Function(List<Choice<T>> choiceList, bool isFromDefaultData)? onSelect,
+    List<Choice<T>>? defaultData,
+    Widget? menuContent,
+    Widget? menuHeader,
+    Widget? menuFooter,
+    BottomSheetStyle? bottomSheetStyle,
+    VoidCallback? onOpened,
+    VoidCallback? onClosed,
+    bool enabled,
+    Widget? child,
+    bool singleSelection,
+    bool selectAllOption,
+    bool useTextFilter,
+    TextStyle? titleMenuStyle,
+    TextStyle? itemMenuStyle,
+    EdgeInsetsGeometry? titleMenuPadding,
+  }) = BottomSheetMultiSelectField<T>;
+
+  /// Creates a [MultiSelectField] that opens a drawer for selection.
+  ///
+  /// Supports two modes:
+  /// - **Scaffold drawer**: Provide [keyDrawer] and [scaffoldKey] to use the
+  ///   Scaffold's native drawer. Place a [MultiSelectDrawerContent] widget
+  ///   inside your Scaffold's `endDrawer` with the same [keyDrawer] name.
+  /// - **Overlay drawer**: Omit [scaffoldKey] to use a standalone overlay
+  ///   drawer that respects SafeArea and system notifications.
+  ///
+  /// Example with Scaffold drawer:
+  /// ```dart
+  /// // In your Scaffold:
+  /// Scaffold(
+  ///   key: scaffoldKey,
+  ///   endDrawer: Drawer(
+  ///     child: MultiSelectDrawerContent<Car>(keyName: "carFilter"),
+  ///   ),
+  ///   body: MultiSelectField<Car>.drawer(
+  ///     label: 'Cars',
+  ///     keyDrawer: "carFilter",
+  ///     scaffoldKey: scaffoldKey,
+  ///     data: () => carChoices,
+  ///     onSelect: (selected, _) => print(selected),
+  ///   ),
+  /// )
+  /// ```
+  ///
+  /// Example with overlay:
+  /// ```dart
+  /// MultiSelectField<Car>.drawer(
+  ///   label: 'Cars',
+  ///   data: () => carChoices,
+  ///   onSelect: (selected, _) => print(selected),
+  /// )
+  /// ```
+  const factory MultiSelectField.drawer({
+    Key? key,
+    required String label,
+    List<Choice<T>> Function()? data,
+    void Function(List<Choice<T>> choiceList, bool isFromDefaultData)? onSelect,
+    List<Choice<T>>? defaultData,
+    Widget? menuContent,
+    Widget? menuHeader,
+    Widget? menuFooter,
+    DrawerStyle? drawerStyle,
+    String? keyDrawer,
+    GlobalKey<ScaffoldState>? scaffoldKey,
+    VoidCallback? onOpened,
+    VoidCallback? onClosed,
+    bool enabled,
+    Widget? child,
+    bool singleSelection,
+    bool selectAllOption,
+    bool useTextFilter,
+    TextStyle? titleMenuStyle,
+    TextStyle? itemMenuStyle,
+    EdgeInsetsGeometry? titleMenuPadding,
+  }) = DrawerMultiSelectField<T>;
 }
 
 /// Represents a selectable choice item.
@@ -416,6 +513,93 @@ class ChipMenuStyle {
   final Offset? offset;
 
   const ChipMenuStyle({this.width, this.height, this.menuStyle, this.offset});
+}
+
+/// Position for the drawer panel.
+enum DrawerPosition { left, right }
+
+/// Style configuration for the drawer variant.
+class DrawerStyle {
+  /// Width of the drawer panel. Defaults to 300.
+  final double? width;
+
+  /// Background color of the drawer panel.
+  final Color? backgroundColor;
+
+  /// Color of the barrier/scrim behind the drawer (overlay mode only).
+  final Color? barrierColor;
+
+  /// Border radius of the drawer panel.
+  final BorderRadius? borderRadius;
+
+  /// Box shadows for the drawer panel.
+  final List<BoxShadow>? boxShadow;
+
+  /// Duration of the open/close animation. Defaults to 300ms.
+  final Duration? animationDuration;
+
+  /// Curve of the open/close animation. Defaults to [Curves.easeInOut].
+  final Curve? animationCurve;
+
+  /// Which side the drawer slides in from. Defaults to [DrawerPosition.right].
+  final DrawerPosition position;
+
+  const DrawerStyle({
+    this.width,
+    this.backgroundColor,
+    this.barrierColor,
+    this.borderRadius,
+    this.boxShadow,
+    this.animationDuration,
+    this.animationCurve,
+    this.position = DrawerPosition.right,
+  });
+}
+
+/// Style configuration for the bottom sheet variant.
+class BottomSheetStyle {
+  /// Maximum height as a fraction of screen height (0.0-1.0). Defaults to 0.6.
+  final double? maxHeightFraction;
+
+  /// Fixed height in pixels. Overrides [maxHeightFraction] if set.
+  final double? fixedHeight;
+
+  /// Background color of the bottom sheet.
+  final Color? backgroundColor;
+
+  /// Color of the barrier/scrim behind the bottom sheet.
+  final Color? barrierColor;
+
+  /// Border radius of the bottom sheet. Defaults to top corners with radius 16.
+  final BorderRadius? borderRadius;
+
+  /// Whether to show the drag handle. Defaults to true.
+  final bool showDragHandle;
+
+  /// Color of the drag handle.
+  final Color? dragHandleColor;
+
+  /// Width of the drag handle.
+  final double? dragHandleWidth;
+
+  /// Duration of the open/close animation.
+  final Duration? animationDuration;
+
+  /// Curve of the open/close animation.
+  final Curve? animationCurve;
+
+  const BottomSheetStyle({
+    this.maxHeightFraction,
+    this.fixedHeight,
+    this.backgroundColor,
+    this.barrierColor,
+    this.borderRadius,
+    this.showDragHandle = true,
+    this.dragHandleColor,
+    this.dragHandleWidth,
+    this.animationDuration,
+    this.animationCurve,
+  });
 }
 
 /// Utility function to compare two Choice lists.

@@ -31,7 +31,7 @@ Add the dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  multiselect_field: ^1.7.0
+  multiselect_field: ^1.8.0
 ```
 
 Then, install the dependencies using:
@@ -185,6 +185,145 @@ MultiSelectField<String>.chip(
       CalendarDatePicker(...),
     ],
   ),
+)
+```
+
+### Bottom Sheet Variant
+
+Use `MultiSelectField.bottomSheet()` to open selections in a modal bottom sheet:
+
+```dart
+MultiSelectField<String>.bottomSheet(
+  label: 'Categories',
+  data: () => [
+    Choice(null, 'Fruits'),  // Group title
+    Choice('apple', 'Apple'),
+    Choice('banana', 'Banana'),
+    Choice(null, 'Vegetables'),
+    Choice('carrot', 'Carrot'),
+  ],
+  bottomSheetStyle: const BottomSheetStyle(
+    maxHeightFraction: 0.5,
+    showDragHandle: true,
+    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  ),
+  menuHeader: const Padding(
+    padding: EdgeInsets.all(16),
+    child: Text('Pick your items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+  ),
+  onSelect: (selected, _) {
+    print(selected.map((c) => c.value).toList());
+  },
+)
+```
+
+#### BottomSheetStyle Options
+
+```dart
+const BottomSheetStyle(
+  maxHeightFraction: 0.6,     // 60% of screen height (default)
+  fixedHeight: 400,           // Fixed height in pixels (overrides fraction)
+  backgroundColor: Colors.white,
+  barrierColor: Colors.black54,
+  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+  showDragHandle: true,       // Default: true
+  dragHandleColor: Colors.grey,
+  dragHandleWidth: 40,
+)
+```
+
+### Drawer Variant
+
+Two modes: **Scaffold drawer** (with `scaffoldKey`) or **Overlay drawer** (without it).
+
+#### Scaffold Mode
+
+Place `MultiSelectField.drawer()` inside your Scaffold's drawer.
+Open/close it from anywhere with `MultiSelectKeyStore`.
+
+```dart
+final scaffoldKey = GlobalKey<ScaffoldState>();
+final filterStore = MultiSelectKeyStore.of<String>('myFilter');
+filterStore.registerScaffold(scaffoldKey);
+
+Scaffold(
+  key: scaffoldKey,
+  endDrawer: Drawer(
+    child: MultiSelectField<String>.drawer(
+      label: 'Filter',
+      keyDrawer: 'myFilter',
+      scaffoldKey: scaffoldKey,
+      data: () => [
+        Choice(null, 'Condition'),  // Group title
+        Choice('new', 'New'),
+        Choice('used', 'Used'),
+        Choice('refurbished', 'Refurbished'),
+      ],
+      menuHeader: const Padding(
+        padding: EdgeInsets.all(16),
+        child: Text('Filters', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      ),
+      onSelect: (selected, _) {
+        print(selected.map((c) => c.key).toList());
+      },
+    ),
+  ),
+  body: Center(
+    child: ElevatedButton(
+      onPressed: () => filterStore.openDrawer(),
+      child: const Text('Open Filters'),
+    ),
+  ),
+)
+```
+
+#### Programmatic Control
+
+Open or close the drawer from anywhere:
+
+```dart
+final store = MultiSelectKeyStore.of<String>('myFilter');
+
+store.openDrawer();
+store.closeDrawer();
+
+// Clean up when done
+MultiSelectKeyStore.dispose('myFilter');
+```
+
+#### Overlay Mode
+
+Without `scaffoldKey`, it renders a trigger button that opens a standalone
+overlay drawer. No Scaffold configuration needed:
+
+```dart
+MultiSelectField<String>.drawer(
+  label: 'Filters',
+  data: () => [
+    Choice('new', 'New'),
+    Choice('used', 'Used'),
+    Choice('refurbished', 'Refurbished'),
+  ],
+  drawerStyle: const DrawerStyle(
+    width: 280,
+    position: DrawerPosition.right,
+  ),
+  onSelect: (selected, _) {
+    print(selected.map((c) => c.key).toList());
+  },
+)
+```
+
+The overlay respects `SafeArea` so it never overlaps system notifications. Tap outside to dismiss.
+
+You can also pass a custom `child` widget as the trigger:
+
+```dart
+MultiSelectField<String>.drawer(
+  label: 'Filters',
+  child: const Icon(Icons.filter_list),
+  data: () => choices,
+  onSelect: (selected, _) => applyFilters(),
 )
 ```
 

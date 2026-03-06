@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:multiselect_field/core/multi_select.dart';
 import 'package:multiselect_field/core/chip_multi_select_extension.dart';
+import 'package:multiselect_field/core/selection_content.dart';
 
 /// Chip variant implementation of [MultiSelectField].
 ///
@@ -333,110 +334,7 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
   }
 }
 
-/// Renders the dropdown menu content for [ChipMultiSelectField].
+/// Backward-compatible alias for [SelectionContent].
 ///
-/// Separated as a widget to avoid rebuilding the entire chip when
-/// only the menu content changes, and to keep the parent's build
-/// method focused on chip layout.
-class ChipMenuContent<T> extends StatelessWidget {
-  final Widget? menuContent;
-  final List<Choice<T>> Function()? data;
-  final bool selectAllOption;
-  final bool singleSelection;
-  final bool selectAllActive;
-  final List<Choice<T>> selectedChoices;
-  final TextStyle? titleMenuStyle;
-  final TextStyle? itemMenuStyle;
-  final EdgeInsetsGeometry? titleMenuPadding;
-  final void Function(Choice<T>) onToggleSelection;
-  final VoidCallback onToggleSelectAll;
-  final bool Function(Choice<T>) isSelected;
-
-  const ChipMenuContent({
-    super.key,
-    this.menuContent,
-    this.data,
-    required this.selectAllOption,
-    required this.singleSelection,
-    required this.selectAllActive,
-    required this.selectedChoices,
-    this.titleMenuStyle,
-    this.itemMenuStyle,
-    this.titleMenuPadding,
-    required this.onToggleSelection,
-    required this.onToggleSelectAll,
-    required this.isSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (menuContent != null) return menuContent!;
-    if (data == null) return const SizedBox.shrink();
-
-    final choices = data!();
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (selectAllOption && choices.isNotEmpty)
-          ListTile(
-            leading: Checkbox(
-              value: selectAllActive,
-              onChanged: (_) => onToggleSelectAll(),
-            ),
-            title: const Text('All'),
-            dense: true,
-            onTap: onToggleSelectAll,
-          ),
-        ...choices.where((c) => c.value.isNotEmpty).map((choice) {
-          final isGroupTitle = choice.key == null || choice.key!.isEmpty;
-
-          if (isGroupTitle) {
-            return Padding(
-              padding:
-                  titleMenuPadding ??
-                  const EdgeInsets.only(left: 16, top: 12, bottom: 4),
-              child: Text(
-                choice.value,
-                style:
-                    titleMenuStyle ??
-                    Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            );
-          }
-
-          final itemStyle =
-              itemMenuStyle ?? Theme.of(context).textTheme.bodyMedium;
-          final selected = isSelected(choice);
-
-          if (singleSelection) {
-            return ListTile(
-              leading: Icon(
-                selected
-                    ? Icons.radio_button_checked
-                    : Icons.radio_button_unchecked,
-                color: selected ? Theme.of(context).primaryColor : null,
-              ),
-              title: Text(choice.value, style: itemStyle),
-              dense: true,
-              onTap: () => onToggleSelection(choice),
-            );
-          }
-
-          return ListTile(
-            leading: Checkbox(
-              value: selected,
-              onChanged: (_) => onToggleSelection(choice),
-            ),
-            title: Text(choice.value, style: itemStyle),
-            dense: true,
-            onTap: () => onToggleSelection(choice),
-          );
-        }),
-      ],
-    );
-  }
-}
+/// Use [SelectionContent] directly for new code.
+typedef ChipMenuContent<T> = SelectionContent<T>;

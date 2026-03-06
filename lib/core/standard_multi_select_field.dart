@@ -311,6 +311,9 @@ class _StandardMultiSelectFieldState<T>
                                       ),
                                     if (_selectedChoice.isNotEmpty)
                                       ..._selectedChoice.map((element) {
+
+
+
                                         if (!widget.singleSelection) {
                                           return widget.multiSelectWidget !=
                                                   null
@@ -322,12 +325,8 @@ class _StandardMultiSelectFieldState<T>
                                                   onDeleted: () =>
                                                       _addOrRemove(element),
                                                 );
-                                        } else {
-                                          return widget.singleSelectWidget !=
-                                                  null
-                                              ? widget.singleSelectWidget!(
-                                                  element,
-                                                )
+                                        } else if(!widget.staticLabel){
+                                          return widget.singleSelectWidget != null ? widget.singleSelectWidget!(element,)
                                               : Text(
                                                   element.value,
                                                   style:
@@ -337,7 +336,10 @@ class _StandardMultiSelectFieldState<T>
                                                         context,
                                                       ).textTheme.labelLarge,
                                                 );
+                                        }else{
+                                          return SizedBox.shrink();
                                         }
+
                                       }),
                                     if (widget.useTextFilter &&
                                         _menuController.isOpen)

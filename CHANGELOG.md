@@ -1,3 +1,34 @@
+## 1.8.0
+### New Display Modes: `.drawer()` and `.bottomSheet()`
+Two new factory constructors for opening the selection menu in a drawer or bottom sheet.
+
+#### `MultiSelectField<T>.bottomSheet()`
+Modal bottom sheet with drag handle, customizable height, and full style control.
+
+- **`BottomSheetStyle`**: Configure `maxHeightFraction`, `fixedHeight`, `backgroundColor`, `borderRadius`, `showDragHandle`, `dragHandleColor`, `dragHandleWidth`, `barrierColor`, and animation parameters.
+- **Custom trigger**: Pass any `child` widget as the tap target, or use the built-in default trigger with label.
+- **Header/footer**: `menuHeader` and `menuFooter` widgets inside the sheet.
+- Supports all existing selection features: single/multi selection, groups, select all, custom `menuContent`.
+
+#### `MultiSelectField<T>.drawer()`
+Two modes depending on whether `scaffoldKey` is provided:
+
+- **Scaffold mode** (`scaffoldKey` provided): Renders selection content directly. Place inside `Scaffold.endDrawer` or `Scaffold.drawer`. Use `MultiSelectKeyStore` to open/close programmatically.
+- **Overlay mode** (no `scaffoldKey`): Renders a trigger button that opens a standalone overlay drawer on tap. Respects `SafeArea`, dismissible by tapping outside. Custom trigger via `child`.
+- **`DrawerStyle`**: Configure `width`, `backgroundColor`, `borderRadius`, `boxShadow`, `barrierColor`, `position` (left/right), and animation parameters.
+- **`DrawerPosition`**: Enum to control which side the drawer slides in from (`left` or `right`).
+
+#### `MultiSelectKeyStore` — Programmatic drawer control
+Singleton key store for sharing state between trigger and content widgets.
+
+- **`MultiSelectKeyStore.of<T>("keyName")`**: Get or create a shared `DrawerStore`.
+- **`store.openDrawer()`** / **`store.closeDrawer()`**: Open or close the Scaffold drawer programmatically from anywhere.
+- **`MultiSelectKeyStore.dispose("keyName")`**: Clean up a store when no longer needed.
+- **`MultiSelectKeyStore.disposeAll()`**: Remove all stores.
+
+#### Shared `SelectionContent<T>` widget
+Extracted the selection list rendering into a reusable `SelectionContent<T>` widget. `ChipMenuContent<T>` is now a backward-compatible typedef.
+
 ## 1.7.0
 ### New Feature: `MultiSelectField.chip()`
 Compact chip-style dropdown for space-constrained areas like filter bars.

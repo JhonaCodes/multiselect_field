@@ -13,6 +13,7 @@ class BottomSheetMultiSelectField<T> extends MultiSelectField<T> {
   final List<Choice<T>> Function()? data;
   final void Function(List<Choice<T>> choiceList, bool isFromDefaultData)?
       onSelect;
+  final void Function(List<Choice<T>> selectedItems)? onChanged;
   final List<Choice<T>>? defaultData;
   final Widget? menuContent;
   final Widget? menuHeader;
@@ -34,6 +35,7 @@ class BottomSheetMultiSelectField<T> extends MultiSelectField<T> {
     required this.label,
     this.data,
     this.onSelect,
+    this.onChanged,
     this.defaultData,
     this.menuContent,
     this.menuHeader,
@@ -109,6 +111,7 @@ class _BottomSheetMultiSelectFieldState<T>
 
     sheetSetState(() {});
     widget.onSelect?.call(_selectedChoices, false);
+    widget.onChanged?.call(_selectedChoices);
   }
 
   void _toggleSelectAll(StateSetter sheetSetState) {
@@ -126,6 +129,7 @@ class _BottomSheetMultiSelectFieldState<T>
 
     sheetSetState(() {});
     widget.onSelect?.call(_selectedChoices, false);
+    widget.onChanged?.call(_selectedChoices);
   }
 
   String get _displayLabel {

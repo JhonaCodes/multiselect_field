@@ -38,8 +38,9 @@ abstract class MultiSelectField<T> extends StatefulWidget {
   const factory MultiSelectField({
     Key? key,
     required List<Choice<T>> Function() data,
-    required void Function(List<Choice<T>> choiceList, bool isFromDefaultData)
+    void Function(List<Choice<T>> choiceList, bool isFromDefaultData)?
     onSelect,
+    void Function(List<Choice<T>> selectedItems)? onChanged,
     Widget Function(bool isEmpty)? title,
     Widget? footer,
     Widget Function(Choice<T> choiceList)? singleSelectWidget,
@@ -114,6 +115,7 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     required String label,
     List<Choice<T>> Function()? data,
     void Function(List<Choice<T>> choiceList, bool isFromDefaultData)? onSelect,
+    void Function(List<Choice<T>> selectedItems)? onChanged,
     List<Choice<T>>? defaultData,
     Widget? menuContent,
     Widget? menuHeader,
@@ -153,6 +155,7 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     required String label,
     List<Choice<T>> Function()? data,
     void Function(List<Choice<T>> choiceList, bool isFromDefaultData)? onSelect,
+    void Function(List<Choice<T>> selectedItems)? onChanged,
     List<Choice<T>>? defaultData,
     Widget? menuContent,
     Widget? menuHeader,
@@ -210,6 +213,7 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     required String label,
     List<Choice<T>> Function()? data,
     void Function(List<Choice<T>> choiceList, bool isFromDefaultData)? onSelect,
+    void Function(List<Choice<T>> selectedItems)? onChanged,
     List<Choice<T>>? defaultData,
     Widget? menuContent,
     Widget? menuHeader,

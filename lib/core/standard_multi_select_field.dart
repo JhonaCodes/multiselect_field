@@ -21,8 +21,9 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final Widget Function(Choice<T> choiceList)? multiSelectWidget;
   final bool cleanCurrentSelection;
   final List<Choice<T>> Function() data;
-  final void Function(List<Choice<T>> choiceList, bool isFromDefaultData)
+  final void Function(List<Choice<T>> choiceList, bool isFromDefaultData)?
   onSelect;
+  final void Function(List<Choice<T>> selectedItems)? onChanged;
   final List<Choice<T>>? defaultData;
   final bool isMandatory;
   final bool singleSelection;
@@ -54,7 +55,8 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   const StandardMultiSelectField({
     super.key,
     required this.data,
-    required this.onSelect,
+    this.onSelect,
+    this.onChanged,
     this.title,
     this.defaultData,
     this.useTextFilter = false,
@@ -140,7 +142,7 @@ class _StandardMultiSelectFieldState<T>
         SchedulerBinding.instance.addPostFrameCallback((_) {
           log('didUpdateWidget from multiselect lib was called');
           _selectedChoice = widget.defaultData!;
-          widget.onSelect(_selectedChoice, true);
+          widget.onSelect?.call(_selectedChoice, true);
         });
       }
     }
@@ -401,7 +403,8 @@ class _StandardMultiSelectFieldState<T>
                             _selectedChoice = _selectAllActive
                                 ? _cleanData
                                 : [];
-                            widget.onSelect(_selectedChoice, false);
+                            widget.onSelect?.call(_selectedChoice, false);
+                            widget.onChanged?.call(_selectedChoice);
                           },
                           child: Text("All"),
                         ),
@@ -591,7 +594,8 @@ class _StandardMultiSelectFieldState<T>
         }
       }
 
-      widget.onSelect(_selectedChoice, false);
+      widget.onSelect?.call(_selectedChoice, false);
+      widget.onChanged?.call(_selectedChoice);
       _onFilteredChoice = _cleanData;
       setState(() {});
     }

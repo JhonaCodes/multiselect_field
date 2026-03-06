@@ -20,9 +20,12 @@ class ChipMultiSelectField<T> extends MultiSelectField<T> {
   /// If null, [menuContent] must be provided.
   final List<Choice<T>> Function()? data;
 
-  /// Callback when selection changes.
+  /// Callback when selection changes (includes default data flag).
   final void Function(List<Choice<T>> choiceList, bool isFromDefaultData)?
   onSelect;
+
+  /// Simple callback that fires only on user interaction, never on default data.
+  final void Function(List<Choice<T>> selectedItems)? onChanged;
 
   /// Pre-selected choices.
   final List<Choice<T>>? defaultData;
@@ -88,6 +91,7 @@ class ChipMultiSelectField<T> extends MultiSelectField<T> {
     required this.label,
     this.data,
     this.onSelect,
+    this.onChanged,
     this.defaultData,
     this.menuContent,
     this.menuHeader,
@@ -203,6 +207,7 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
     });
 
     widget.onSelect?.call(_selectedChoices, false);
+    widget.onChanged?.call(_selectedChoices);
 
     if (widget.singleSelection) {
       _menuController.close();
@@ -221,6 +226,7 @@ class _ChipMultiSelectFieldState<T> extends State<ChipMultiSelectField<T>> {
       }
     });
     widget.onSelect?.call(_selectedChoices, false);
+    widget.onChanged?.call(_selectedChoices);
   }
 
   @override

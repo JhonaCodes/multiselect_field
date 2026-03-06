@@ -2,6 +2,12 @@
 ### Breaking Changes
 - **`onSelect` is now optional** in the Standard variant. Previously `required`, it is now nullable across all variants. You can use `onSelect`, `onChanged`, or both.
 
+### New Feature: `closeOnSelect` — Auto-close menu on selection
+Automatically close the menu after each item selection. Available in all variants: Standard, BottomSheet, and Drawer.
+
+- **`closeOnSelect`**: `bool`, defaults to `false`. When `true`, the menu/sheet/drawer closes immediately after an item is selected.
+- Callbacks (`onSelect`, `onChanged`) fire before closing.
+
 ### New Feature: `onChanged` callback
 Simple callback that fires **only on user interaction**, never on default data changes. Available in all 4 variants.
 
@@ -21,6 +27,9 @@ Control the gap between the label/chips area and the dropdown arrow icon in the 
 
 - **`iconSpacing`**: `double`, defaults to `0` (minimal gap). Only applies when `iconRight` is null.
 - The default dropdown icon no longer uses a fixed `SizedBox(40x20)` wrapper, resulting in a tighter layout by default.
+
+### Bugfix
+- Fixed `_cleanData` crash when using `selectAllOption` with grouped data (null key caused null check error).
 
 ## 1.8.0
 ### New Display Modes: `.drawer()` and `.bottomSheet()`

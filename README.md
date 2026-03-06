@@ -14,11 +14,14 @@
 
 ## Features
 
-- **Flexibility**: Complete control over the widget's design and behavior, allowing precise customizations according to project requirements.
-- **Native multi-selection**: Implements multi-select functionality natively without the need for additional packages or complex modifications.
-- **Advanced features**: Includes real-time text filtering and the display of selected items as chips, enhancing the user experience.
-- **Maintenance and evolution**: As a custom implementation, it allows easy adaptation and evolution as project needs change.
-- **Independence**: Avoids third-party dependencies, improving project stability and long-term control.
+- **4 display modes**: Standard (dropdown), Chip (compact), BottomSheet (modal), and Drawer (panel).
+- **Native multi-selection**: Single or multiple selection without additional packages.
+- **`closeOnSelect`**: Automatically close the menu after selection (all variants).
+- **`onChanged` callback**: Simple callback that fires only on user interaction, never on default data.
+- **`FieldWidth`**: Control field width — fit content, fixed pixels, or full width (Standard variant).
+- **`iconSpacing`**: Configurable gap between label and dropdown icon (Standard variant).
+- **Advanced features**: Real-time text filtering, select all, group titles, chips display, programmatic control via `MultiSelectKeyStore`.
+- **Independence**: Zero third-party dependencies.
 
 ## Library
 
@@ -31,7 +34,7 @@ Add the dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  multiselect_field: ^1.8.0
+  multiselect_field: ^2.0.0
 ```
 
 Then, install the dependencies using:
@@ -49,25 +52,24 @@ flutter pub add multiselect_field
 ### Basic Example
 
 ```dart
-import 'package:multi_select_field/multiselect_field.dart';
+import 'package:multiselect_field/multiselect_field.dart';
 
 class MyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiSelectField<Car>(
       data: () => [
-        Choice<Car>('Ferrari'),
+        Choice<Car>(null, 'Ferrari'),  // Group title
         Choice<Car>('2', '488 GTB', metadata: Car(103, 27.500, 2015)),
         Choice<Car>('3', '458 Italia', metadata: Car(99, 22.000, 2009)),
         Choice<Car>('4', 'Portofino', metadata: Car(105, 31.000, 2017)),
         Choice<Car>('5', 'California T', metadata: Car(102, 25.000, 2016)),
         Choice<Car>('6', 'F8 Tributo', metadata: Car(104, 30.000, 2019)),
       ],
-      onSelect: (selectedItems) {
-        // Handle selected items here
+      onSelect: (selectedItems, isFromDefault) {
         print(selectedItems.map((item) => item.value).toList());
       },
-      useTextFilter: true, // Enables real-time text filtering
+      useTextFilter: true,
     );
   }
 }
@@ -324,6 +326,96 @@ MultiSelectField<String>.drawer(
   child: const Icon(Icons.filter_list),
   data: () => choices,
   onSelect: (selected, _) => applyFilters(),
+)
+```
+
+### Close on Select
+
+By default, the menu stays open after selecting an item (multi-selection friendly). Set `closeOnSelect: true` to automatically close the menu after each selection. Available in all variants.
+
+```dart
+// Standard — menu closes after each tap
+MultiSelectField<String>(
+  data: () => choices,
+  closeOnSelect: true,
+  onSelect: (selected, _) => print(selected),
+)
+
+// Bottom Sheet — sheet dismisses after selection
+MultiSelectField<String>.bottomSheet(
+  label: 'Category',
+  data: () => choices,
+  closeOnSelect: true,
+  onSelect: (selected, _) => print(selected),
+)
+
+// Drawer — drawer closes after selection
+MultiSelectField<String>.drawer(
+  label: 'Filter',
+  scaffoldKey: scaffoldKey,
+  data: () => choices,
+  closeOnSelect: true,
+  onSelect: (selected, _) => print(selected),
+)
+```
+
+### `onChanged` Callback
+
+Simple callback that fires **only on user interaction**, never on default data. Use it when you don't need to distinguish between user and default selections.
+
+```dart
+MultiSelectField<String>(
+  data: () => choices,
+  defaultData: [Choice('1', 'Apple')],  // Does NOT trigger onChanged
+  onChanged: (selectedItems) {
+    // Only fires when the user taps an item
+    print('User selected: ${selectedItems.length} items');
+  },
+)
+```
+
+You can use `onChanged` alone, `onSelect` alone, or both together:
+
+```dart
+MultiSelectField<String>(
+  data: () => choices,
+  onSelect: (items, isDefault) => print('onSelect: isDefault=$isDefault'),
+  onChanged: (items) => print('onChanged: ${items.length} items'),
+)
+```
+
+### Field Width Control (Standard)
+
+Control the field width without wrapping in `SizedBox`:
+
+```dart
+// Shrinks to fit the label/chips — compact inline selector
+MultiSelectField<String>(
+  data: () => choices,
+  fieldWidth: FieldWidth.fitContent,
+  iconSpacing: 2,
+)
+
+// Fixed width in pixels
+MultiSelectField<String>(
+  data: () => choices,
+  fieldWidth: FieldWidth.fixed(200),
+)
+
+// Default: fills all available width (unchanged behavior)
+MultiSelectField<String>(
+  data: () => choices,
+)
+```
+
+### Icon Spacing (Standard)
+
+Control the gap between the content area and the dropdown arrow:
+
+```dart
+MultiSelectField<String>(
+  data: () => choices,
+  iconSpacing: 8, // 8px gap between label and arrow icon
 )
 ```
 

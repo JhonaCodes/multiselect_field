@@ -34,8 +34,8 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final bool menuHeightBaseOnContent;
   final TextStyle? textStyleSingleSelection;
   final MenuStyle? menuStyle;
-  final Widget Function(bool menuState)? iconLeft;
-  final Widget Function(bool menuState)? iconRight;
+  final Widget Function(bool menuState, Choice<T> choice)? iconLeft;
+  final Widget Function(bool menuState, Choice<T> choice)? iconRight;
   final ButtonStyle? buttonStyle;
   final bool mergeSelectedStyle;
   final ButtonStyle? selectedItemButtonStyle;
@@ -291,7 +291,7 @@ class _StandardMultiSelectFieldState<T>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               if (widget.iconLeft != null)
-                                widget.iconLeft!(_menuController.isOpen),
+                                widget.iconLeft!(_menuController.isOpen, _selectedChoice.first),
                               Flexible(
                                 fit: FlexFit.loose,
                                 child: Wrap(
@@ -383,7 +383,7 @@ class _StandardMultiSelectFieldState<T>
                                         ),
                                       ),
                                     )
-                                  : widget.iconRight!(_menuController.isOpen),
+                                  : widget.iconRight!(_menuController.isOpen, _selectedChoice.first),
                             ],
                           ),
                         ),

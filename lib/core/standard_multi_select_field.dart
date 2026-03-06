@@ -53,6 +53,7 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final ScrollbarConfig? scrollbarConfig;
   final double iconSpacing;
   final FieldWidth? fieldWidth;
+  final bool closeOnSelect;
 
   const StandardMultiSelectField({
     super.key,
@@ -93,6 +94,7 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
     this.scrollbarConfig,
     this.iconSpacing = 0,
     this.fieldWidth,
+    this.closeOnSelect = false,
   }) : super.internal();
 
   @override
@@ -428,6 +430,7 @@ class _StandardMultiSelectFieldState<T>
                                   : widget.itemPadding ?? EdgeInsets.zero,
                               child: MenuItemButton(
                                 closeOnActivate:
+                                    widget.closeOnSelect ||
                                     widget.singleSelection ||
                                     widget.data().length == 1,
                                 key: isSelected &&

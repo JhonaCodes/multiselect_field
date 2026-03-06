@@ -76,6 +76,7 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     bool staticLabel,
     double iconSpacing,
     FieldWidth? fieldWidth,
+    bool closeOnSelect,
   }) = StandardMultiSelectField<T>;
 
   /// Creates a compact chip-style [MultiSelectField].

@@ -753,4 +753,86 @@ void main() {
       expect(find.byIcon(Icons.check_box_outline_blank), findsNWidgets(2));
     });
   });
+
+  // =========================================================================
+  // CLOSE ON SELECT
+  // =========================================================================
+  group('Standard - closeOnSelect', () {
+    testWidgets('menu stays open after selection by default', (tester) async {
+      await tester.pumpWidget(wrap(
+        MultiSelectField<String>(
+          data: () => testChoices,
+          decoration: decoration,
+        ),
+      ));
+
+      await tester.tap(find.byType(InkWell).first);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Option 1'));
+      await tester.pumpAndSettle();
+
+      // Menu should still be open
+      expect(find.text('Option 2'), findsOneWidget);
+    });
+
+    testWidgets('menu closes after selection when closeOnSelect=true', (tester) async {
+      await tester.pumpWidget(wrap(
+        MultiSelectField<String>(
+          data: () => testChoices,
+          decoration: decoration,
+          closeOnSelect: true,
+        ),
+      ));
+
+      await tester.tap(find.byType(InkWell).first);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Option 1'));
+      await tester.pumpAndSettle();
+
+      // Menu should be closed
+      expect(find.byType(MenuItemButton), findsNothing);
+    });
+
+    testWidgets('onSelect still fires when closeOnSelect=true', (tester) async {
+      final selected = <List<String>>[];
+      await tester.pumpWidget(wrap(
+        MultiSelectField<String>(
+          data: () => testChoices,
+          decoration: decoration,
+          closeOnSelect: true,
+          onSelect: (items, _) => selected.add(items.map((e) => e.key!).toList()),
+        ),
+      ));
+
+      await tester.tap(find.byType(InkWell).first);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Option 1'));
+      await tester.pumpAndSettle();
+
+      expect(selected.last, ['1']);
+    });
+
+    testWidgets('onChanged still fires when closeOnSelect=true', (tester) async {
+      final changed = <int>[];
+      await tester.pumpWidget(wrap(
+        MultiSelectField<String>(
+          data: () => testChoices,
+          decoration: decoration,
+          closeOnSelect: true,
+          onChanged: (items) => changed.add(items.length),
+        ),
+      ));
+
+      await tester.tap(find.byType(InkWell).first);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Option 1'));
+      await tester.pumpAndSettle();
+
+      expect(changed, [1]);
+    });
+  });
 }

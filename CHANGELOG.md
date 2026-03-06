@@ -1,3 +1,69 @@
+## 2.0.0
+### Breaking Changes
+- **`onSelect` is now optional** in the Standard variant. Previously `required`, it is now nullable across all variants. You can use `onSelect`, `onChanged`, or both.
+
+### New Feature: `onChanged` callback
+Simple callback that fires **only on user interaction**, never on default data changes. Available in all 4 variants.
+
+- **`onChanged: (List<Choice<T>> selectedItems) {}`**: No `isFromDefaultData` flag — just the selected items.
+- **`onSelect`** remains unchanged (still receives the `isFromDefaultData` flag).
+- Both are optional. Use `onChanged` when you only care about user-driven selections, `onSelect` when you need to distinguish default data.
+
+### New Feature: `FieldWidth` — Field width control
+Control the Standard variant width without wrapping in `SizedBox`.
+
+- **`FieldWidth.fitContent`**: Field shrinks to fit its label/chips (compact inline selector).
+- **`FieldWidth.fixed(double)`**: Field uses a specific width in pixels.
+- **Default (`null`)**: Fills available width (unchanged behavior).
+
+### New Feature: `iconSpacing` — Dropdown icon spacing
+Control the gap between the label/chips area and the dropdown arrow icon in the Standard variant.
+
+- **`iconSpacing`**: `double`, defaults to `0` (minimal gap). Only applies when `iconRight` is null.
+- The default dropdown icon no longer uses a fixed `SizedBox(40x20)` wrapper, resulting in a tighter layout by default.
+
+## 1.8.0
+### New Display Modes: `.drawer()` and `.bottomSheet()`
+Two new factory constructors for opening the selection menu in a drawer or bottom sheet.
+
+#### `MultiSelectField<T>.bottomSheet()`
+Modal bottom sheet with drag handle, customizable height, and full style control.
+
+- **`BottomSheetStyle`**: Configure `maxHeightFraction`, `fixedHeight`, `backgroundColor`, `borderRadius`, `showDragHandle`, `dragHandleColor`, `dragHandleWidth`, `barrierColor`, and animation parameters.
+- **Custom trigger**: Pass any `child` widget as the tap target, or use the built-in default trigger with label.
+- **Header/footer**: `menuHeader` and `menuFooter` widgets inside the sheet.
+- Supports all existing selection features: single/multi selection, groups, select all, custom `menuContent`.
+
+#### `MultiSelectField<T>.drawer()`
+Two modes depending on whether `scaffoldKey` is provided:
+
+- **Scaffold mode** (`scaffoldKey` provided): Renders selection content directly. Place inside `Scaffold.endDrawer` or `Scaffold.drawer`. Use `MultiSelectKeyStore` to open/close programmatically.
+- **Overlay mode** (no `scaffoldKey`): Renders a trigger button that opens a standalone overlay drawer on tap. Respects `SafeArea`, dismissible by tapping outside. Custom trigger via `child`.
+- **`DrawerStyle`**: Configure `width`, `backgroundColor`, `borderRadius`, `boxShadow`, `barrierColor`, `position` (left/right), and animation parameters.
+- **`DrawerPosition`**: Enum to control which side the drawer slides in from (`left` or `right`).
+
+#### `MultiSelectKeyStore` — Programmatic drawer control
+Singleton key store for sharing state between trigger and content widgets.
+
+- **`MultiSelectKeyStore.of<T>("keyName")`**: Get or create a shared `DrawerStore`.
+- **`store.openDrawer()`** / **`store.closeDrawer()`**: Open or close the Scaffold drawer programmatically from anywhere.
+- **`MultiSelectKeyStore.dispose("keyName")`**: Clean up a store when no longer needed.
+- **`MultiSelectKeyStore.disposeAll()`**: Remove all stores.
+
+#### Shared `SelectionContent<T>` widget
+Extracted the selection list rendering into a reusable `SelectionContent<T>` widget. `ChipMenuContent<T>` is now a backward-compatible typedef.
+
+## 1.7.0
+### New Feature: `MultiSelectField.chip()`
+Compact chip-style dropdown for space-constrained areas like filter bars.
+
+- **`MultiSelectField<T>.chip()`**: New factory constructor for chip variant.
+- **`ChipSize`**: Proportional sizing system (extraSmall, small, medium, large, extraLarge) or custom sizes.
+- **`ChipStyle`**: Color and appearance configuration with `withColor()` and `styled()` factories.
+- **`ChipMenuStyle`**: Menu dimensions and style configuration.
+- **Customizable menu**: `titleMenuStyle`, `itemMenuStyle`, `titleMenuPadding` for group titles.
+- **Flexible content**: Use `data` for auto-generated lists or `menuContent` for custom widgets.
+
 ## 1.6.8
 - New feature `ScrollbarConfig`, Now we can modify the size, color, margins, etc. of our scrollbar in a very easy way.
 

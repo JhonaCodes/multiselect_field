@@ -177,6 +177,7 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     Widget Function(void Function(String query) onSearch)? searchBuilder,
     String? searchHint,
     TextStyle? searchHintStyle,
+    double? searchMinHeight,
   }) = BottomSheetMultiSelectField<T>;
 
   /// Creates a [MultiSelectField] that opens a drawer for selection.

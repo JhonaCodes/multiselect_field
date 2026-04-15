@@ -41,6 +41,11 @@ class BottomSheetMultiSelectField<T> extends MultiSelectField<T> {
   /// Style for the default search hint text. Only used when [searchBuilder] is null.
   final TextStyle? searchHintStyle;
 
+  /// Minimum height of the bottom sheet when [useTextFilter] is true.
+  /// Prevents the sheet from collapsing too much when few results match.
+  /// Defaults to 200.
+  final double? searchMinHeight;
+
   const BottomSheetMultiSelectField({
     super.key,
     required this.label,
@@ -66,6 +71,7 @@ class BottomSheetMultiSelectField<T> extends MultiSelectField<T> {
     this.searchBuilder,
     this.searchHint,
     this.searchHintStyle,
+    this.searchMinHeight,
   }) : super.internal();
 
   @override
@@ -174,6 +180,7 @@ class _BottomSheetMultiSelectFieldState<T>
       ),
       constraints: BoxConstraints(
         maxHeight: context.resolveBottomSheetMaxHeight(style: style),
+        minHeight: widget.useTextFilter ? (widget.searchMinHeight ?? 200) : 0,
       ),
       builder: (sheetContext) {
         return StatefulBuilder(

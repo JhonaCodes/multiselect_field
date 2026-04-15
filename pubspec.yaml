@@ -1,6 +1,6 @@
 name: multiselect_field
 description: "A flexible dropdown field supporting single/multiple selection modes, styles, titles, etc"
-version: 2.0.0
+version: 2.0.1
 homepage: https://github.com/JhonaCodes/multiselect_field.git
 
 environment:
@@ -15,8 +15,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  alchemist: ^0.12.1
-  lints: ^6.0.0
+  alchemist: ^0.14.0
+  lints: ^6.1.0
 
 flutter:
   uses-material-design: true

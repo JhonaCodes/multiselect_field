@@ -205,6 +205,92 @@ void main() {
     );
 
     goldenTest(
+      'Bottom sheet content - with search field',
+      fileName: 'bottom_sheet_content_search',
+      builder: () => GoldenTestGroup(
+        scenarioConstraints: constraint,
+        children: [
+          GoldenTestScenario(
+            name: 'Default search (useTextFilter)',
+            child: SizedBox(
+              width: 350,
+              height: 400,
+              child: Material(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Search...',
+                          prefixIcon: const Icon(Icons.search, size: 20),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: SelectionContentPreview<String>(
+                        choices: testChoices,
+                        singleSelection: true,
+                        selectAllOption: false,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          GoldenTestScenario(
+            name: 'Custom search builder',
+            child: SizedBox(
+              width: 350,
+              height: 400,
+              child: Material(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.search, color: Colors.grey),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: 'Find items...',
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: SelectionContentPreview<String>(
+                        choices: testChoices,
+                        singleSelection: false,
+                        selectAllOption: false,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    goldenTest(
       'Bottom sheet content - with header and footer',
       fileName: 'bottom_sheet_content_header_footer',
       builder: () => GoldenTestGroup(

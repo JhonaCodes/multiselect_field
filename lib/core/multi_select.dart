@@ -56,8 +56,8 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     bool menuHeightBaseOnContent,
     TextStyle? textStyleSingleSelection,
     MenuStyle? menuStyle,
-    Widget Function(bool menuState, Choice<T> choice)? iconLeft,
-    Widget Function(bool menuState, Choice<T> choice)? iconRight,
+    Widget Function(bool menuState, Choice<T>? choice)? iconLeft,
+    Widget Function(bool menuState, Choice<T>? choice)? iconRight,
 
     ButtonStyle? buttonStyle,
     bool mergeSelectedStyle,
@@ -174,6 +174,9 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     TextStyle? titleMenuStyle,
     TextStyle? itemMenuStyle,
     EdgeInsetsGeometry? titleMenuPadding,
+    Widget Function(void Function(String query) onSearch)? searchBuilder,
+    String? searchHint,
+    TextStyle? searchHintStyle,
   }) = BottomSheetMultiSelectField<T>;
 
   /// Creates a [MultiSelectField] that opens a drawer for selection.

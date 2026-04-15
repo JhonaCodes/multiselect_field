@@ -35,8 +35,8 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final bool menuHeightBaseOnContent;
   final TextStyle? textStyleSingleSelection;
   final MenuStyle? menuStyle;
-  final Widget Function(bool menuState, Choice<T> choice)? iconLeft;
-  final Widget Function(bool menuState, Choice<T> choice)? iconRight;
+  final Widget Function(bool menuState, Choice<T>? choice)? iconLeft;
+  final Widget Function(bool menuState, Choice<T>? choice)? iconRight;
   final ButtonStyle? buttonStyle;
   final bool mergeSelectedStyle;
   final ButtonStyle? selectedItemButtonStyle;
@@ -278,14 +278,14 @@ class _StandardMultiSelectFieldState<T>
 
                             if (event.logicalKey == LogicalKeyboardKey.enter) {
                               if (_textController.text.isNotEmpty) {
-                                Choice<T> elementFiltered = widget
-                                    .data()
-                                    .firstWhere(
-                                      (filter) =>
-                                          filter.value.toLowerCase() ==
-                                          _textController.text.toLowerCase(),
-                                    );
-                                _addOrRemove(elementFiltered);
+                                final matches = widget.data().where(
+                                  (filter) =>
+                                      filter.value.toLowerCase() ==
+                                      _textController.text.toLowerCase(),
+                                );
+                                if (matches.isNotEmpty) {
+                                  _addOrRemove(matches.first);
+                                }
                               }
                             }
                           }
@@ -313,7 +313,7 @@ class _StandardMultiSelectFieldState<T>
                               if (widget.iconLeft != null)
                                 widget.iconLeft!(
                                   _menuController.isOpen,
-                                  _selectedChoice.first,
+                                  _selectedChoice.isNotEmpty ? _selectedChoice.first : null,
                                 ),
                               Flexible(
                                 fit: FlexFit.loose,
@@ -401,7 +401,7 @@ class _StandardMultiSelectFieldState<T>
                                     )
                                   : widget.iconRight!(
                                       _menuController.isOpen,
-                                      _selectedChoice.first,
+                                      _selectedChoice.isNotEmpty ? _selectedChoice.first : null,
                                     ),
                             ],
                           ),

@@ -1,3 +1,9 @@
+## 2.0.1
+### Bug Fixes
+- Fix `StateError: Bad state: No element` crash when `iconLeft`/`iconRight` callbacks are used with an empty selection list
+- Fix `StateError` on Enter key press when text filter has no matching items
+- `iconLeft`/`iconRight` now receive `Choice<T>?` (nullable) instead of `Choice<T>` to reflect that selection can be empty
+
 ## 2.0.0
 ### Breaking Changes
 - **`onSelect` is now optional** in the Standard variant. Previously `required`, it is now nullable across all variants. You can use `onSelect`, `onChanged`, or both.

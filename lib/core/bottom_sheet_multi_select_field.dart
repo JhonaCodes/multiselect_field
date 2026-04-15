@@ -31,6 +31,16 @@ class BottomSheetMultiSelectField<T> extends MultiSelectField<T> {
   final TextStyle? itemMenuStyle;
   final EdgeInsetsGeometry? titleMenuPadding;
 
+  /// Custom search widget builder. Receives [onSearch] callback to filter items.
+  /// When null and [useTextFilter] is true, uses a default [TextField].
+  final Widget Function(void Function(String query) onSearch)? searchBuilder;
+
+  /// Hint text for the default search field. Only used when [searchBuilder] is null.
+  final String? searchHint;
+
+  /// Style for the default search hint text. Only used when [searchBuilder] is null.
+  final TextStyle? searchHintStyle;
+
   const BottomSheetMultiSelectField({
     super.key,
     required this.label,
@@ -53,6 +63,9 @@ class BottomSheetMultiSelectField<T> extends MultiSelectField<T> {
     this.titleMenuStyle,
     this.itemMenuStyle,
     this.titleMenuPadding,
+    this.searchBuilder,
+    this.searchHint,
+    this.searchHintStyle,
   }) : super.internal();
 
   @override
@@ -148,6 +161,7 @@ class _BottomSheetMultiSelectFieldState<T>
     widget.onOpened?.call();
 
     final style = widget.bottomSheetStyle;
+    String searchQuery = '';
 
     await showModalBottomSheet<void>(
       context: context,
@@ -164,6 +178,22 @@ class _BottomSheetMultiSelectFieldState<T>
       builder: (sheetContext) {
         return StatefulBuilder(
           builder: (context, sheetSetState) {
+            List<Choice<T>> Function()? filteredData = widget.data;
+
+            if (widget.useTextFilter &&
+                searchQuery.isNotEmpty &&
+                widget.data != null) {
+              filteredData = () => widget.data!()
+                  .where((c) => c.value
+                      .toLowerCase()
+                      .contains(searchQuery.toLowerCase()))
+                  .toList();
+            }
+
+            void onSearch(String query) {
+              sheetSetState(() => searchQuery = query);
+            }
+
             return SafeArea(
               top: false,
               child: Column(
@@ -171,11 +201,34 @@ class _BottomSheetMultiSelectFieldState<T>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   if (widget.menuHeader != null) widget.menuHeader!,
+                  if (widget.useTextFilter)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: widget.searchBuilder?.call(onSearch) ??
+                          TextField(
+                            autofocus: false,
+                            onChanged: onSearch,
+                            decoration: InputDecoration(
+                              hintText: widget.searchHint ?? 'Search...',
+                              hintStyle: widget.searchHintStyle,
+                              prefixIcon: const Icon(Icons.search, size: 20),
+                              suffixIcon: searchQuery.isNotEmpty
+                                  ? GestureDetector(
+                                      onTap: () => onSearch(''),
+                                      child: const Icon(Icons.close, size: 20),
+                                    )
+                                  : null,
+                            ),
+                          ),
+                    ),
                   Flexible(
                     child: SingleChildScrollView(
                       child: SelectionContent<T>(
                         menuContent: widget.menuContent,
-                        data: widget.data,
+                        data: filteredData,
                         selectAllOption: widget.selectAllOption,
                         singleSelection: widget.singleSelection,
                         selectAllActive: _selectAllActive,

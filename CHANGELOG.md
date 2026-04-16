@@ -1,3 +1,8 @@
+## 2.1.0
+### New Features
+- **`searchMinHeight`**: Configure the minimum height of the search/filter area in the BottomSheet variant. Defaults to 200px when `useTextFilter` is enabled. Pass a custom value to ensure enough space for filtered results.
+- **BottomSheet search support**: The BottomSheet variant now supports `useTextFilter` for real-time text filtering within the sheet.
+
 ## 2.0.1
 ### Bug Fixes
 - Fix `StateError: Bad state: No element` crash when `iconLeft`/`iconRight` callbacks are used with an empty selection list

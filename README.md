@@ -234,6 +234,20 @@ const BottomSheetStyle(
 )
 ```
 
+#### Search in BottomSheet
+
+Enable text filtering inside the bottom sheet with `useTextFilter`. Use `searchMinHeight` to control the minimum height of the filtered area:
+
+```dart
+MultiSelectField<String>.bottomSheet(
+  label: 'Categories',
+  data: () => choices,
+  useTextFilter: true,
+  searchMinHeight: 400,  // Ensures enough space for filtered results
+  onSelect: (selected, _) => print(selected),
+)
+```
+
 ### Drawer Variant
 
 Two modes: **Scaffold drawer** (with `scaffoldKey`) or **Overlay drawer** (without it).

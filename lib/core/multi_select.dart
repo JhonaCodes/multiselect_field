@@ -69,6 +69,7 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     TextStyle? itemMenuStyle,
     String? label,
     TextStyle? textStyleLabel,
+    Widget Function(String label)? labelBuilder,
     bool selectAllOption,
     ItemColor? itemColor,
     ScrollbarConfig? scrollbarConfig,

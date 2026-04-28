@@ -9,6 +9,7 @@ import 'package:multiselect_field/core/multi_select.dart';
 import 'package:multiselect_field/core/chip_multiselect_field.dart';
 import 'package:multiselect_field/core/search_multiselect_field.dart';
 import 'package:multiselect_field/core/standard_multi_select_extension.dart';
+import 'package:multiselect_field/core/standard_multi_select_menu_item.dart';
 
 /// Standard implementation of [MultiSelectField].
 ///
@@ -50,6 +51,9 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final TextStyle? textStyleLabel;
   final Widget Function(String label)? labelBuilder;
   final bool selectAllOption;
+  final bool showSelectedTick;
+  final Widget? Function(Choice<T> choice, bool isSelected)? menuLeadingIcon;
+  final Widget? Function(Choice<T> choice, bool isSelected)? menuTrailingIcon;
   final ItemColor? itemColor;
   final ScrollbarConfig? scrollbarConfig;
   final double iconSpacing;
@@ -88,6 +92,9 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
     this.textStyleSingleSelection,
     this.cleanCurrentSelection = false,
     this.selectAllOption = false,
+    this.showSelectedTick = true,
+    this.menuLeadingIcon,
+    this.menuTrailingIcon,
     this.itemColor,
     this.label,
     this.staticLabel = false,
@@ -250,7 +257,7 @@ class _StandardMultiSelectFieldState<T>
                         } else {
                           menu.open();
                           WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _scrollToSelectedItem();
+                            _selectedItemKey.ensureVisibleCentered();
                           });
                         }
 
@@ -385,7 +392,13 @@ class _StandardMultiSelectFieldState<T>
                                           _textController.text = value;
                                           if (!menu.isOpen) menu.open();
                                           _onSelected = false;
-                                          _searchElement(_textController.text);
+                                          setState(() {
+                                            _onFilteredChoice = _onSelected
+                                                ? widget.data()
+                                                : widget.data().filterByValue(
+                                                    _textController.text,
+                                                  );
+                                          });
                                         },
                                       ),
                                   ],
@@ -437,95 +450,42 @@ class _StandardMultiSelectFieldState<T>
                     ..._onFilteredChoice
                         .where((element) => element.value.isNotEmpty)
                         .map((result) {
-                          bool isGroupingTitle =
-                              result.key == null || result.key!.isEmpty;
-                          final isSelected =
-                              !isGroupingTitle && _isSelected(result);
-
-                          return SizedBox(
-                            width: widget.menuWidthBaseOnContent
-                                ? null
-                                : size.maxWidth,
-                            child: Padding(
-                              padding:
-                                  (isSelected &&
-                                      widget.selectedItemPadding != null)
-                                  ? widget.selectedItemPadding!
-                                  : widget.itemPadding ?? EdgeInsets.zero,
-                              child: MenuItemButton(
-                                closeOnActivate:
-                                    widget.closeOnSelect ||
-                                    widget.singleSelection ||
-                                    widget.data().length == 1,
-                                key:
-                                    isSelected &&
-                                        _selectedChoice.indexOf(result) == 0
-                                    ? _selectedItemKey
-                                    : null,
-                                trailingIcon: !widget.selectAllOption
-                                    ? isSelected
-                                          ? const Icon(
-                                              Icons.check,
-                                              color: Colors.green,
-                                              size: 12,
-                                            )
-                                          : null
-                                    : null,
-                                leadingIcon:
-                                    widget.selectAllOption && !isGroupingTitle
-                                    ? Padding(
-                                        padding: EdgeInsets.only(left: 15),
-                                        child: isSelected
-                                            ? const Icon(
-                                                Icons.check_box,
-                                                color: Colors.green,
-                                              )
-                                            : Icon(
-                                                Icons.check_box_outline_blank,
-                                              ),
-                                      )
-                                    : null,
-                                style: context.resolveItemStyle(
-                                  isGroupingTitle: isGroupingTitle,
-                                  isSelected: isSelected,
-                                  isMobile: _isMobile,
-                                  selectedItemButtonStyle:
-                                      widget.selectedItemButtonStyle,
-                                  mergeSelectedStyle: widget.mergeSelectedStyle,
-                                  buttonStyle: widget.buttonStyle,
-                                  itemColor: widget.itemColor,
-                                ),
-                                onPressed: isGroupingTitle
-                                    ? null
-                                    : () {
-                                        _addOrRemove(result);
-                                        if (!widget.singleSelection &&
-                                            widget.useTextFilter) {
-                                          _textController.clear();
-                                        }
-                                      },
-                                child: switch (widget.itemMenuButton) {
-                                  null => Padding(
-                                    padding: EdgeInsets.only(
-                                      left: isGroupingTitle ? 0 : 10,
-                                    ),
-                                    child: Text(
-                                      result.value,
-                                      style: isGroupingTitle
-                                          ? widget.titleMenuStyle ??
-                                                Theme.of(
-                                                  context,
-                                                ).textTheme.titleMedium
-                                          : widget.itemMenuStyle ??
-                                                Theme.of(
-                                                  context,
-                                                ).textTheme.labelMedium,
-                                    ),
-                                  ),
-                                  _ => widget.itemMenuButton!(result),
-                                },
-                              ),
-                            ),
+                          return StandardMultiSelectMenuItem<T>(
+                            result: result,
+                            isGroupingTitle: result.isGroupingTitle,
+                            isSelected: result.isSelectedIn(_selectedChoice),
+                            maxWidth: size.maxWidth,
+                            menuWidthBaseOnContent:
+                                widget.menuWidthBaseOnContent,
+                            itemPadding: widget.itemPadding,
+                            selectedItemPadding: widget.selectedItemPadding,
+                            closeOnActivate:
+                                widget.closeOnSelect ||
+                                widget.singleSelection ||
+                                widget.data().length == 1,
+                            itemKey: result.isFirstSelectedIn(_selectedChoice)
+                                ? _selectedItemKey
+                                : null,
+                            showSelectedTick: widget.showSelectedTick,
+                            selectAllOption: widget.selectAllOption,
+                            buttonStyle: widget.buttonStyle,
+                            selectedItemButtonStyle:
+                                widget.selectedItemButtonStyle,
+                            mergeSelectedStyle: widget.mergeSelectedStyle,
+                            itemColor: widget.itemColor,
+                            isMobile: _isMobile,
+                            titleMenuStyle: widget.titleMenuStyle,
+                            itemMenuStyle: widget.itemMenuStyle,
+                            itemMenuButton: widget.itemMenuButton,
+                            leadingIconBuilder: widget.menuLeadingIcon,
+                            trailingIconBuilder: widget.menuTrailingIcon,
+                            onTap: () {
+                              _addOrRemove(result);
+                              if (!widget.singleSelection &&
+                                  widget.useTextFilter) {
+                                _textController.clear();
+                              }
+                            },
                           );
                         }),
                   ],
@@ -557,45 +517,11 @@ class _StandardMultiSelectFieldState<T>
 
   void _arrowEnableOrNot() => setState(() => _isTap = !_isTap);
 
-  bool _isSelected(Choice val) {
-    return _selectedChoice
-        .where(
-          (element) =>
-              (val.key != null || val.key!.isNotEmpty) &&
-              element.key == val.key,
-        )
-        .isNotEmpty;
-  }
-
-  Future<void> _scrollToSelectedItem() async {
-    if (_selectedItemKey.currentContext != null) {
-      await Scrollable.ensureVisible(
-        _selectedItemKey.currentContext!,
-        alignment: 0.5,
-      );
-    }
-  }
-
-  void _searchElement(String text) {
-    setState(() {
-      _onFilteredChoice = _onSelected
-          ? widget.data()
-          : widget
-                .data()
-                .where(
-                  (e) => e.value.toLowerCase().contains(
-                    text.toLowerCase().toString(),
-                  ),
-                )
-                .toList();
-    });
-  }
-
   void _addOrRemove(Choice<T>? va) {
     if (va != null) {
       if (widget.singleSelection) {
         if (_selectedChoice.isNotEmpty &&
-            _isSelected(va) &&
+            va.isSelectedIn(_selectedChoice) &&
             !widget.isMandatory) {
           _selectedChoice.clear();
           _textController.clear();
@@ -610,7 +536,7 @@ class _StandardMultiSelectFieldState<T>
         }
         _onSelected = _selectedChoice.isNotEmpty;
       } else {
-        if (_isSelected(va)) {
+        if (va.isSelectedIn(_selectedChoice)) {
           if (widget.isMandatory) {
             if (_selectedChoice.isNotEmpty) {
               _selectedChoice.remove(va);

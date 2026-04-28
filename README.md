@@ -34,7 +34,7 @@ Add the dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  multiselect_field: ^2.0.0
+  multiselect_field: ^2.3.0
 ```
 
 Then, install the dependencies using:

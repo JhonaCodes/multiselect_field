@@ -9,6 +9,9 @@
   for `labelBuilder`:
   - `LabelType.line` (default): single line, no wrap.
   - `LabelType.wrap`: wraps up to `maxLines` (default 2) with ellipsis.
+    Width collapses to the longest *rendered* line so trailing widgets
+    (e.g. dropdown arrows) sit right next to the text instead of being
+    pushed to the parent's max width.
   - `LabelType.overflow`: single line truncated with ellipsis.
 
 ## 2.1.0

@@ -53,10 +53,7 @@ class MultiSelectLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (type) {
-      LabelType.line => Text(
-        label,
-        style: style,
-      ),
+      LabelType.line => Text(label, style: style),
       LabelType.wrap => _WrappedLabel(
         label: label,
         style: style,

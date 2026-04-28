@@ -89,7 +89,46 @@ class MyWidget extends StatelessWidget {
 - **`decoration`**: `Decoration?`. Custom decoration for the widget.
 - **`padding`**: `EdgeInsetsGeometry?`. Defines the internal padding of the widget.
 - **`textStyleSingleSelection`**: `TextStyle?`. Text style for single selection.
+- **`labelBuilder`**: `Widget Function(String label)?`. Optional builder that fully overrides how the static label is rendered. See [Custom label rendering](#custom-label-rendering).
 - **`scrollbarConfig`**: `ScrollbarConfig`. Modify the size, color, margins, etc.
+
+### Custom label rendering
+
+When `staticLabel: true`, the field shows `label` regardless of the current selection. By default this is a plain `Text(label)`. Pass `labelBuilder` to fully control how it renders, or use the included `MultiSelectLabel` widget for common presets via the `LabelType` enum.
+
+```dart
+MultiSelectField<String>(
+  label: 'NUI Marketplace North America',
+  staticLabel: true,
+  singleSelection: true,
+  labelBuilder: (label) => MultiSelectLabel(
+    label: label,
+    type: LabelType.wrap,      // see LabelType options below
+    maxLines: 2,
+    style: Theme.of(context).textTheme.titleSmall,
+  ),
+  data: () => choices,
+)
+```
+
+`LabelType` options:
+
+- **`LabelType.line`** *(default)*: single line, no wrap.
+- **`LabelType.wrap`**: wraps up to `maxLines` (default 2) with ellipsis. Width collapses to the longest *rendered* line so trailing widgets (e.g. dropdown arrows) sit right next to the text instead of being pushed to the parent's max width.
+- **`LabelType.overflow`**: single line truncated with ellipsis when the parent constrains width.
+
+You can also supply a fully custom widget when the presets do not fit:
+
+```dart
+labelBuilder: (label) => Row(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    const Icon(Icons.filter_alt, size: 14),
+    const SizedBox(width: 4),
+    Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+  ],
+),
+```
 
 ### Advanced Example with scrollbarConfig
 

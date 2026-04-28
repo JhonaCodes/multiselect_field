@@ -54,8 +54,9 @@ void main() {
       expect(text.overflow, TextOverflow.ellipsis);
     });
 
-    testWidgets('LabelType.overflow truncates with ellipsis on a single line',
-        (tester) async {
+    testWidgets('LabelType.overflow truncates with ellipsis on a single line', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -88,7 +89,7 @@ void main() {
                 label: 'Filter',
                 staticLabel: true,
                 data: () => const [Choice('1', 'Opt 1')],
-                onSelect: (_, __) {},
+                onSelect: (_, _) {},
               ),
             ),
           ),
@@ -117,7 +118,7 @@ void main() {
                   maxLines: 2,
                 ),
                 data: () => const [Choice('1', 'Opt 1')],
-                onSelect: (_, __) {},
+                onSelect: (_, _) {},
               ),
             ),
           ),

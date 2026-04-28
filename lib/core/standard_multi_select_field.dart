@@ -315,7 +315,9 @@ class _StandardMultiSelectFieldState<T>
                               if (widget.iconLeft != null)
                                 widget.iconLeft!(
                                   _menuController.isOpen,
-                                  _selectedChoice.isNotEmpty ? _selectedChoice.first : null,
+                                  _selectedChoice.isNotEmpty
+                                      ? _selectedChoice.first
+                                      : null,
                                 ),
                               Flexible(
                                 fit: FlexFit.loose,
@@ -405,7 +407,9 @@ class _StandardMultiSelectFieldState<T>
                                     )
                                   : widget.iconRight!(
                                       _menuController.isOpen,
-                                      _selectedChoice.isNotEmpty ? _selectedChoice.first : null,
+                                      _selectedChoice.isNotEmpty
+                                          ? _selectedChoice.first
+                                          : null,
                                     ),
                             ],
                           ),

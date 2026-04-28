@@ -191,9 +191,11 @@ class _BottomSheetMultiSelectFieldState<T>
                 searchQuery.isNotEmpty &&
                 widget.data != null) {
               filteredData = () => widget.data!()
-                  .where((c) => c.value
-                      .toLowerCase()
-                      .contains(searchQuery.toLowerCase()))
+                  .where(
+                    (c) => c.value.toLowerCase().contains(
+                      searchQuery.toLowerCase(),
+                    ),
+                  )
                   .toList();
             }
 
@@ -214,7 +216,8 @@ class _BottomSheetMultiSelectFieldState<T>
                         horizontal: 16,
                         vertical: 8,
                       ),
-                      child: widget.searchBuilder?.call(onSearch) ??
+                      child:
+                          widget.searchBuilder?.call(onSearch) ??
                           TextField(
                             autofocus: false,
                             onChanged: onSearch,

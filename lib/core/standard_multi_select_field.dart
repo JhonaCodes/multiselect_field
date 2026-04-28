@@ -48,6 +48,7 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final String? label;
   final bool staticLabel;
   final TextStyle? textStyleLabel;
+  final Widget Function(String label)? labelBuilder;
   final bool selectAllOption;
   final ItemColor? itemColor;
   final ScrollbarConfig? scrollbarConfig;
@@ -91,6 +92,7 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
     this.label,
     this.staticLabel = false,
     this.textStyleLabel,
+    this.labelBuilder,
     this.scrollbarConfig,
     this.iconSpacing = 0,
     this.fieldWidth,
@@ -329,10 +331,12 @@ class _StandardMultiSelectFieldState<T>
                                             widget.staticLabel) &&
                                         !widget.useTextFilter &&
                                         widget.label != null)
-                                      Text(
-                                        widget.label!,
-                                        style: widget.textStyleLabel,
-                                      ),
+                                      widget.labelBuilder != null
+                                          ? widget.labelBuilder!(widget.label!)
+                                          : Text(
+                                              widget.label!,
+                                              style: widget.textStyleLabel,
+                                            ),
                                     if (_selectedChoice.isNotEmpty)
                                       ..._selectedChoice.map((element) {
                                         if (!widget.singleSelection) {

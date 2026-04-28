@@ -1,3 +1,16 @@
+## 2.2.0
+### New Features
+- **`labelBuilder`**: Optional builder callback on the Standard variant that
+  fully overrides how the static label is rendered. Consistent with the
+  existing builder-based API (`itemMenuButton`, `singleSelectWidget`, etc.).
+  Default behavior is unchanged when the parameter is omitted.
+- **`MultiSelectLabel` widget + `LabelType` enum**: Reusable label widget that
+  centralises common rendering presets. Use as the default building block
+  for `labelBuilder`:
+  - `LabelType.line` (default): single line, no wrap.
+  - `LabelType.wrap`: wraps up to `maxLines` (default 2) with ellipsis.
+  - `LabelType.overflow`: single line truncated with ellipsis.
+
 ## 2.1.0
 ### New Features
 - **`searchMinHeight`**: Configure the minimum height of the search/filter area in the BottomSheet variant. Defaults to 200px when `useTextFilter` is enabled. Pass a custom value to ensure enough space for filtered results.

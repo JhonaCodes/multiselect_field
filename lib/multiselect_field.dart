@@ -8,6 +8,9 @@ export 'core/multi_select.dart';
 /// Shared selection content widget
 export 'core/selection_content.dart';
 
+/// Reusable label widget with LabelType presets (line / wrap / overflow)
+export 'core/multi_select_label.dart';
+
 /// Standard multiselect implementation
 export 'core/standard_multi_select_field.dart';
 

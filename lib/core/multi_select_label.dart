@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 /// Defines how the label text should be rendered in [MultiSelectLabel].
@@ -55,12 +57,10 @@ class MultiSelectLabel extends StatelessWidget {
         label,
         style: style,
       ),
-      LabelType.wrap => Text(
-        label,
+      LabelType.wrap => _WrappedLabel(
+        label: label,
         style: style,
         maxLines: maxLines,
-        softWrap: true,
-        overflow: TextOverflow.ellipsis,
       ),
       LabelType.overflow => Text(
         label,
@@ -70,5 +70,56 @@ class MultiSelectLabel extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
     };
+  }
+}
+
+/// Wrapping label whose width collapses to the longest *rendered* line so
+/// trailing widgets (e.g. dropdown arrows) sit right next to the text instead
+/// of being pushed to the parent's max width.
+class _WrappedLabel extends StatelessWidget {
+  final String label;
+  final TextStyle? style;
+  final int maxLines;
+
+  const _WrappedLabel({
+    required this.label,
+    required this.style,
+    required this.maxLines,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double maxWidth = constraints.maxWidth.isFinite
+            ? constraints.maxWidth
+            : MediaQuery.sizeOf(context).width;
+
+        final TextPainter painter = TextPainter(
+          text: TextSpan(text: label, style: style),
+          textDirection: Directionality.of(context),
+          maxLines: maxLines,
+          textScaler: MediaQuery.textScalerOf(context),
+        )..layout(maxWidth: maxWidth);
+
+        double longestLine = 0;
+        for (final ui.LineMetrics line in painter.computeLineMetrics()) {
+          if (line.width > longestLine) longestLine = line.width;
+        }
+        // Ceil to avoid sub-pixel clipping that would re-trigger soft wrap.
+        final double width = longestLine.ceilToDouble();
+
+        return SizedBox(
+          width: width,
+          child: Text(
+            label,
+            style: style,
+            maxLines: maxLines,
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
+          ),
+        );
+      },
+    );
   }
 }

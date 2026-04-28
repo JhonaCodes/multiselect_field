@@ -1,3 +1,35 @@
+## 2.3.0
+### New Features
+- **`showSelectedTick`**: New flag on the Standard variant to control the
+  trailing green check icon that marks selected items. Defaults to `true`
+  to preserve the existing behavior. Set to `false` to hide the tick when
+  you want a cleaner menu (style still indicates selection). The
+  `selectAllOption` checkbox layout continues to take precedence and is
+  unaffected.
+- **`menuLeadingIcon` / `menuTrailingIcon`**: New optional builders on the
+  Standard variant `(Choice<T> choice, bool isSelected) => Widget?` that
+  let you replace the default leading/trailing icons of each menu entry
+  with your own widgets. Returning `null` falls back to the default
+  behavior so you can override only specific states (e.g. only the
+  selected state).
+
+### Internal / Refactor
+- Extracted each menu entry into a dedicated `StandardMultiSelectMenuItem<T>`
+  widget class. The parent now spreads the items inline into
+  `MenuAnchor.menuChildren`, preserving keyboard navigation, focus and
+  scroll semantics of the menu.
+- New pure helpers in `standard_multi_select_extension.dart`:
+  - `ChoiceMenuExtension<T>`: `isGroupingTitle`, `isSelectedIn`,
+    `isFirstSelectedIn` predicates used by the menu.
+  - `ChoiceListSearchExtension<T>.filterByValue(text)`:
+    case-insensitive substring filter.
+  - `GlobalKeyScrollExtension.ensureVisibleCentered()`: centers the
+    pointed widget inside its scrollable ancestor.
+- `_isSelected`, `_scrollToSelectedItem` and the in-place `_searchElement`
+  filter logic were removed from the widget in favour of these extensions.
+- `trailingIcon` selection now uses a `switch` expression over a
+  `(showTick, selectAll, isSelected)` record for clearer matching.
+
 ## 2.2.0
 ### New Features
 - **`labelBuilder`**: Optional builder callback on the Standard variant that

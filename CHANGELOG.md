@@ -1,3 +1,14 @@
+## 2.3.1
+### Bug Fixes
+- **Standard variant: menu collapsing on tap.** The keyboard-aware reposition
+  logic in `build()` ran on every rebuild, causing the menu to be closed and
+  reopened in the same frame whenever it was open without a soft keyboard. On
+  recent Flutter versions, that `close()`+`open()` pair on `MenuController`
+  resolved to the closed state, so each tap appeared to open and immediately
+  collapse the dropdown (and produced flicker on multi-selection rebuilds).
+  The reposition logic now runs only on actual keyboard state transitions,
+  preserving the original fix from #8 without interfering with normal taps.
+
 ## 2.3.0
 ### New Features
 - **`showSelectedTick`**: New flag on the Standard variant to control the

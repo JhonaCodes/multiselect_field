@@ -131,6 +131,7 @@ class _StandardMultiSelectFieldState<T>
 
   bool _onSelected = false;
   bool _selectAllActive = false;
+  bool _wasKeyboardOpen = false;
 
   List<Choice<T>> get _cleanData => widget
       .data()
@@ -195,11 +196,17 @@ class _StandardMultiSelectFieldState<T>
     double currentMenuHeight = widget.menuHeight ?? 300;
 
     WidgetsBinding.instance.addPostFrameCallback((obs) {
-      final isKeyboardOpen = View.of(context).viewInsets.bottom > 0;
+      if (!mounted) return;
 
-      if (_menuController.isOpen && isKeyboardOpen) {
-        _menuController.open(position: Offset(0, double.infinity));
-      } else if (_menuController.isOpen && !isKeyboardOpen) {
+      final isKeyboardOpen = View.of(context).viewInsets.bottom > 0;
+      final keyboardChanged = isKeyboardOpen != _wasKeyboardOpen;
+      _wasKeyboardOpen = isKeyboardOpen;
+
+      if (!keyboardChanged || !_menuController.isOpen) return;
+
+      if (isKeyboardOpen) {
+        _menuController.open(position: const Offset(0, double.infinity));
+      } else {
         _menuController.close();
         _menuController.open();
       }

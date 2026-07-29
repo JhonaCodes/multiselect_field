@@ -36,13 +36,25 @@ extension MultiSelectStyleExtension on BuildContext {
     bool mergeSelectedStyle = false,
     ButtonStyle? buttonStyle,
     ItemColor? itemColor,
+    Color? pressedColor,
   }) {
     final baseStyle =
         buttonStyle ??
         ButtonStyle(
           alignment: Alignment.centerLeft,
           elevation: const WidgetStatePropertyAll<double>(7.5),
-          overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+          // Rows suppress the overlay by default; when [pressedColor] is
+          // provided the row shows that tint on press/hover/focus so touch
+          // targets give feedback without competing with the selected fill.
+          overlayColor: pressedColor == null
+              ? const WidgetStatePropertyAll(Colors.transparent)
+              : WidgetStateProperty.resolveWith((states) {
+                  final active =
+                      states.contains(WidgetState.pressed) ||
+                      states.contains(WidgetState.hovered) ||
+                      states.contains(WidgetState.focused);
+                  return active ? pressedColor : Colors.transparent;
+                }),
           backgroundColor: WidgetStateProperty.resolveWith((state) {
             return resolveItemBackgroundColor(
               widgetState: state,
@@ -136,6 +148,16 @@ extension ChoiceListSearchExtension<T> on List<Choice<T>> {
     if (text.isEmpty) return List<Choice<T>>.from(this);
     final needle = text.toLowerCase();
     return where((e) => e.value.toLowerCase().contains(needle)).toList();
+  }
+
+  /// Whether a hairline divider should precede the option at [index].
+  ///
+  /// Returns `true` only when [index] is not the first entry and neither the
+  /// option at [index] nor the one before it is a grouping title, so
+  /// separators never wrap around group headers.
+  bool hasDividerBefore(int index) {
+    if (index <= 0) return false;
+    return !this[index].isGroupingTitle && !this[index - 1].isGroupingTitle;
   }
 }
 

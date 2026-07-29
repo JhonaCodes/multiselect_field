@@ -91,6 +91,9 @@ class MyWidget extends StatelessWidget {
 - **`textStyleSingleSelection`**: `TextStyle?`. Text style for single selection.
 - **`labelBuilder`**: `Widget Function(String label)?`. Optional builder that fully overrides how the static label is rendered. See [Custom label rendering](#custom-label-rendering).
 - **`scrollbarConfig`**: `ScrollbarConfig`. Modify the size, color, margins, etc.
+- **`itemDividerColor`**: `Color?`. When set, draws a hairline divider of that color between adjacent option rows (grouping titles are never bordered). Defaults to `null` (no dividers).
+- **`pressedColor`**: `Color?`. Overlay tint shown on menu rows while pressed/hovered/focused. Defaults to `null` (no overlay).
+- **`selectedItemMenuStyle`**: `TextStyle?`. Merged onto the label of selected option rows (grouping titles unaffected), e.g. to bold the current selection. Defaults to `null`.
 
 ### Custom label rendering
 

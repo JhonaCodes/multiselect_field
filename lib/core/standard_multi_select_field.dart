@@ -46,6 +46,12 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final Widget Function(Choice<T> choice)? itemMenuButton;
   final TextStyle? titleMenuStyle;
   final TextStyle? itemMenuStyle;
+
+  /// Text style merged onto the label of the currently selected option row(s)
+  /// (grouping titles are unaffected). Use it to give selection a weight or
+  /// color change on top of [itemMenuStyle]. Defaults to `null` (no change).
+  final TextStyle? selectedItemMenuStyle;
+
   final String? label;
   final bool staticLabel;
   final TextStyle? textStyleLabel;
@@ -55,6 +61,21 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final Widget? Function(Choice<T> choice, bool isSelected)? menuLeadingIcon;
   final Widget? Function(Choice<T> choice, bool isSelected)? menuTrailingIcon;
   final ItemColor? itemColor;
+
+  /// When non-null, a hairline [Divider] of this color is drawn between
+  /// adjacent option rows in the menu (grouping titles are never bordered).
+  /// Defaults to `null` (no dividers), preserving the original layout.
+  final Color? itemDividerColor;
+
+  /// Overlay tint shown on menu rows while pressed/hovered/focused. Defaults
+  /// to `null`, which keeps rows without an overlay (the original behavior).
+  ///
+  /// Applies to the built-in row style. If a custom [buttonStyle] is supplied
+  /// (or a selected row uses [selectedItemButtonStyle] with
+  /// [mergeSelectedStyle] `false`), that style takes over and the overlay is
+  /// governed by it instead.
+  final Color? pressedColor;
+
   final ScrollbarConfig? scrollbarConfig;
   final double iconSpacing;
   final FieldWidth? fieldWidth;
@@ -88,6 +109,7 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
     this.singleSelectWidget,
     this.isMandatory = false,
     this.itemMenuStyle,
+    this.selectedItemMenuStyle,
     this.titleMenuStyle,
     this.textStyleSingleSelection,
     this.cleanCurrentSelection = false,
@@ -96,6 +118,8 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
     this.menuLeadingIcon,
     this.menuTrailingIcon,
     this.itemColor,
+    this.itemDividerColor,
+    this.pressedColor,
     this.label,
     this.staticLabel = false,
     this.textStyleLabel,
@@ -219,6 +243,10 @@ class _StandardMultiSelectFieldState<T>
           if (widget.title != null) widget.title!(_selectedChoice.isEmpty),
           LayoutBuilder(
             builder: (context, size) {
+              final options = _onFilteredChoice
+                  .where((element) => element.value.isNotEmpty)
+                  .toList();
+
               final effectiveScrollbarConfig =
                   widget.scrollbarConfig ??
                   ScrollbarConfig(
@@ -454,47 +482,47 @@ class _StandardMultiSelectFieldState<T>
                           child: Text("All"),
                         ),
                       ),
-                    ..._onFilteredChoice
-                        .where((element) => element.value.isNotEmpty)
-                        .map((result) {
-                          return StandardMultiSelectMenuItem<T>(
-                            result: result,
-                            isGroupingTitle: result.isGroupingTitle,
-                            isSelected: result.isSelectedIn(_selectedChoice),
-                            maxWidth: size.maxWidth,
-                            menuWidthBaseOnContent:
-                                widget.menuWidthBaseOnContent,
-                            itemPadding: widget.itemPadding,
-                            selectedItemPadding: widget.selectedItemPadding,
-                            closeOnActivate:
-                                widget.closeOnSelect ||
-                                widget.singleSelection ||
-                                widget.data().length == 1,
-                            itemKey: result.isFirstSelectedIn(_selectedChoice)
-                                ? _selectedItemKey
-                                : null,
-                            showSelectedTick: widget.showSelectedTick,
-                            selectAllOption: widget.selectAllOption,
-                            buttonStyle: widget.buttonStyle,
-                            selectedItemButtonStyle:
-                                widget.selectedItemButtonStyle,
-                            mergeSelectedStyle: widget.mergeSelectedStyle,
-                            itemColor: widget.itemColor,
-                            isMobile: _isMobile,
-                            titleMenuStyle: widget.titleMenuStyle,
-                            itemMenuStyle: widget.itemMenuStyle,
-                            itemMenuButton: widget.itemMenuButton,
-                            leadingIconBuilder: widget.menuLeadingIcon,
-                            trailingIconBuilder: widget.menuTrailingIcon,
-                            onTap: () {
-                              _addOrRemove(result);
-                              if (!widget.singleSelection &&
-                                  widget.useTextFilter) {
-                                _textController.clear();
-                              }
-                            },
-                          );
-                        }),
+                    for (final (index, choice) in options.indexed)
+                      StandardMultiSelectMenuItem<T>(
+                        result: choice,
+                        isGroupingTitle: choice.isGroupingTitle,
+                        isSelected: choice.isSelectedIn(_selectedChoice),
+                        showTopDivider:
+                            widget.itemDividerColor != null &&
+                            options.hasDividerBefore(index),
+                        dividerColor: widget.itemDividerColor,
+                        maxWidth: size.maxWidth,
+                        menuWidthBaseOnContent: widget.menuWidthBaseOnContent,
+                        itemPadding: widget.itemPadding,
+                        selectedItemPadding: widget.selectedItemPadding,
+                        closeOnActivate:
+                            widget.closeOnSelect ||
+                            widget.singleSelection ||
+                            widget.data().length == 1,
+                        itemKey: choice.isFirstSelectedIn(_selectedChoice)
+                            ? _selectedItemKey
+                            : null,
+                        showSelectedTick: widget.showSelectedTick,
+                        selectAllOption: widget.selectAllOption,
+                        buttonStyle: widget.buttonStyle,
+                        selectedItemButtonStyle: widget.selectedItemButtonStyle,
+                        mergeSelectedStyle: widget.mergeSelectedStyle,
+                        itemColor: widget.itemColor,
+                        pressedColor: widget.pressedColor,
+                        isMobile: _isMobile,
+                        titleMenuStyle: widget.titleMenuStyle,
+                        itemMenuStyle: widget.itemMenuStyle,
+                        selectedItemMenuStyle: widget.selectedItemMenuStyle,
+                        itemMenuButton: widget.itemMenuButton,
+                        leadingIconBuilder: widget.menuLeadingIcon,
+                        trailingIconBuilder: widget.menuTrailingIcon,
+                        onTap: () {
+                          _addOrRemove(choice);
+                          if (!widget.singleSelection && widget.useTextFilter) {
+                            _textController.clear();
+                          }
+                        },
+                      ),
                   ],
                   style:
                       widget.menuStyle ??

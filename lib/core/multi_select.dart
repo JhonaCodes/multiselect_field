@@ -67,6 +67,7 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     Widget Function(Choice<T> choice)? itemMenuButton,
     TextStyle? titleMenuStyle,
     TextStyle? itemMenuStyle,
+    TextStyle? selectedItemMenuStyle,
     String? label,
     TextStyle? textStyleLabel,
     Widget Function(String label)? labelBuilder,
@@ -75,11 +76,17 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     Widget? Function(Choice<T> choice, bool isSelected)? menuLeadingIcon,
     Widget? Function(Choice<T> choice, bool isSelected)? menuTrailingIcon,
     ItemColor? itemColor,
+    Color? itemDividerColor,
+    Color? pressedColor,
     ScrollbarConfig? scrollbarConfig,
     bool staticLabel,
     double iconSpacing,
     FieldWidth? fieldWidth,
     bool closeOnSelect,
+    Color? groupHeaderBackgroundColor,
+    EdgeInsetsGeometry? groupHeaderPadding,
+    Color? selectedTickColor,
+    Color? selectAllIconColor,
   }) = StandardMultiSelectField<T>;
 
   /// Creates a compact chip-style [MultiSelectField].

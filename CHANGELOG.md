@@ -1,3 +1,39 @@
+## 2.5.0
+### New Features
+- **Group headers render as non-interactive section labels.** On the Standard
+  variant, a grouping title (`Choice` with a null/empty key) is now drawn as a
+  plain label instead of a disabled `MenuItemButton`. Without button chrome (no
+  ink, no minimum tap height) it can no longer read as a tappable option row.
+- **`groupHeaderBackgroundColor`**: New optional color on the Standard variant.
+  When set, grouping titles get a background band so sections read as headers,
+  not rows. Defaults to `null` (transparent header, unchanged layout).
+- **`groupHeaderPadding`**: New optional padding for grouping titles. Defaults
+  to `null`, applying a compact built-in padding shorter than the option rows.
+- **`selectedTickColor`**: New optional color for the trailing selected-check on
+  option rows. Defaults to `null`, preserving the historical green tick.
+- **`selectAllIconColor`**: New optional color for the leading select-all
+  checkbox on option rows. Defaults to `null`, preserving the historical green.
+
+### Notes
+- All new parameters are nullable and default to the 2.4.0 behavior, so existing
+  callers are unaffected. The only unconditional change is that grouping titles
+  are no longer `MenuItemButton`s (they were already non-tappable).
+
+## 2.4.0
+### New Features
+- **`itemDividerColor`**: New optional color on the Standard variant. When set,
+  a hairline `Divider` of that color is drawn between adjacent option rows in
+  the menu (grouping titles are never bordered). Defaults to `null`, preserving
+  the original borderless layout.
+- **`pressedColor`**: New optional color on the Standard variant applied as the
+  menu rows' overlay tint on press/hover/focus. The rows previously suppressed
+  the overlay entirely; the default stays `null` (no overlay) so existing usage
+  is unchanged. Threaded through `resolveItemStyle` alongside the item colors.
+- **`selectedItemMenuStyle`**: New optional `TextStyle` on the Standard variant,
+  merged onto the label of selected option rows (grouping titles unaffected).
+  Lets selection carry a weight/color change on top of `itemMenuStyle`. Defaults
+  to `null`, leaving selected labels identical to unselected ones.
+
 ## 2.3.1
 ### Bug Fixes
 - **Standard variant: menu collapsing on tap.** The keyboard-aware reposition

@@ -83,6 +83,10 @@ abstract class MultiSelectField<T> extends StatefulWidget {
     double iconSpacing,
     FieldWidth? fieldWidth,
     bool closeOnSelect,
+    Color? groupHeaderBackgroundColor,
+    EdgeInsetsGeometry? groupHeaderPadding,
+    Color? selectedTickColor,
+    Color? selectAllIconColor,
   }) = StandardMultiSelectField<T>;
 
   /// Creates a compact chip-style [MultiSelectField].

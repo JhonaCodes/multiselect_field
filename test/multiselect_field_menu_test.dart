@@ -110,7 +110,9 @@ void main() {
       // Verificar que los grupos se muestran correctamente
       expect(find.text('Group 1'), findsOneWidget);
       expect(find.text('Group 2'), findsOneWidget);
-      expect(find.byType(MenuItemButton), findsNWidgets(5));
+      // Group titles render as plain non-interactive headers, not buttons, so
+      // only the 3 real options are MenuItemButtons (2 headers + 3 options).
+      expect(find.byType(MenuItemButton), findsNWidgets(3));
     });
 
     // Test para verificar el comportamiento del menú con opción "Seleccionar todo"

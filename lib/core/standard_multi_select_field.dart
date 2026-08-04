@@ -81,6 +81,25 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
   final FieldWidth? fieldWidth;
   final bool closeOnSelect;
 
+  /// Background fill for grouping-title rows in the menu. When set, headers
+  /// read as a distinct section band instead of a transparent label. Defaults
+  /// to `null` (transparent header, original layout).
+  final Color? groupHeaderBackgroundColor;
+
+  /// Padding for grouping-title rows in the menu. Defaults to `null`, which
+  /// applies a compact built-in padding shorter than the option rows so the
+  /// header does not read as a tappable item.
+  final EdgeInsetsGeometry? groupHeaderPadding;
+
+  /// Colour of the trailing selected-check on option rows. Defaults to `null`,
+  /// preserving the historical green tick. Only used when [showSelectedTick].
+  final Color? selectedTickColor;
+
+  /// Colour of the leading select-all checkbox on option rows. Defaults to
+  /// `null`, preserving the historical green checkbox. Only used when
+  /// [selectAllOption].
+  final Color? selectAllIconColor;
+
   const StandardMultiSelectField({
     super.key,
     required this.data,
@@ -128,6 +147,10 @@ class StandardMultiSelectField<T> extends MultiSelectField<T> {
     this.iconSpacing = 0,
     this.fieldWidth,
     this.closeOnSelect = false,
+    this.groupHeaderBackgroundColor,
+    this.groupHeaderPadding,
+    this.selectedTickColor,
+    this.selectAllIconColor,
   }) : super.internal();
 
   @override
@@ -513,6 +536,11 @@ class _StandardMultiSelectFieldState<T>
                         titleMenuStyle: widget.titleMenuStyle,
                         itemMenuStyle: widget.itemMenuStyle,
                         selectedItemMenuStyle: widget.selectedItemMenuStyle,
+                        groupHeaderBackgroundColor:
+                            widget.groupHeaderBackgroundColor,
+                        groupHeaderPadding: widget.groupHeaderPadding,
+                        selectedTickColor: widget.selectedTickColor,
+                        selectAllIconColor: widget.selectAllIconColor,
                         itemMenuButton: widget.itemMenuButton,
                         leadingIconBuilder: widget.menuLeadingIcon,
                         trailingIconBuilder: widget.menuTrailingIcon,

@@ -41,6 +41,24 @@ class StandardMultiSelectMenuItem<T> extends StatelessWidget {
   /// title). `null` leaves the selected label identical to unselected rows.
   final TextStyle? selectedItemMenuStyle;
 
+  /// Background fill for a grouping-title row. When set, the header reads as a
+  /// distinct section band instead of a plain transparent label. `null` keeps
+  /// the header transparent (no band). Only applies to grouping titles.
+  final Color? groupHeaderBackgroundColor;
+
+  /// Padding for a grouping-title row. Kept compact (shorter than the 48pt
+  /// option rows) so the header does not read as a tappable item. Only applies
+  /// to grouping titles.
+  final EdgeInsetsGeometry? groupHeaderPadding;
+
+  /// Colour of the trailing "selected" check on option rows. `null` preserves
+  /// the historical green tick. Only used when [showSelectedTick] is `true`.
+  final Color? selectedTickColor;
+
+  /// Colour of the leading select-all checkbox on option rows. `null` preserves
+  /// the historical green checkbox. Only used when [selectAllOption] is `true`.
+  final Color? selectAllIconColor;
+
   final Widget Function(Choice<T> choice)? itemMenuButton;
   final Widget? Function(Choice<T> choice, bool isSelected)? leadingIconBuilder;
   final Widget? Function(Choice<T> choice, bool isSelected)?
@@ -71,6 +89,10 @@ class StandardMultiSelectMenuItem<T> extends StatelessWidget {
     required this.titleMenuStyle,
     required this.itemMenuStyle,
     this.selectedItemMenuStyle,
+    this.groupHeaderBackgroundColor,
+    this.groupHeaderPadding,
+    this.selectedTickColor,
+    this.selectAllIconColor,
     required this.itemMenuButton,
     required this.onTap,
     this.leadingIconBuilder,
@@ -106,55 +128,71 @@ class StandardMultiSelectMenuItem<T> extends StatelessWidget {
               endIndent: 12,
               color: dividerColor,
             ),
-          Padding(
-            padding: (isSelected && selectedItemPadding != null)
-                ? selectedItemPadding!
-                : itemPadding ?? EdgeInsets.zero,
-            child: MenuItemButton(
-              closeOnActivate: closeOnActivate,
-              key: itemKey,
-              trailingIcon:
-                  trailingIconBuilder?.call(result, isSelected) ??
-                  switch ((
-                    showTick: showSelectedTick,
-                    selectAll: selectAllOption,
-                    isSelected: isSelected,
-                  )) {
-                    (showTick: true, selectAll: false, isSelected: true) =>
-                      const Icon(Icons.check, color: Colors.green, size: 12),
-                    _ => null,
-                  },
-              leadingIcon:
-                  leadingIconBuilder?.call(result, isSelected) ??
-                  (selectAllOption && !isGroupingTitle
-                      ? Padding(
-                          padding: const EdgeInsets.only(left: 15),
-                          child: isSelected
-                              ? const Icon(Icons.check_box, color: Colors.green)
-                              : const Icon(Icons.check_box_outline_blank),
-                        )
-                      : null),
-              style: context.resolveItemStyle(
-                isGroupingTitle: isGroupingTitle,
-                isSelected: isSelected,
-                isMobile: isMobile,
-                selectedItemButtonStyle: selectedItemButtonStyle,
-                mergeSelectedStyle: mergeSelectedStyle,
-                buttonStyle: buttonStyle,
-                itemColor: itemColor,
-                pressedColor: pressedColor,
-              ),
-              onPressed: isGroupingTitle ? null : onTap,
-              child: switch (itemMenuButton) {
-                null => Padding(
-                  padding: EdgeInsets.only(left: isGroupingTitle ? 0 : 10),
-                  child: Text(result.value, style: _labelStyle(context)),
-                ),
-                _ => itemMenuButton!(result),
-              },
-            ),
-          ),
+          if (isGroupingTitle) _buildGroupHeader(context) else _buildOption(context),
         ],
+      ),
+    );
+  }
+
+  /// A grouping title rendered as a plain, non-interactive section label — not
+  /// a [MenuItemButton]. Without button chrome (no ink, no min-tap height) it
+  /// can never read as a tappable option row; an optional
+  /// [groupHeaderBackgroundColor] turns it into a section band.
+  Widget _buildGroupHeader(BuildContext context) {
+    return Container(
+      color: groupHeaderBackgroundColor,
+      padding: groupHeaderPadding ?? const EdgeInsets.fromLTRB(12, 8, 12, 4),
+      child: Text(result.value, style: _labelStyle(context)),
+    );
+  }
+
+  Widget _buildOption(BuildContext context) {
+    return Padding(
+      padding: (isSelected && selectedItemPadding != null)
+          ? selectedItemPadding!
+          : itemPadding ?? EdgeInsets.zero,
+      child: MenuItemButton(
+        closeOnActivate: closeOnActivate,
+        key: itemKey,
+        trailingIcon:
+            trailingIconBuilder?.call(result, isSelected) ??
+            switch ((
+              showTick: showSelectedTick,
+              selectAll: selectAllOption,
+              isSelected: isSelected,
+            )) {
+              (showTick: true, selectAll: false, isSelected: true) =>
+                Icon(Icons.check, color: selectedTickColor ?? Colors.green, size: 12),
+              _ => null,
+            },
+        leadingIcon:
+            leadingIconBuilder?.call(result, isSelected) ??
+            (selectAllOption
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: isSelected
+                        ? Icon(Icons.check_box, color: selectAllIconColor ?? Colors.green)
+                        : const Icon(Icons.check_box_outline_blank),
+                  )
+                : null),
+        style: context.resolveItemStyle(
+          isGroupingTitle: false,
+          isSelected: isSelected,
+          isMobile: isMobile,
+          selectedItemButtonStyle: selectedItemButtonStyle,
+          mergeSelectedStyle: mergeSelectedStyle,
+          buttonStyle: buttonStyle,
+          itemColor: itemColor,
+          pressedColor: pressedColor,
+        ),
+        onPressed: onTap,
+        child: switch (itemMenuButton) {
+          null => Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Text(result.value, style: _labelStyle(context)),
+          ),
+          _ => itemMenuButton!(result),
+        },
       ),
     );
   }
